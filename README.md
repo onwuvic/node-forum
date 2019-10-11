@@ -1,5 +1,5 @@
 # api-pen
-[![CircleCI](https://circleci.com/gh/onwuvic/api-pen.svg?style=svg)](https://circleci.com/gh/onwuvic/api-pen) [![Maintainability](https://api.codeclimate.com/v1/badges/5793246489f7fe8a890a/maintainability)](https://codeclimate.com/github/onwuvic/api-pen/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/5793246489f7fe8a890a/test_coverage)](https://codeclimate.com/github/onwuvic/api-pen/test_coverage) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![CircleCI](https://circleci.com/gh/onwuvic/node-forum/tree/develop.svg?style=svg)](https://circleci.com/gh/onwuvic/node-forum/tree/develop) [![Maintainability](https://api.codeclimate.com/v1/badges/d44a0af08f04fb0d7c94/maintainability)](https://codeclimate.com/github/onwuvic/node-forum/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d44a0af08f04fb0d7c94/test_coverage)](https://codeclimate.com/github/onwuvic/node-forum/test_coverage) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 A PENS (Postgres, Express, Node and Sequelize ORM) API template for building API application. It allows you to start developing your application without the stress of basic setup.
 
