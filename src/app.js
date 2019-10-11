@@ -2,6 +2,7 @@ import logger from 'morgan';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import routes from './routes';
 
 // Set up the express app
 const app = express();
@@ -16,9 +17,16 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// set base url for api
+routes(app);
+
 // Setup a default catch-all route that sends back a welcome message in JSON format.
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to the beginning of nothingness.',
-}));
+app.use('*', (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  res.status(404).json({
+    status: 'fail',
+    message: `Not Found. ${fullUrl} API does not exist`
+  });
+});
 
 module.exports = app;
