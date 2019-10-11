@@ -1,16 +1,16 @@
 {
-  "name": "api-postgres-node-express-sequelize",
+  "name": "node-forum",
   "version": "1.0.0",
   "main": "src/index.js",
-  "description": "A PENS (Postgres, Express, Node and Sequelize ORM) API template for building API application",
+  "description": "A Forum app build with (Postgres, Express, Node and Sequelize ORM)",
   "bugs": {
-    "url": "https://github.com/onwuvic/api-postgres-node-express-sequelize/issues"
+    "url": "https://github.com/onwuvic/node-forum/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:onwuvic/api-postgres-node-express-sequelize.git"
+    "url": "git@github.com:onwuvic/node-forum.git"
   },
-  "homepage": "https://github.com/onwuvic/api-postgres-node-express-sequelize#readme",
+  "homepage": "https://github.com/onwuvic/node-forum#readme",
   "author": "Onwuzor Victor <onwuzorvictor@outlook.com>",
   "license": "MIT",
   "scripts": {
