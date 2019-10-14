@@ -15,7 +15,6 @@ class ThreadController {
       const thread = await ThreadService.findOne(req.params.id);
       res.status(200).json(thread);
     } catch (error) {
-      console.log('ERROR', error);
       res.status(500).json(error);
     }
   }

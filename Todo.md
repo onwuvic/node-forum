@@ -1,0 +1,4 @@
+- set up thread testing
+- create thread on each test case / use before each
+- destroy after each test
+- add the frontend angular project
