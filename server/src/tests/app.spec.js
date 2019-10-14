@@ -17,11 +17,10 @@ describe('Application Test', () => {
   });
 
   describe('App Root Route', () => {
-    it('should return a message when it is launch', async () => {
+    it('should return 404', async () => {
       const response = await request.get('/');
 
-      expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Welcome to the beginning of nothingness.');
+      expect(response.status).toBe(404);
     });
   });
 });

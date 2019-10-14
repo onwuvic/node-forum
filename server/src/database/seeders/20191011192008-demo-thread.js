@@ -6,7 +6,7 @@ module.exports = {
   up: (queryInterface) => {
     const threads = [];
 
-    for (let i = 1; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       const seedData = {
         userId: i,
         title: faker.lorem.words(),

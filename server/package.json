@@ -27,10 +27,12 @@
     "serve": "node dist/src/index.js",
     "start": "cross-env NODE_ENV=production npm run build && npm run serve",
     "dev": "cross-env NODE_ENV=development DEBUG=log node_modules/.bin/nodemon --exec babel-node src/index.js",
+    "pretest": "cross-env NODE_ENV=test npm run db:rollmigrate",
     "test": "jest --no-cache  --detectOpenHandles --runInBand --forceExit"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "bcrypt": "3.0.6",
     "body-parser": "^1.18.3",
     "core-js": "3.1.4",
     "cors": "^2.8.5",

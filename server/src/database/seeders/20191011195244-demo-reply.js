@@ -8,8 +8,8 @@ module.exports = {
 
     for (let i = 0; i < 10; i++) {
       const seedData = {
-        userId: i + 1,
-        threadId: faker.random.number(10),
+        userId: faker.random.number({ min: 1, max: 10 }),
+        threadId: faker.random.number({ min: 1, max: 10 }),
         body: faker.lorem.paragraphs(),
         createdAt: new Date(),
         updatedAt: new Date()
