@@ -1,3 +1,7 @@
-<p>
-  thread works!
-</p>
+<ng-container *ngIf="(threads$ | async) as threads">
+  <div class="section" *ngFor="let thread of threads">
+    <h5>{{ thread.title }}</h5>
+    <p>{{ thread.body }}</p>
+  </div>
+  <div class="divider"></div>
+</ng-container>
