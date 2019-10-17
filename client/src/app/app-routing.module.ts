@@ -3,6 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: '/threads',
+    pathMatch: 'full'
+  },
+  {
     path: 'threads',
     loadChildren: './modules/thread/thread.module#ThreadModule'
   }

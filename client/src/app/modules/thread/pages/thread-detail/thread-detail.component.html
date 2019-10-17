@@ -1,3 +1,8 @@
-<p>
-  thread-detail works!
-</p>
+<ng-container *ngIf="(thread$ | async) as thread">
+  <div>
+    <div class="section">
+      <h5>{{ thread.title }}</h5>
+      <p>{{ thread.body }}</p>
+    </div>
+  </div>
+</ng-container>

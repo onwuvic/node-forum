@@ -12,7 +12,6 @@ export class ThreadComponent implements OnInit {
 
   threads$ = this.threadService.fetchAll();
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
 }

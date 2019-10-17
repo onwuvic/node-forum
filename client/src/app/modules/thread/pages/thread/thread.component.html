@@ -1,7 +1,11 @@
 <ng-container *ngIf="(threads$ | async) as threads">
-  <div class="section" *ngFor="let thread of threads">
-    <h5>{{ thread.title }}</h5>
-    <p>{{ thread.body }}</p>
+  <div  *ngFor="let thread of threads">
+    <div class="section">
+      <h5>
+        <a [routerLink]="['./', thread.id]">{{ thread.title }}</a>
+      </h5>
+      <p>{{ thread.body }}</p>
+    </div>
+    <mat-divider></mat-divider>
   </div>
-  <div class="divider"></div>
 </ng-container>
