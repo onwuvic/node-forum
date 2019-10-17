@@ -21,7 +21,6 @@ export default (sequelize, DataTypes) => {
   }, {});
 
   Thread.associate = (models) => {
-    // associations can be defined here
     Thread.hasMany(models.Reply, {
       foreignKey: 'threadId',
       sourceKey: 'id',

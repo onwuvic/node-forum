@@ -8,7 +8,7 @@ import { ThreadService } from '../../../../core/services/thread/thread.service';
 @Component({
   selector: 'app-thread-detail',
   templateUrl: './thread-detail.component.html',
-  styleUrls: ['./thread-detail.component.sass']
+  styleUrls: ['./thread-detail.component.scss']
 })
 export class ThreadDetailComponent implements OnInit {
 

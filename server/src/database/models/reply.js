@@ -21,12 +21,18 @@ export default (sequelize, DataTypes) => {
   }, {});
 
   Reply.associate = (models) => {
-    // associations can be defined here
     Reply.belongsTo(models.Thread, {
       foreignKey: 'threadId',
       targetKey: 'id',
       onDelete: 'CASCADE',
       as: 'thread'
+    });
+
+    Reply.belongsTo(models.User, {
+      foreignKey: 'userId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'user'
     });
   };
   return Reply;

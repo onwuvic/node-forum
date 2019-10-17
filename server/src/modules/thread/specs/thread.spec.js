@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import http from 'http';
+import bcrypt from 'bcrypt';
 import app from '../../../app';
 import models from '../../../database/models';
 
@@ -7,6 +8,7 @@ describe('', () => {
   let server;
   let request;
   let thread;
+  let user;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -22,7 +24,17 @@ describe('', () => {
   describe('Thread Test', () => {
     // refactor to a function that just do MockThread.create()
     beforeAll(async () => {
-      thread = await models.Thread.create({ title: 'The walls', body: 'The walls down for all', userId: 1 });
+      user = await models.User.create({
+        fullName: 'Jane Doe',
+        email: 'jane.doe@example.com',
+        password: bcrypt.hashSync('password', 10),
+        gender: 'female'
+      });
+      thread = await models.Thread.create({
+        title: 'The walls',
+        body: 'The walls down for all',
+        userId: user.dataValues.id
+      });
     });
 
     // afterEach(async () => {
@@ -46,7 +58,9 @@ describe('', () => {
 
     it('should return replies that are associated with a thread', async () => {
       // and the thread includes replies
-      const { dataValues: reply } = await models.Reply.create({ body: 'yes', userId: 1, threadId: thread.dataValues.id });
+      const { dataValues: reply } = await models.Reply.create(
+        { body: 'yes', userId: user.dataValues.id, threadId: thread.dataValues.id }
+      );
 
       // the thread should return the replies
       const response = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);

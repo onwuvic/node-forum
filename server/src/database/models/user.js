@@ -27,9 +27,12 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
 
-  // eslint-disable-next-line no-unused-vars
   User.associate = (models) => {
-    // associations can be defined here
+    User.hasMany(models.Reply, {
+      foreignKey: 'userId',
+      sourceKey: 'id',
+      as: 'replies'
+    });
   };
   return User;
 };
