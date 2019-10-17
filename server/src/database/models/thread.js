@@ -20,9 +20,13 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
 
-  // eslint-disable-next-line no-unused-vars
   Thread.associate = (models) => {
     // associations can be defined here
+    Thread.hasMany(models.Reply, {
+      foreignKey: 'threadId',
+      sourceKey: 'id',
+      as: 'replies'
+    });
   };
   return Thread;
 };

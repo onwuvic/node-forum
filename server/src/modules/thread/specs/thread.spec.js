@@ -1,12 +1,12 @@
 import supertest from 'supertest';
 import http from 'http';
-// import { Sequelize } from 'sequelize';
 import app from '../../../app';
 import models from '../../../database/models';
 
 describe('', () => {
   let server;
   let request;
+  let thread;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -20,8 +20,9 @@ describe('', () => {
   });
 
   describe('Thread Test', () => {
-    beforeEach(async () => {
-      await models.Thread.create({ title: 'The walls', body: 'The walls down for all', userId: 1 });
+    // refactor to a function that just do MockThread.create()
+    beforeAll(async () => {
+      thread = await models.Thread.create({ title: 'The walls', body: 'The walls down for all', userId: 1 });
     });
 
     // afterEach(async () => {
@@ -30,22 +31,26 @@ describe('', () => {
     // });
 
     it('should return all threads', async () => {
-      // create it own thread
       const response = await request.get(`${baseUrl}/threads`);
-      console.log('---->', response.body);
 
       expect(response.status).toBe(200);
       expect(response.body[0]).toHaveProperty('title');
     });
 
     it('should return one thread', async () => {
-      // create it own thread
-      // use the id of the created thread
-      const response = await request.get(`${baseUrl}/threads/1`);
-      console.log('---->', response.body);
+      const response = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('title');
+    });
+
+    it('should return replies that are associated with a thread', async () => {
+      // and the thread includes replies
+      const { dataValues: reply } = await models.Reply.create({ body: 'yes', userId: 1, threadId: thread.dataValues.id });
+
+      // the thread should return the replies
+      const response = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);
+      expect(response.body.replies[0].body).toBe(reply.body);
     });
   });
 });

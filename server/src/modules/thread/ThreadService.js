@@ -1,6 +1,6 @@
 import models from '../../database/models';
 
-const { Thread } = models;
+const { Thread, Reply } = models;
 
 class ThreadService {
   static async findAll() {
@@ -9,7 +9,13 @@ class ThreadService {
   }
 
   static async findOne(id) {
-    const thread = await Thread.findOne({ where: { id } });
+    const thread = await Thread.findOne({
+      where: { id },
+      include: [{
+        model: Reply,
+        as: 'replies'
+      }]
+    });
     return thread;
   }
 }

@@ -18,7 +18,13 @@ module.exports = {
     },
     threadId: {
       allowNull: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Threads',
+        key: 'id',
+        as: 'thread',
+      },
     },
     createdAt: {
       allowNull: false,

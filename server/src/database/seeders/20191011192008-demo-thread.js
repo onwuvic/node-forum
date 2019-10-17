@@ -8,7 +8,7 @@ module.exports = {
 
     for (let i = 0; i < 10; i++) {
       const seedData = {
-        userId: i,
+        userId: i + 1,
         title: faker.lorem.words(),
         body: faker.lorem.paragraphs(),
         createdAt: new Date(),
