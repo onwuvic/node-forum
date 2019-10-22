@@ -33,6 +33,11 @@ export default (sequelize, DataTypes) => {
       sourceKey: 'id',
       as: 'replies'
     });
+    User.hasMany(models.Thread, {
+      foreignKey: 'userId',
+      sourceKey: 'id',
+      as: 'threads'
+    });
   };
   return User;
 };

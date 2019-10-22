@@ -26,6 +26,12 @@ export default (sequelize, DataTypes) => {
       sourceKey: 'id',
       as: 'replies'
     });
+    Thread.belongsTo(models.User, {
+      foreignKey: 'userId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'creator'
+    });
   };
   return Thread;
 };

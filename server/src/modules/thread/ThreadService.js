@@ -24,6 +24,13 @@ class ThreadService {
               as: 'user',
             }
           ]
+        },
+        {
+          model: User,
+          as: 'creator',
+          attributes: {
+            exclude: 'password'
+          }
         }
       ]
     });

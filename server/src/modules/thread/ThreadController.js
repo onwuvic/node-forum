@@ -1,21 +1,26 @@
 import ThreadService from './ThreadService';
+import Response from '../../responses/response';
 
 class ThreadController {
   static async index(req, res) {
     try {
       const threads = await ThreadService.findAll();
-      res.status(200).json(threads);
+      return Response.ok(res, threads);
     } catch (error) {
-      res.status(500).json(error);
+      return Response.error(
+        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
+      );
     }
   }
 
   static async show(req, res) {
     try {
       const thread = await ThreadService.findOne(req.params.id);
-      res.status(200).json(thread);
+      return Response.ok(res, thread);
     } catch (error) {
-      res.status(500).json(error);
+      return Response.error(
+        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
+      );
     }
   }
 }

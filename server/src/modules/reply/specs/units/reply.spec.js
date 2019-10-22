@@ -24,7 +24,9 @@ describe.skip('', () => {
   describe('Reply Unit Test', () => {
     // refactor to a function that just do MockThread.create()
     // beforeAll(async () => {
-    //   reply = await models.Reply.create({ body: 'The walls down for all', userId: 1, threadId: 1 });
+    //   reply =
+    // await models.Reply
+    // .create({ body: 'The walls down for all', userId: 1, threadId: 1 });
     // });
     beforeAll(async () => {
       user = await models.User.create({
@@ -45,7 +47,7 @@ describe.skip('', () => {
         { body: 'yes', userId: user.dataValues.id, threadId: thread.dataValues.id }
       );
 
-      expect(reply.userId).toBeInstanceOf(models.User);
+      expect(reply).toBeInstanceOf(models.Reply);
     });
   });
 });
