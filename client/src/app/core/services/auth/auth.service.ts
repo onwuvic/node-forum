@@ -23,7 +23,11 @@ export class AuthService {
   }
 
   private authUserSub = new BehaviorSubject(null);
-  authUser$ = this.authUserSub.asObservable();
+
+  get authUser() {
+    this.authUserSub.next(this.jwt.decodeToken());
+    return this.authUserSub.asObservable();
+  }
 
   isAuthenticated(): boolean {
     return localStorage.getItem('token') != null && !this.jwt.isTokenExpired();
@@ -35,6 +39,11 @@ export class AuthService {
 
   getRedirectUrl(): string {
     return this.redirectUrl;
+  }
+
+  clear(): void {
+    this.loggedInSubject.next(false);
+    localStorage.clear();
   }
 
   authenticate(user: {email: string, password: string }): Observable<any> {

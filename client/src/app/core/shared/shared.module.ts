@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material-module/material.module';
 import { MomentModule } from 'ngx-moment';
+import { TemplateStoreDirective } from '../directives/template-store.directive';
 
 @NgModule({
-  declarations: [],
+  declarations: [TemplateStoreDirective],
   imports: [
     CommonModule
   ],
@@ -13,7 +14,8 @@ import { MomentModule } from 'ngx-moment';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    MomentModule
+    MomentModule,
+    TemplateStoreDirective
   ]
 })
 export class SharedModule { }

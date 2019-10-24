@@ -22,12 +22,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
   displayMessage: { [key: string]: string } = {};
   private genericValidator: GenericValidator;
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     // Define an instance of the validator for use with this form,
     this.genericValidator = new GenericValidator();
   }
 
   ngOnInit() {
+    this.authService.clear();
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -49,12 +50,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   login() {
     this.loading = true;
-    this.auth.authenticate(this.loginForm.value)
+    this.authService.authenticate(this.loginForm.value)
       .subscribe(
         () => {
           this.loading = false;
           // navigate back to our redirect url
-          const to: string = this.auth.getRedirectUrl() || '';
+          const to: string = this.authService.getRedirectUrl() || '';
           this.router.navigate([to]);
         },
         (error) => {

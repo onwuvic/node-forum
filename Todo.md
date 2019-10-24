@@ -13,11 +13,14 @@
 - thread has a owner
 - an unauth user can not add a reply test
 
-- user name when loggined
+- user name when loggined (done)
 - rename auth to isLogged (done)
-- add functionality to adding a reply frontend
+- logout (done)
+- add sign in for unauth user (done)
+- when sign in redirect back to the forum (done)
+- add functionality to adding a reply frontend (done)
 - route back to same page and display the new reply
-- add sign in for unauth user
+
 
 - A class that:
 a. create a normal user
