@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable, BehaviorSubject } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-thread-detail',
@@ -12,7 +13,13 @@ import { ThreadService } from '../../../../core/services/thread/thread.service';
 })
 export class ThreadDetailComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private threadService: ThreadService) { }
+  isLoggedIn$ = this.authService.isLoggedIn;
+
+  constructor(
+    private route: ActivatedRoute,
+    private threadService: ThreadService,
+    private authService: AuthService
+  ) { }
 
   thread$ = this.route.paramMap
     .pipe(

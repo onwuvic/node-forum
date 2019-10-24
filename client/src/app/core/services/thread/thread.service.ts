@@ -19,7 +19,7 @@ export class ThreadService {
     const url = `${environment.baseUrl}/threads`;
     return this.http.get(url)
       .pipe(
-        map(res => res.data)
+        map((res: any) => res.data)
       );
   }
 
@@ -27,7 +27,7 @@ export class ThreadService {
     const url = `${environment.baseUrl}/threads/${id}`;
     return this.http.get(url)
       .pipe(
-        map(res => res.data)
+        map((res: any) => res.data)
       );
   }
 }

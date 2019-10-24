@@ -11,6 +11,13 @@
 - reply has a owner test
 - thread has a reply
 - thread has a owner
+- an unauth user can not add a reply test
+
+- user name when loggined
+- rename auth to isLogged (done)
+- add functionality to adding a reply frontend
+- route back to same page and display the new reply
+- add sign in for unauth user
 
 - A class that:
 a. create a normal user

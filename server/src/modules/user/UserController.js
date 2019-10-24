@@ -32,9 +32,9 @@ class UserController {
       const { dataValues: { password, ...logInUser } } = user;
 
       // generate a token from the user data
-      const token = await Token.generateToken(user);
+      const token = await Token.generateToken(logInUser);
       // return a token
-      return Response.ok(res, { logInUser, token });
+      return Response.ok(res, { token });
     } catch (error) {
       return Response.error(
         res, 'Server Error', 'Unable to perform this action at this time. Try again.', error

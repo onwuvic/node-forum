@@ -10,6 +10,10 @@ const routes: Routes = [
   {
     path: 'threads',
     loadChildren: './modules/thread/thread.module#ThreadModule'
+  },
+  {
+    path: 'auth',
+    loadChildren: './modules/auth/auth.module#AuthModule'
   }
 ];
 

@@ -1,24 +1,57 @@
 <ng-container *ngIf="(thread$ | async) as thread">
-  <div class="row">
-    <div class="col s12 m12">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">
-            <a href="">{{ thread.creator.fullName }}</a> Posted: {{ thread.title }}
-          </span>
-          <p>{{ thread.body }}</p>
-        </div>
-        <div class="card-action">
-          <div class="section" *ngFor="let reply of thread.replies">
-            <h6>
-              <a href="">{{ reply.user.fullName }}</a> said {{ reply.createdAt | amTimeAgo }}
-            </h6>
+  <div class="blog-post">
+    <h2 class="blog-post-title">{{ thread.title }}</h2>
+    <p class="blog-post-meta">January 1, 2014 by <a href="#">{{ thread.creator.fullName }}</a></p>
+    <hr>
+    <p>{{ thread.body }}</p>
+  </div>
+
+  <!--Comments-->
+  <div class="card card-comments mb-3 wow fadeIn">
+    <div class="card-header font-weight-bold">3 comments</div>
+    <div class="card-body">
+
+      <ng-container *ngFor="let reply of thread.replies">
+        <div class="media d-block d-md-flex mt-4">
+          <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
+            alt="Generic placeholder image">
+          <div class="media-body text-center text-md-left ml-md-3 ml-0">
+            <h5 class="mt-0 font-weight-bold">
+              <a href="">{{ reply.user.fullName }}</a>
+            </h5>
+            <small>{{ reply.createdAt | amTimeAgo }}</small>
             <p>{{ reply.body }}</p>
-            <mat-divider></mat-divider>
           </div>
         </div>
-      </div>
+
+        <hr>
+      </ng-container>
     </div>
   </div>
-</ng-container>
+  <!--/.Comments-->
 
+  <!--Reply-->
+  <ng-container *ngIf="isLoggedIn$ | async">
+    <div class="card mb-3 wow fadeIn">
+      <div class="card-header font-weight-bold">Leave a reply</div>
+      <div class="card-body">
+
+        <!-- Default form reply -->
+        <form>
+
+          <!-- Comment -->
+          <div class="form-group">
+            <label for="replyFormComment">Your comment</label>
+            <textarea class="form-control" id="replyFormComment" rows="5"></textarea>
+          </div>
+
+          <div class="text-center mt-4">
+            <button class="btn btn-info btn-md" type="submit">Post</button>
+          </div>
+        </form>
+        <!-- Default form reply -->
+      </div>
+    </div>
+  </ng-container>
+  <!--/.Reply-->
+</ng-container>
