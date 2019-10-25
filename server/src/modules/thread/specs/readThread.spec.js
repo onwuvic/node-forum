@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 import http from 'http';
-import bcrypt from 'bcrypt';
 import app from '../../../app';
 import models from '../../../database/models';
+import Mock from '../../../tests/utils/testHelper';
 
 describe('', () => {
   let server;
@@ -25,29 +25,16 @@ describe('', () => {
   describe('Thread Test', () => {
     // refactor to a function that just do MockThread.create()
     beforeAll(async () => {
-      user = await models.User.create({
-        fullName: 'Jane Doe',
-        email: 'jane.doe@example.com',
-        password: bcrypt.hashSync('password', 10),
-        gender: 'female'
-      });
-      thread = await models.Thread.create({
-        title: 'The walls',
-        body: 'The walls down for all',
-        userId: user.dataValues.id
-      });
-      const { body: { data: { token: authToken } } } = await request
-        .post(`${baseUrl}/auth/login`)
-        .send({
-          email: user.dataValues.email, password: 'password'
-        });
-      token = authToken;
+      user = await Mock.createUser();
+      thread = await Mock.createThread(user.id);
+      token = await Mock.authUser(request, `${baseUrl}/auth/login`, user.email);
     });
 
-    // afterEach(async () => {
-    //   await Object.values(models).map(model => model.destroy({ where: {}, force: true }));
-    //   // await Sequelize.queryInterface.query('TRUNCATE TABLE threads CASCADE;');
-    // });
+    afterAll(async () => {
+      await models.User.destroy({ where: {}, force: true });
+      // await Object.values(models).map(model => model.destroy({ where: {}, force: true }));
+      // await Sequelize.queryInterface.query('TRUNCATE TABLE threads CASCADE;');
+    });
 
     it('should return all threads', async () => {
       const response = await request.get(`${baseUrl}/threads`);
@@ -57,40 +44,34 @@ describe('', () => {
     });
 
     it('should return one thread', async () => {
-      const response = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);
+      const response = await request.get(`${baseUrl}/threads/${thread.id}`);
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveProperty('title');
     });
 
     it('should return replies that are associated with a thread', async () => {
-      // and the thread includes replies
-      const { dataValues: reply } = await models.Reply.create(
-        { body: 'yes', userId: user.dataValues.id, threadId: thread.dataValues.id }
-      );
+      const reply = await Mock.createReply(user.id, thread.id);
 
-      // the thread should return the replies
-      const response = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);
+      const response = await request.get(`${baseUrl}/threads/${thread.id}`);
       expect(response.body.data.replies[0].body).toBe(reply.body);
     });
 
     it('should return the creator of the thread', async () => {
-      // given we have a thread
-      // when we try to get the thread
-      const response = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);
+      const response = await request.get(`${baseUrl}/threads/${thread.id}`);
 
-      // it should return who created the thread
       expect(response.status).toBe(200);
       expect(response.body.data.creator.id).toBe(user.id);
     });
 
     // participationInForum Test
+    // move this when test heplers are created
     it('should return an anthenticated user reply on a thread', async () => {
       // given we have a authenticated user
       // and an existing thread
       // when the user adds a reply to the thread
       const response = await request
-        .post(`${baseUrl}/threads/${thread.dataValues.id}/replies`)
+        .post(`${baseUrl}/threads/${thread.id}/replies`)
         .set('authorization', `Bearer ${token}`)
         .send({ body: 'I reply you' });
 

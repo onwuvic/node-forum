@@ -4,7 +4,7 @@
 - use one single layout for header (done)
 
 - destroy after each test (ask efe)
-- global error handler in frontend angular
+- global error handler in frontend angular (done)
 - write test for getting user from reply
 - fix running test on circleCI (when done update postgres api generator)
 
@@ -21,6 +21,12 @@
 - add functionality to adding a reply frontend (done)
 - route back to same page and display the new reply
 
+- add all threads nav link
+- move please to center (done)
+- add created at time (done)
+- user can create a thread
+- user can create thread frontend
+
 
 - A class that:
 a. create a normal user
@@ -32,11 +38,16 @@ f. a set method to set any of these
 
 API
 
-Mock.createUser();
-Mock.createAuthUser();
+
+
 Mock.setUser(); Mock.getUser();
 Mock.setAuthUser(); Mock.getAuthUser();
+Mock.setThread(userId); Mock.getThread(userId);
 
-Mock.createThread(userId); Mock.setThread(userId); Mock.getThread(userId);
+Mock.createUser(); return a user object
 
-Mock.createReply(userId, threadId);
+Mock.createAuthUser(); // return a token
+
+Mock.createThread(userId); return a thread object
+
+Mock.createReply(userId, threadId); return a reply object

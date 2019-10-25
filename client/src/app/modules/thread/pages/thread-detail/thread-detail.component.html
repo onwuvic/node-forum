@@ -1,7 +1,7 @@
 <ng-container *ngIf="(thread$ | async) as thread">
   <div class="blog-post">
     <h2 class="blog-post-title">{{ thread.title }}</h2>
-    <p class="blog-post-meta">January 1, 2014 by <a href="#">{{ thread.creator.fullName }}</a></p>
+    <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by <a href="#">{{ thread.creator.fullName }}</a></p>
     <hr>
     <p>{{ thread.body }}</p>
   </div>
@@ -60,7 +60,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="!isLoggedIn.check">
-    <p>Please <span class="btn-link" (click)="signIn()">sign in</span> to participate in this discussion.</p>
+    <p class="text-center">Please <span class="btn-link" (click)="signIn()">sign in</span> to participate in this discussion.</p>
   </ng-container>
   <!--/.Reply-->
 </ng-container>
