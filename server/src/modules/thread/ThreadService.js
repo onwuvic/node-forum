@@ -36,6 +36,11 @@ class ThreadService {
     });
     return thread;
   }
+
+  static async create(threadData, userId) {
+    const thread = await Thread.create({ ...threadData, userId });
+    return thread;
+  }
 }
 
 export default ThreadService;

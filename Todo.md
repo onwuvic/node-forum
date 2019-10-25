@@ -24,8 +24,11 @@
 - add all threads nav link
 - move please to center (done)
 - add created at time (done)
-- user can create a thread
-- user can create thread frontend
+- user can create a thread BACKEND functionality and test (done)
+- user can create thread frontend 
+- create form for thread basic validation required
+- add auth guard for only auth user
+- when created redirect to a single page of the form
 
 
 - A class that:

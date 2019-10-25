@@ -23,6 +23,18 @@ class ThreadController {
       );
     }
   }
+
+  static async store(req, res) {
+    try {
+      const userId = req.user.id;
+      const thread = await ThreadService.create(req.body, userId);
+      return Response.created(res, thread);
+    } catch (error) {
+      return Response.error(
+        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
+      );
+    }
+  }
 }
 
 export default ThreadController;

@@ -5,6 +5,11 @@ import Authentication from '../../middleware/authentication';
 
 const threadRouter = express.Router();
 
+threadRouter.post(
+  '/threads',
+  Authentication.tokenAuthentication,
+  ThreadController.store
+);
 threadRouter.get('/threads', ThreadController.index);
 threadRouter.get('/threads/:id', ThreadController.show);
 threadRouter.post(
