@@ -24,7 +24,7 @@ class ThreadController {
     }
   }
 
-  static async store(req, res) {
+  static async create(req, res) {
     try {
       const userId = req.user.id;
       const thread = await ThreadService.create(req.body, userId);

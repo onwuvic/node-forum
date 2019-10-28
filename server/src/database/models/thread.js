@@ -17,6 +17,10 @@ export default (sequelize, DataTypes) => {
     userId: {
       allowNull: false,
       type: DataTypes.INTEGER
+    },
+    channelId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
     }
   }, {});
 
@@ -31,6 +35,12 @@ export default (sequelize, DataTypes) => {
       targetKey: 'id',
       onDelete: 'CASCADE',
       as: 'creator'
+    });
+    Thread.belongsTo(models.Channel, {
+      foreignKey: 'channelId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'channel'
     });
   };
   return Thread;

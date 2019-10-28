@@ -16,6 +16,16 @@ class Mock {
     return user;
   }
 
+  static async createChannel() {
+    const name = faker.lorem.word();
+    const newChannel = await models.Channel.create({
+      name,
+      slug: name,
+    });
+    const { dataValues: channel } = newChannel;
+    return channel;
+  }
+
   static async authUser(request, url, email) {
     const { body: { data: { token: authToken } } } = await request
       .post(url)
@@ -23,11 +33,12 @@ class Mock {
     return authToken;
   }
 
-  static async createThread(userId) {
+  static async createThread(userId, channelId) {
     const newThread = await models.Thread.create({
       title: faker.lorem.words(),
       body: faker.lorem.paragraphs(),
-      userId
+      userId,
+      channelId
     });
     const { dataValues: thread } = newThread;
     return thread;

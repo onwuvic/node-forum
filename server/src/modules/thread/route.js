@@ -8,7 +8,7 @@ const threadRouter = express.Router();
 threadRouter.post(
   '/threads',
   Authentication.tokenAuthentication,
-  ThreadController.store
+  ThreadController.create
 );
 threadRouter.get('/threads', ThreadController.index);
 threadRouter.get('/threads/:id', ThreadController.show);

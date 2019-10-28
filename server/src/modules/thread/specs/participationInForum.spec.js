@@ -10,6 +10,7 @@ describe('', () => {
   let thread;
   let user;
   let token;
+  let channel;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -25,7 +26,8 @@ describe('', () => {
   describe('Thread Participation Test', () => {
     beforeAll(async () => {
       user = await Mock.createUser();
-      thread = await Mock.createThread(user.id);
+      channel = await Mock.createChannel();
+      thread = await Mock.createThread(user.id, channel.id);
       token = await Mock.authUser(request, `${baseUrl}/auth/login`, user.email);
     });
 
@@ -44,6 +46,8 @@ describe('', () => {
         expect(response.body.data.body).toBe('I reply you');
 
         const threadResponse = await request.get(`${baseUrl}/threads/${thread.id}`);
+        
+        expect(threadResponse.status).toBe(200);
         expect(threadResponse.body.data.replies[0].body).toBe('I reply you');
       });
     });

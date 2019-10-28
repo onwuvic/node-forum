@@ -9,7 +9,7 @@ describe('', () => {
   let request;
   let thread;
   let user;
-  let token;
+  let channel;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -26,12 +26,13 @@ describe('', () => {
     // refactor to a function that just do MockThread.create()
     beforeAll(async () => {
       user = await Mock.createUser();
-      thread = await Mock.createThread(user.id);
-      token = await Mock.authUser(request, `${baseUrl}/auth/login`, user.email);
+      channel = await Mock.createChannel();
+      thread = await Mock.createThread(user.id, channel.id);
     });
 
     afterAll(async () => {
       await models.User.destroy({ where: {}, force: true });
+      await models.Channel.destroy({ where: {}, force: true });
       // await Object.values(models).map(model => model.destroy({ where: {}, force: true }));
       // await Sequelize.queryInterface.query('TRUNCATE TABLE threads CASCADE;');
     });
@@ -62,26 +63,6 @@ describe('', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.data.creator.id).toBe(user.id);
-    });
-
-    // participationInForum Test
-    // move this when test heplers are created
-    it('should return an anthenticated user reply on a thread', async () => {
-      // given we have a authenticated user
-      // and an existing thread
-      // when the user adds a reply to the thread
-      const response = await request
-        .post(`${baseUrl}/threads/${thread.id}/replies`)
-        .set('authorization', `Bearer ${token}`)
-        .send({ body: 'I reply you' });
-
-      // then their reply should be return to the client
-      expect(response.status).toBe(201);
-      expect(response.body.data.body).toBe('I reply you');
-
-      //
-      // const threadResponse = await request.get(`${baseUrl}/threads/${thread.dataValues.id}`);
-      // expect(response.body.replies[0].body).toBe(reply.body);
     });
   });
 });

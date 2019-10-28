@@ -5,6 +5,7 @@
         <a [routerLink]="['./']" class="brand-logo">Forum</a>
       </h5>
       <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" [routerLink]="['threads']">All Threads</a>
         <ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
           <ng-container *ngIf="!isLoggedIn.check">
             <a class="p-2 text-dark" [routerLink]="['auth', 'login']">Login</a>
