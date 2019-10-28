@@ -30,4 +30,12 @@ export class ThreadService {
         map((res: any) => res.data)
       );
   }
+
+  create(thread) {
+    const url = `${environment.baseUrl}/threads`;
+    return this.http.post(url, thread)
+      .pipe(
+        map((res: any) => res.data)
+      );
+  }
 }

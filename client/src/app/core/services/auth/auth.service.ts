@@ -17,7 +17,7 @@ export class AuthService {
   private loggedInSubject = new BehaviorSubject<boolean>(false);
 
   // think of a better way to implement this
-  get isLoggedIn() {
+  get isLoggedIn$() {
     this.loggedInSubject.next(this.isAuthenticated());
     return this.loggedInSubject.asObservable();
   }

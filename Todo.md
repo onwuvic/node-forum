@@ -25,10 +25,10 @@
 - move please to center (done)
 - add created at time (done)
 - user can create a thread BACKEND functionality and test (done)
-- user can create thread frontend 
-- create form for thread basic validation required
-- add auth guard for only auth user
-- when created redirect to a single page of the form
+- user can create thread frontend (done)
+- create form for thread basic validation required (done)
+- add auth guard for only auth user (done)
+- when created redirect to a single page of the form (done)
 
 
 - A class that:

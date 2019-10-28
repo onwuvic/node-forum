@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { EMPTY } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
@@ -19,7 +20,7 @@ export class ThreadDetailComponent implements OnInit {
   loading = false;
   errorMessage: string;
 
-  isLoggedIn$ = this.authService.isLoggedIn;
+  isLoggedIn$ = this.authService.isLoggedIn$;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,7 +28,8 @@ export class ThreadDetailComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private replyService: ReplyService
+    private replyService: ReplyService,
+    private snackBar: MatSnackBar
   ) { }
 
   thread$ = this.route.paramMap
@@ -59,10 +61,12 @@ export class ThreadDetailComponent implements OnInit {
           console.log('----> data', data);
           this.loading = false;
           this.resetForm();
+          this.snackBar.open('Reply added!', 'Ok');
         },
         (error) => {
           console.log('----> error', error);
           this.loading = false;
+          this.snackBar.open(error, 'Ok');
         }
       );
   }

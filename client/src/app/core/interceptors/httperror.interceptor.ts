@@ -19,16 +19,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           if (error instanceof HttpErrorResponse) {
             // Server error happened
             if (!navigator.onLine) {
-              console.log('ERROR - INTERNET ISSUES', error);
               return throwError('No Internet Connection');
             }
             // Http Error
             // Send the error to the server
-            console.log('ERROR - HTTP ISSUES', error);
             return throwError(error.error.message);
           } else {
             // Client Error Happend
-            console.log('ERROR - CLIENT ISSUES', error);
             return throwError(error.message);
           }
         })
