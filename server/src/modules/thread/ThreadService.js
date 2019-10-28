@@ -1,10 +1,19 @@
 import models from '../../database/models';
 
-const { Thread, Reply, User } = models;
+const {
+  Thread, Reply, User, Channel
+} = models;
 
 class ThreadService {
   static async findAll() {
-    const threads = await Thread.findAll();
+    const threads = await Thread.findAll({
+      include: [
+        {
+          model: Channel,
+          as: 'channel'
+        }
+      ]
+    });
     return threads;
   }
 
@@ -31,6 +40,10 @@ class ThreadService {
           attributes: {
             exclude: 'password'
           }
+        },
+        {
+          model: Channel,
+          as: 'channel'
         }
       ]
     });

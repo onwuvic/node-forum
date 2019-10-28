@@ -2,26 +2,15 @@
 - add the frontend angular project (done)
 - create thread on each test case / use before - beforeAll is better (done)
 - use one single layout for header (done)
-
-- destroy after each test (ask efe)
+- destroy after each test (ask efe) (done)
 - global error handler in frontend angular (done)
-- write test for getting user from reply
-- fix running test on circleCI (when done update postgres api generator)
-
-- reply has a owner test
-- thread has a reply
-- thread has a owner
-- an unauth user can not add a reply test
-
 - user name when loggined (done)
 - rename auth to isLogged (done)
 - logout (done)
 - add sign in for unauth user (done)
 - when sign in redirect back to the forum (done)
 - add functionality to adding a reply frontend (done)
-- route back to same page and display the new reply
-
-- add all threads nav link
+- add all threads nav link (done)
 - move please to center (done)
 - add created at time (done)
 - user can create a thread BACKEND functionality and test (done)
@@ -30,6 +19,18 @@
 - add auth guard for only auth user (done)
 - when created redirect to a single page of the form (done)
 
+
+- write test for getting user from reply
+- fix running test on circleCI (when done update postgres api generator)
+- reply has a owner test
+- thread has a reply
+- thread has a owner
+- an unauth user can not add a reply test
+- route back to same page and display the new reply
+
+- write test for all features that exist
+- add 404 page
+- add catch all route error
 
 - A class that:
 a. create a normal user
@@ -41,8 +42,7 @@ f. a set method to set any of these
 
 API
 
-
-
+// all done
 Mock.setUser(); Mock.getUser();
 Mock.setAuthUser(); Mock.getAuthUser();
 Mock.setThread(userId); Mock.getThread(userId);
