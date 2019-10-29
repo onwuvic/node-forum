@@ -18,6 +18,17 @@
 - create form for thread basic validation required (done)
 - add auth guard for only auth user (done)
 - when created redirect to a single page of the form (done)
+// all done
+Mock.setUser(); Mock.getUser();
+Mock.setAuthUser(); Mock.getAuthUser();
+Mock.setThread(userId); Mock.getThread(userId);
+Mock.createUser(); return a user object
+
+Mock.createAuthUser(); // return a token
+
+Mock.createThread(userId); return a thread object
+
+Mock.createReply(userId, threadId); return a reply object
 
 
 - write test for getting user from reply
@@ -31,26 +42,15 @@
 - write test for all features that exist
 - add 404 page
 - add catch all route error
+- add channel to parameter call
 
-- A class that:
-a. create a normal user
-b. create an authenticated user
-c. create a thread
-d. create a reply
-e. a get method to get any of these
-f. a set method to set any of these
-
-API
-
-// all done
-Mock.setUser(); Mock.getUser();
-Mock.setAuthUser(); Mock.getAuthUser();
-Mock.setThread(userId); Mock.getThread(userId);
-
-Mock.createUser(); return a user object
-
-Mock.createAuthUser(); // return a token
-
-Mock.createThread(userId); return a thread object
-
-Mock.createReply(userId, threadId); return a reply object
+What to test
+- user can login (done)
+- test get all thread include its channel too (done)
+- thread should have replies (done)
+- thread replies should have it creator (done)
+- single thread should have it creator / replies / channel (done)
+- auth user can create a thread (done)
+- unauth user can not create a thread (done)
+- auth user can reply a thread (done)
+- unauth user ca not reply a thread (done)

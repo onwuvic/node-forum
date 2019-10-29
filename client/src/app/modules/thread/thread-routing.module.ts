@@ -4,6 +4,7 @@ import { ThreadComponent } from './pages/thread/thread.component';
 import { ThreadDetailComponent } from './pages/thread-detail/thread-detail.component';
 import { ThreadCreateComponent } from './pages/thread-create/thread-create.component';
 import { AuthenticationGuard } from '../../core/guards/authentication/authentication.guard';
+import { ErrorComponent } from '../../core/error/error.component';
 
 const routes: Routes = [
   {
@@ -28,8 +29,9 @@ const routes: Routes = [
           }
         ]
       },
+      { path: '**', component: ErrorComponent }
     ]
-  }
+  },
 ];
 
 @NgModule({

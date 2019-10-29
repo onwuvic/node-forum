@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { EMPTY } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
@@ -34,8 +34,13 @@ export class ThreadDetailComponent implements OnInit {
 
   thread$ = this.route.paramMap
     .pipe(
-      map(params => params.get('id')),
-      switchMap(id => this.threadService.fetch(+id)),
+      map(params => {
+        const id = params.get('id');
+        const slug = params.get('channel');
+        return { id, slug };
+      }),
+      tap(data => console.log('------> dta', data)),
+      switchMap(data => this.threadService.fetch(+data.id)),
       map(data => data),
       catchError(() =>  EMPTY),
     );

@@ -42,6 +42,7 @@ describe('', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.data[0]).toHaveProperty('title');
+      expect(response.body.data[0]).toHaveProperty('channel');
     });
 
     it('should return one thread', async () => {
@@ -49,6 +50,8 @@ describe('', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveProperty('title');
+      expect(response.body.data).toHaveProperty('channel');
+      expect(response.body.data).toHaveProperty('creator');
     });
 
     it('should return replies that are associated with a thread', async () => {
@@ -56,6 +59,7 @@ describe('', () => {
 
       const response = await request.get(`${baseUrl}/threads/${thread.id}`);
       expect(response.body.data.replies[0].body).toBe(reply.body);
+      expect(response.body.data.replies[0]).toHaveProperty('user');
     });
 
     it('should return the creator of the thread', async () => {

@@ -15,7 +15,7 @@ threadRouter.get('/threads/:id', ThreadController.show);
 threadRouter.post(
   '/threads/:id/replies',
   Authentication.tokenAuthentication,
-  ReplyController.store
+  ReplyController.create
 );
 
 export default threadRouter;

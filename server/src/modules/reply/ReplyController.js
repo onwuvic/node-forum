@@ -6,7 +6,7 @@ class ReplyController {
     res.json('Main reply');
   }
 
-  static async store(req, res) {
+  static async create(req, res) {
     try {
       const userId = req.user.id;
       const reply = await ReplyService.create(req.body.body, userId, req.params.id);

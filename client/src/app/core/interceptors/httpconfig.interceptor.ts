@@ -15,6 +15,7 @@ import { environment } from '../../../environments/environment';
 export class HttpConfigInterceptor implements HttpInterceptor {
   private bearer = 'Bearer';
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log(`HttpConfig Interceptor ${req.url}`);
 
     // bail if we're not requesting something against our api
     const apiReq = req.url.startsWith(environment.baseUrl);
@@ -34,7 +35,9 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
     return next.handle(jsonReq).pipe(
       tap(event => {
-        if (event instanceof HttpResponse) {}
+        if (event instanceof HttpResponse) {
+          console.log('api call success :', event);
+        }
       })
     );
   }

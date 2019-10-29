@@ -9,10 +9,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpErrorInterceptor } from './core/interceptors/httperror.interceptor';
 import { SharedModule } from './core/shared/shared.module';
 import { HttpConfigInterceptor } from './core/interceptors/httpconfig.interceptor';
+// import { ErrorComponent } from './core/error/error.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    // ErrorComponent
   ],
   imports: [
     BrowserModule,
