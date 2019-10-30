@@ -22,7 +22,7 @@ describe('', () => {
     server.close(done);
   });
 
-  describe('Thread Participation Test', () => {
+  describe('Thread Creation Test', () => {
     beforeAll(async () => {
       user = await Mock.createUser();
       channel = await Mock.createChannel();
@@ -54,6 +54,28 @@ describe('', () => {
 
         expect(response.status).toBe(401);
         expect(response.body.message).toBe('No token provided');
+      });
+    });
+
+    describe('Validate user input', () => {
+      it('should have a title', async () => {
+        const response = await request
+          .post(`${baseUrl}/threads`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'I reply you', channelId: channel.id });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message.title).toBe('Please provide title');
+      });
+
+      it('should have a body', async () => {
+        const response = await request
+          .post(`${baseUrl}/threads`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ title: 'I reply you', channelId: channel.id });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message.body).toBe('Please provide body');
       });
     });
   });
