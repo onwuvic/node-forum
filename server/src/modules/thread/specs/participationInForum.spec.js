@@ -46,7 +46,7 @@ describe('', () => {
         expect(response.body.data.body).toBe('I reply you');
 
         const threadResponse = await request.get(`${baseUrl}/threads/${thread.id}`);
-        
+
         expect(threadResponse.status).toBe(200);
         expect(threadResponse.body.data.replies[0].body).toBe('I reply you');
       });
@@ -60,6 +60,18 @@ describe('', () => {
 
         expect(response.status).toBe(401);
         expect(response.body.message).toBe('No token provided');
+      });
+    });
+
+    describe('Validate reply input', () => {
+      it('should have a body', async () => {
+        const response = await request
+          .post(`${baseUrl}/threads/1/replies`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message.body).toBe('Please provide body');
       });
     });
   });

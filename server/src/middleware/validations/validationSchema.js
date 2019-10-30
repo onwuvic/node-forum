@@ -10,3 +10,7 @@ export const createThreadSchema = Joi.object().keys({
   body: Joi.string().required(),
   channelId: Joi.number().required(),
 });
+
+export const createReplySchema = Joi.object().keys({
+  body: Joi.string().required()
+});

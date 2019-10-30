@@ -77,6 +77,16 @@ describe('', () => {
         expect(response.status).toBe(400);
         expect(response.body.message.body).toBe('Please provide body');
       });
+
+      it('should have a valid channel Id', async () => {
+        const response = await request
+          .post(`${baseUrl}/threads`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'I reply you', title: 'I reply you', channelId: 9999 });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe('Channel id doesn\'t exist');
+      });
     });
   });
 });

@@ -3,6 +3,7 @@ import ThreadController from './ThreadController';
 import ReplyController from '../reply/ReplyController';
 import Authentication from '../../middleware/authentication';
 import ThreadValidator from '../../middleware/validations/threadValidator';
+import ReplyValidator from '../../middleware/validations/replyValidator';
 
 const threadRouter = express.Router();
 
@@ -17,6 +18,7 @@ threadRouter.get('/threads/:id', ThreadController.show);
 threadRouter.post(
   '/threads/:id/replies',
   Authentication.tokenAuthentication,
+  ReplyValidator.validateCreateReplyDetails,
   ReplyController.create
 );
 

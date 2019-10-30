@@ -17,7 +17,7 @@ class ThreadService {
     return threads;
   }
 
-  static async findOne(id) {
+  static async findById(id) {
     const thread = await Thread.findOne({
       where: { id },
       include: [
