@@ -4,7 +4,7 @@ import { ThreadComponent } from './pages/thread/thread.component';
 import { ThreadDetailComponent } from './pages/thread-detail/thread-detail.component';
 import { ThreadCreateComponent } from './pages/thread-create/thread-create.component';
 import { AuthenticationGuard } from '../../core/guards/authentication/authentication.guard';
-import { ErrorComponent } from '../../core/error/error.component';
+import { ThreadChannelComponent } from './pages/thread-channel/thread-channel.component';
 
 const routes: Routes = [
   {
@@ -22,14 +22,12 @@ const routes: Routes = [
       },
       {
         path: ':channel',
-        children: [
-          {
-            path: ':id',
-            component: ThreadDetailComponent
-          }
-        ]
+        component: ThreadChannelComponent
       },
-      { path: '**', component: ErrorComponent }
+      {
+        path: ':channel/:id',
+        component: ThreadDetailComponent
+      }
     ]
   },
 ];

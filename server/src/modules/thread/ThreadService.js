@@ -1,4 +1,5 @@
 import models from '../../database/models';
+import ChannelService from '../channel/ChannelService';
 
 const {
   Thread, Reply, User, Channel
@@ -17,9 +18,9 @@ class ThreadService {
     return threads;
   }
 
-  static async findById(id) {
+  static async findById(id, channelId) {
     const thread = await Thread.findOne({
-      where: { id },
+      where: { id, channelId },
       include: [
         {
           model: Reply,
@@ -53,6 +54,23 @@ class ThreadService {
   static async create(threadData, userId) {
     const thread = await Thread.create({ ...threadData, userId });
     return thread;
+  }
+
+  static async findAllWithChannel(channelSlug) {
+    const channel = await ChannelService.findBySlug(channelSlug);
+    if (!channel) {
+      return null;
+    }
+    const threads = await Thread.findAll({
+      where: { channelId: channel.id },
+      include: [
+        {
+          model: Channel,
+          as: 'channel'
+        }
+      ]
+    });
+    return threads;
   }
 }
 

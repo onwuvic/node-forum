@@ -4,8 +4,16 @@ import ChannelService from '../channel/ChannelService';
 
 class ThreadController {
   static async index(req, res) {
+    let threads;
     try {
-      const threads = await ThreadService.findAll();
+      if (req.params.channel) {
+        threads = await ThreadService.findAllWithChannel(req.params.channel);
+        if (!threads) {
+          return Response.notFound(res, 'Channel doesn\'t exist');
+        }
+      } else {
+        threads = await ThreadService.findAll();
+      }
       return Response.ok(res, threads);
     } catch (error) {
       return Response.error(
@@ -16,7 +24,14 @@ class ThreadController {
 
   static async show(req, res) {
     try {
-      const thread = await ThreadService.findById(req.params.id);
+      const channel = await ChannelService.findBySlug(req.params.channel);
+      if (!channel) {
+        return Response.notFound(res, 'Channel doesn\'t exist');
+      }
+      const thread = await ThreadService.findById(req.params.id, channel.id);
+      if (!thread) {
+        return Response.notFound(res, 'Thread doesn\'t exist');
+      }
       return Response.ok(res, thread);
     } catch (error) {
       return Response.error(

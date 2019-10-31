@@ -15,16 +15,16 @@ export class ThreadService {
   private store = new BehaviorSubject([]);
   store$ = this.store.asObservable();
 
-  fetchAll() {
-    const url = `${environment.baseUrl}/threads`;
+  fetchAll(slug = null) {
+    const url = slug ? `${environment.baseUrl}/threads/${slug}` : `${environment.baseUrl}/threads`;
     return this.http.get(url)
       .pipe(
         map((res: any) => res.data)
       );
   }
 
-  fetch(id: number) {
-    const url = `${environment.baseUrl}/threads/${id}`;
+  fetch(data) {
+    const url = `${environment.baseUrl}/threads/${data.slug}/${data.id}`;
     return this.http.get(url)
       .pipe(
         map((res: any) => res.data)

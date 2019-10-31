@@ -45,7 +45,7 @@ describe('', () => {
         expect(response.status).toBe(201);
         expect(response.body.data.body).toBe('I reply you');
 
-        const threadResponse = await request.get(`${baseUrl}/threads/${thread.id}`);
+        const threadResponse = await request.get(`${baseUrl}/threads/${channel.slug}/${thread.id}`);
 
         expect(threadResponse.status).toBe(200);
         expect(threadResponse.body.data.replies[0].body).toBe('I reply you');

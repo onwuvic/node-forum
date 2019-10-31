@@ -8,9 +8,11 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
+  constructor(private router: Router) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
       .pipe(
@@ -21,6 +23,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             if (!navigator.onLine) {
               console.log('ERROR - INTERNET ISSUES', error);
               return throwError('No Internet Connection');
+            }
+            // redirect 404 to 404 error page
+            if (error.status === 404) {
+              this.router.navigate(['/error']);
             }
             // Http Error
             // Send the error to the server

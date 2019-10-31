@@ -49,3 +49,6 @@ What to test
 
 - add backend validation to create thread
 - do a look up for channel id before creating thread
+
+- channel should be unique
+- channel should user the find or create method to create new channel

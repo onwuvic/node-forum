@@ -14,7 +14,8 @@ threadRouter.post(
   ThreadController.create
 );
 threadRouter.get('/threads', ThreadController.index);
-threadRouter.get('/threads/:id', ThreadController.show);
+threadRouter.get('/threads/:channel', ThreadController.index);
+threadRouter.get('/threads/:channel/:id', ThreadController.show);
 threadRouter.post(
   '/threads/:id/replies',
   Authentication.tokenAuthentication,
