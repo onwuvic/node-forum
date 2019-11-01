@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
+import { ChannelService } from '../../../../core/services/channel/channel.service';
 
 
 @Component({
@@ -19,11 +20,15 @@ export class ThreadCreateComponent implements OnInit {
     private fb: FormBuilder,
     private threadService: ThreadService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private channelService: ChannelService
   ) { }
+
+  channels$ = this.channelService.fetchAll();
 
   ngOnInit() {
     this.threadForm = this.fb.group({
+      channelId: ['', [Validators.required]],
       title: ['', [Validators.required]],
       body: ['', [Validators.required]]
     });

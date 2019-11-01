@@ -53,6 +53,7 @@ class ThreadService {
 
   static async create(threadData, userId) {
     const thread = await Thread.create({ ...threadData, userId });
+    thread.setDataValue('channel', await thread.getChannel());
     return thread;
   }
 

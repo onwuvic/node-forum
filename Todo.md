@@ -39,13 +39,13 @@ What to test
 - unauth user can not create a thread (done)
 - auth user can reply a thread (done)
 - unauth user ca not reply a thread (done)
+- add 404 page (done)
+- add catch all route error (done)
+- add channel to parameter call (done)
 
 - fix running test on circleCI (when done update postgres api generator)
 - route back to same page and display the new reply
 
-- add 404 page (done)
-- add catch all route error (done)
-- add channel to parameter call (done)
 
 - add backend validation to create thread
 - do a look up for channel id before creating thread
