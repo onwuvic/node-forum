@@ -6,13 +6,17 @@
       </h5>
       <nav class="my-2 my-md-0 mr-md-3">
         <a class="p-2 text-dark" [routerLink]="['threads']">All Threads</a>
-        <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="channeldropdown">
-          Channels
-        </span>
-        <mat-menu #channeldropdown="matMenu">
-          <span mat-menu-item>Item 1</span>
-          <span mat-menu-item (click)="logout()">LogOut</span>
-        </mat-menu>
+        <ng-container *ngIf="(channels$ | async) as channels">
+          <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="channeldropdown">
+            Channels
+          </span>
+          <mat-menu #channeldropdown="matMenu">
+            <ng-container *ngFor="let channel of channels">
+              <a [routerLink]="['/threads', channel.slug]" mat-menu-item>{{ channel.name }}</a>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+
         <ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
           <ng-container *ngIf="!isLoggedIn.check">
             <a class="p-2 text-dark" [routerLink]="['auth', 'login']">Login</a>
@@ -25,7 +29,7 @@
                 {{ user.userObject.fullName }}
               </span>
               <mat-menu #profiledropdown="matMenu">
-                <span mat-menu-item>Item 1</span>
+                <a [routerLink]="['/threads', 'create']" mat-menu-item>New Thread</a>
                 <span mat-menu-item (click)="logout()">LogOut</span>
               </mat-menu>
             </ng-container>

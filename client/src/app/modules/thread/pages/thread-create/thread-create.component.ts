@@ -35,10 +35,12 @@ export class ThreadCreateComponent implements OnInit {
       .subscribe(
         (data) => {
           console.log('----> data', data);
+          this.loading = false;
           this.snackBar.open('Thread Created!', 'Ok');
           this.router.navigate(['/threads', data.id]);
         },
         (error) => {
+          this.loading = false;
           console.log('-----> error', error);
           this.snackBar.open(error, 'Ok');
         }

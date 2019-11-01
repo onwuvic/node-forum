@@ -12,6 +12,11 @@ class ChannelService {
     const channel = await Channel.findOne({ where: { slug } });
     return channel;
   }
+
+  static async findAll() {
+    const channels = await Channel.findAll();
+    return channels;
+  }
 }
 
 export default ChannelService;

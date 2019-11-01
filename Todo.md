@@ -43,12 +43,13 @@ What to test
 - fix running test on circleCI (when done update postgres api generator)
 - route back to same page and display the new reply
 
-- add 404 page
-- add catch all route error
-- add channel to parameter call
+- add 404 page (done)
+- add catch all route error (done)
+- add channel to parameter call (done)
 
 - add backend validation to create thread
 - do a look up for channel id before creating thread
 
 - channel should be unique
 - channel should user the find or create method to create new channel
+- fine tune validation error to either array or object 
