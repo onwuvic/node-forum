@@ -18,7 +18,23 @@ module.exports = {
     },
     userId: {
       allowNull: false,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'creator',
+      },
+    },
+    channelId: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Channels',
+        key: 'id',
+        as: 'channel',
+      },
     },
     createdAt: {
       allowNull: false,

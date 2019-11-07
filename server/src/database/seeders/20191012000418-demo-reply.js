@@ -10,7 +10,7 @@ module.exports = {
       const seedData = {
         userId: faker.random.number({ min: 1, max: 10 }),
         threadId: faker.random.number({ min: 1, max: 10 }),
-        body: faker.lorem.paragraphs(),
+        body: faker.lorem.sentences(),
         createdAt: new Date(),
         updatedAt: new Date()
       };

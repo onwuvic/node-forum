@@ -17,12 +17,31 @@ export default (sequelize, DataTypes) => {
     userId: {
       allowNull: false,
       type: DataTypes.INTEGER
+    },
+    channelId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
     }
   }, {});
 
-  // eslint-disable-next-line no-unused-vars
   Thread.associate = (models) => {
-    // associations can be defined here
+    Thread.hasMany(models.Reply, {
+      foreignKey: 'threadId',
+      sourceKey: 'id',
+      as: 'replies'
+    });
+    Thread.belongsTo(models.User, {
+      foreignKey: 'userId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'creator'
+    });
+    Thread.belongsTo(models.Channel, {
+      foreignKey: 'channelId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'channel'
+    });
   };
   return Thread;
 };

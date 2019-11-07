@@ -20,9 +20,20 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
 
-  // eslint-disable-next-line no-unused-vars
   Reply.associate = (models) => {
-    // associations can be defined here
+    Reply.belongsTo(models.Thread, {
+      foreignKey: 'threadId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'thread'
+    });
+
+    Reply.belongsTo(models.User, {
+      foreignKey: 'userId',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+      as: 'user'
+    });
   };
   return Reply;
 };

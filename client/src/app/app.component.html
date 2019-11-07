@@ -1,0 +1,44 @@
+<div>
+  <header>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+      <h5 class="my-0 mr-md-auto font-weight-normal">
+        <a [routerLink]="['./']" class="brand-logo">Forum</a>
+      </h5>
+      <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" [routerLink]="['threads']">All Threads</a>
+        <ng-container *ngIf="(channels$ | async) as channels">
+          <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="channeldropdown">
+            Channels
+          </span>
+          <mat-menu #channeldropdown="matMenu">
+            <ng-container *ngFor="let channel of channels">
+              <a [routerLink]="['/threads', channel.slug]" mat-menu-item>{{ channel.name }}</a>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+
+        <ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
+          <ng-container *ngIf="!isLoggedIn.check">
+            <a class="p-2 text-dark" [routerLink]="['auth', 'login']">Login</a>
+            <a class="p-2 text-dark" [routerLink]="['auth', 'register']">Register</a>
+          </ng-container>
+
+          <ng-container *ngIf="isLoggedIn.check">
+            <ng-container *ngIf="authUser$ | async as user">
+              <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="profiledropdown">
+                {{ user.userObject.fullName }}
+              </span>
+              <mat-menu #profiledropdown="matMenu">
+                <a [routerLink]="['/threads', 'create']" mat-menu-item>New Thread</a>
+                <span mat-menu-item (click)="logout()">LogOut</span>
+              </mat-menu>
+            </ng-container>
+          </ng-container>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <router-outlet></router-outlet>
+  </main>
+</div>

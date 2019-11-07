@@ -1,0 +1,39 @@
+<div class="card card-comments mb-3 wow fadeIn">
+  <div class="card-header font-weight-bold">Create a New Thread</div>
+  <div class="card-body">
+
+      <form (ngSubmit)="createThread()" [formGroup]="threadForm" novalidate>
+        <div class="form-group">
+          <label for="title">Choose a Channel</label>
+          <select class="custom-select my-1 mr-sm-2" formControlName="channelId">
+            <option selected>Choose One...</option>
+            <ng-container *ngIf="(channels$ | async) as channels">
+              <ng-container *ngFor="let channel of channels">
+                <option value="{{ channel.id }}">{{ channel.name }}</option>
+              </ng-container>
+            </ng-container>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" formControlName="title">
+        </div>
+
+        <div class="form-group">
+          <label for="body">Body</label>
+          <textarea class="form-control" rows="8" formControlName="body"></textarea>
+        </div>
+
+        <div class="mt-4">
+          <mat-spinner *ngIf="loading" diameter="50"></mat-spinner>
+          <button
+            *ngIf="!loading"
+            mat-flat-button
+            color="primary"
+            [title]="threadForm.valid ? 'Click to submit' : 'Disabled until the form data is valid'"
+            [disabled]="threadForm.invalid">Post</button>
+        </div>
+      </form>
+  </div>
+</div>

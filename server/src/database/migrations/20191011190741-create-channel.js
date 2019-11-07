@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Replies', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Channels', {
     id: {
       type: Sequelize.INTEGER,
       allowNull: false,
@@ -8,17 +8,13 @@ module.exports = {
       unique: true,
       primaryKey: true,
     },
-    body: {
-      type: Sequelize.TEXT,
+    name: {
+      type: Sequelize.STRING,
       allowNull: false
     },
-    userId: {
-      allowNull: false,
-      type: Sequelize.INTEGER
-    },
-    threadId: {
-      allowNull: false,
-      type: Sequelize.INTEGER
+    slug: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
     createdAt: {
       allowNull: false,
@@ -30,5 +26,5 @@ module.exports = {
     },
   }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Replies')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Channels')
 };
