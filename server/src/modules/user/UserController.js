@@ -22,14 +22,14 @@ class UserController {
       //   return Response.unauthorized(res, 'Please verify your account');
       // }
       // check if the password supplied by the user match the account being accessed
-      const match = await Utils.comparePassword(req.body.password, user.dataValues.password);
+      const match = await Utils.comparePassword(req.body.password, user.password);
       if (!match) {
         // if not, return a forbidden error
         return Response.forbidden(res, 'Invalid user credentials');
       }
       // remove user password for the user data
       // eslint-disable-next-line no-unused-vars
-      const { dataValues: { password, ...logInUser } } = user;
+      const { password, ...logInUser } = user;
 
       // generate a token from the user data
       const token = await Token.generateToken(logInUser);

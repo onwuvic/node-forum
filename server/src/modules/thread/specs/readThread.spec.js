@@ -108,5 +108,15 @@ describe('', () => {
       expect(response.status).toBe(404);
       expect(response.body.message).toBe('Channel doesn\'t exist');
     });
+
+    it('should filter threads created by them only, by thier name', async () => {
+      // given a thread created by a user
+      // when the user try to get thread created by them
+      // they should see the thread
+      const response = await request.get(`${baseUrl}/threads/?by=${user.fullName}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data[0]).toHaveProperty('title');
+    });
   });
 });

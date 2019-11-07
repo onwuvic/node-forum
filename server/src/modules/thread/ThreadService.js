@@ -1,5 +1,6 @@
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
+import UserService from '../user/UserService';
 
 const {
   Thread, Reply, User, Channel
@@ -64,6 +65,23 @@ class ThreadService {
     }
     const threads = await Thread.findAll({
       where: { channelId: channel.id },
+      include: [
+        {
+          model: Channel,
+          as: 'channel'
+        }
+      ]
+    });
+    return threads;
+  }
+
+  static async findAllByUser(name) {
+    const user = await UserService.findUserByName(name);
+    if (!user) {
+      return null;
+    }
+    const threads = await Thread.findAll({
+      where: { userId: user.id },
       include: [
         {
           model: Channel,

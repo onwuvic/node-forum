@@ -6,7 +6,22 @@ class UserService {
     const user = await User.findOne({
       where: { email }
     });
-    return user;
+    return UserService.refineObject(user);
+  }
+
+  static async findUserByName(fullName) {
+    const user = await User.findOne({
+      where: { fullName }
+    });
+    return UserService.refineObject(user);
+  }
+
+  static refineObject(user) {
+    if (!user) {
+      return null;
+    }
+    const { dataValues: userObj } = user;
+    return userObj;
   }
 }
 

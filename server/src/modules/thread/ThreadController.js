@@ -1,19 +1,29 @@
 import ThreadService from './ThreadService';
 import Response from '../../responses/response';
 import ChannelService from '../channel/ChannelService';
+import ThreadFilters from './ThreadFilters';
 
 class ThreadController {
   static async index(req, res) {
-    let threads;
+    // refactor this method. A lot is going on here
     try {
+      // if channel is provided
       if (req.params.channel) {
-        threads = await ThreadService.findAllWithChannel(req.params.channel);
+        const threads = await ThreadService.findAllWithChannel(req.params.channel);
         if (!threads) {
           return Response.notFound(res, 'Channel doesn\'t exist');
         }
-      } else {
-        threads = await ThreadService.findAll();
+        return Response.ok(res, threads);
       }
+
+      // if query is provided
+      if (Object.keys(req.query).length) {
+        const threads = await ThreadFilters.filter(req.query);
+        return Response.ok(res, threads);
+      }
+
+      // else just get all the thread
+      const threads = await ThreadService.findAll();
       return Response.ok(res, threads);
     } catch (error) {
       return Response.error(
