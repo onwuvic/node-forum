@@ -113,10 +113,15 @@ describe('', () => {
       // given a thread created by a user
       // when the user try to get thread created by them
       // they should see the thread
+      const user2 = await Mock.createUser();
       const response = await request.get(`${baseUrl}/threads/?by=${user.fullName}`);
 
+      const response2 = await request.get(`${baseUrl}/threads/?by=${user2.fullName}`);
+
       expect(response.status).toBe(200);
-      expect(response.body.data[0]).toHaveProperty('title');
+      expect(response2.status).toBe(200);
+      expect(response.body.data[0].title).toEqual(thread.title);
+      expect(response2.body.data).toEqual([]);
     });
   });
 });
