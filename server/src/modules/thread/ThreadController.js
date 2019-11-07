@@ -19,6 +19,9 @@ class ThreadController {
       // if query is provided
       if (Object.keys(req.query).length) {
         const threads = await ThreadFilters.filter(req.query);
+        if (!threads) {
+          return Response.notFound(res, 'Username doesn\'t exist');
+        }
         return Response.ok(res, threads);
       }
 
