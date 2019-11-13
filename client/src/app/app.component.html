@@ -19,6 +19,7 @@
             <ng-container *ngIf="isLoggedIn.check">
               <a [routerLink]="['threads']" [queryParams]="{by: auth.user.userObject.fullName }" mat-menu-item>My Threads</a>
             </ng-container>
+            <a [routerLink]="['threads']" [queryParams]="{popular: 1 }" mat-menu-item>Popular Threads</a>
           </mat-menu>
         </ng-container>
 

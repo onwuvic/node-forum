@@ -29,6 +29,80 @@ class ThreadService {
     return threads;
   }
 
+  static async findAllWithChannel(channelSlug) {
+    const channel = await ChannelService.findBySlug(channelSlug);
+    if (!channel) {
+      return null;
+    }
+    const threads = await Thread.findAll({
+      where: { channelId: channel.id },
+      include: [
+        {
+          model: Channel,
+          as: 'channel'
+        },
+        {
+          model: Reply,
+          as: 'replies',
+          attributes: []
+        },
+      ],
+      attributes: {
+        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
+      },
+      group: ['Thread.id', 'channel.id'],
+    });
+    return threads;
+  }
+
+  static async findAllByUser(name) {
+    const user = await UserService.findUserByName(name);
+    if (!user) {
+      return null;
+    }
+    const threads = await Thread.findAll({
+      where: { userId: user.id },
+      include: [
+        {
+          model: Channel,
+          as: 'channel'
+        },
+        {
+          model: Reply,
+          as: 'replies',
+          attributes: []
+        },
+      ],
+      attributes: {
+        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
+      },
+      group: ['Thread.id', 'channel.id'],
+    });
+    return threads;
+  }
+
+  static async findAllByPopular() {
+    const threads = await Thread.findAll({
+      include: [
+        {
+          model: Channel,
+          as: 'channel'
+        },
+        {
+          model: Reply,
+          as: 'replies',
+          attributes: []
+        },
+      ],
+      attributes: {
+        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
+      },
+      group: ['Thread.id', 'channel.id'],
+      order: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'DESC']]
+    });
+    return threads;
+  }
+
   static async findById(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },
@@ -71,40 +145,6 @@ class ThreadService {
     const thread = await Thread.create({ ...threadData, userId });
     thread.setDataValue('channel', await thread.getChannel());
     return thread;
-  }
-
-  static async findAllWithChannel(channelSlug) {
-    const channel = await ChannelService.findBySlug(channelSlug);
-    if (!channel) {
-      return null;
-    }
-    const threads = await Thread.findAll({
-      where: { channelId: channel.id },
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        }
-      ]
-    });
-    return threads;
-  }
-
-  static async findAllByUser(name) {
-    const user = await UserService.findUserByName(name);
-    if (!user) {
-      return null;
-    }
-    const threads = await Thread.findAll({
-      where: { userId: user.id },
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        }
-      ]
-    });
-    return threads;
   }
 }
 

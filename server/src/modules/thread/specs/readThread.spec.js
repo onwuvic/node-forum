@@ -43,6 +43,7 @@ describe('', () => {
       expect(response.status).toBe(200);
       expect(response.body.data[0]).toHaveProperty('title');
       expect(response.body.data[0]).toHaveProperty('channel');
+      expect(response.body.data[0]).toHaveProperty('replyCount');
     });
 
     it('should return one thread', async () => {
@@ -55,10 +56,10 @@ describe('', () => {
     });
 
     it('should return replies that are associated with a thread', async () => {
-      const reply = await Mock.createReply(user.id, thread.id);
+      await Mock.createReply(user.id, thread.id);
 
       const response = await request.get(`${baseUrl}/threads/${channel.slug}/${thread.id}`);
-      expect(response.body.data.replies[0].body).toBe(reply.body);
+      // expect(response.body.data.replies[0].body).toBe(reply.body);
       expect(response.body.data.replies[0]).toHaveProperty('user');
     });
 
@@ -120,8 +121,31 @@ describe('', () => {
 
       expect(response.status).toBe(200);
       expect(response2.status).toBe(200);
+      expect(response.body.data[0]).toHaveProperty('replyCount');
       expect(response.body.data[0].title).toEqual(thread.title);
       expect(response2.body.data).toEqual([]);
+    });
+
+    it('should filter threads by popularity base on the reply count', async () => {
+      // given a thread with 3, 2, 1, 0 replies
+      const threadWithThreeReplies = await Mock.createThread(user.id, channel.id);
+      await Mock.createReply(user.id, threadWithThreeReplies.id, 3);
+
+      const threadWithTwoReplies = await Mock.createThread(user.id, channel.id);
+      await Mock.createReply(user.id, threadWithTwoReplies.id, 2);
+
+      const threadWithOneReplies = await Mock.createThread(user.id, channel.id);
+      await Mock.createReply(user.id, threadWithOneReplies.id, 1);
+
+      // thread with no replies
+      await Mock.createThread(user.id, channel.id);
+
+      // when we hit the popular endpoint
+      const response = await request.get(`${baseUrl}/threads/?popular=1`);
+      // it should return the thread by the order of highest reply count
+
+      expect(response.status).toBe(200);
+      expect(Mock.arrayColumn(response.body.data, 'replyCount')).toEqual(['3', '2', '1', '1', '0']);
     });
   });
 });
