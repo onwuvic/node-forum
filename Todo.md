@@ -64,3 +64,5 @@ psuedo code
 - complete backend implementation
 - start frontend implementation
 - hold on on reply pagination (all pagination)
+
+- how to add count to api resource

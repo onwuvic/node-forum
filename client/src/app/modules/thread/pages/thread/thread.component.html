@@ -1,16 +1,4 @@
-<!-- <ng-container *ngIf="(threads$ | async) as threads">
-  <div  *ngFor="let thread of threads">
-    <div class="section">
-      <h5>
-        <a [routerLink]="['./', thread.id]">{{ thread.title }}</a>
-      </h5>
-      <p>{{ thread.body }}</p>
-    </div>
-    <mat-divider></mat-divider>
-  </div>
-</ng-container> -->
-
-<div class="row mb-2">
+<div class="row mb-2 thread">
   <ng-container *ngIf="(threads$ | async) as threads">
     <div class="col-md-6" *ngFor="let thread of threads">
       <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -19,7 +7,10 @@
           <h3 class="mb-0">{{ thread.title }}</h3>
           <div class="mb-1 text-muted">Nov 11</div>
           <p class="mb-auto">{{ thread.body }}</p>
-          <a [routerLink]="['.', thread.channel.slug, thread.id]" class="stretched-link">Continue reading</a>
+          <div class="thread-comment">
+            <a [routerLink]="['.', thread.channel.slug, thread.id]" class="stretched-link">Continue reading</a>
+            <a [routerLink]="['.', thread.channel.slug, thread.id]" class="stretched-link">{{ thread.replyCount | pluralize : 'comment' }}</a>
+          </div>
         </div>
         <div class="col-auto d-none d-lg-block">
           <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"

@@ -1,4 +1,4 @@
-// import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
@@ -14,8 +14,17 @@ class ThreadService {
         {
           model: Channel,
           as: 'channel'
-        }
-      ]
+        },
+        {
+          model: Reply,
+          as: 'replies',
+          attributes: []
+        },
+      ],
+      attributes: {
+        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
+      },
+      group: ['Thread.id', 'channel.id'],
     });
     return threads;
   }
