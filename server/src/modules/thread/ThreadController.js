@@ -29,7 +29,6 @@ class ThreadController {
       const threads = await ThreadService.findAll();
       return Response.ok(res, threads);
     } catch (error) {
-      console.log('------->', error);
       return Response.error(
         res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
       );

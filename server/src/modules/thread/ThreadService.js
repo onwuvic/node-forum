@@ -32,10 +32,6 @@ class ThreadService {
   static async findById(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },
-      // attributes: {
-      //   include: [Sequelize.fn('count', Sequelize.col('replies.threadId')), 'count']
-      // },
-      // group: ['replies.id', 'Thread.id'],
       include: [
         {
           model: Reply,
@@ -61,7 +57,12 @@ class ThreadService {
           model: Channel,
           as: 'channel'
         }
-      ]
+      ],
+      // attributes: {
+      //   include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
+      // },
+      // group: ['Thread.id', 'channel.id', 'replies.id', 'replies->user.id', 'creator.id'],
+      // group: ['Thread.id'],
     });
     return thread;
   }
