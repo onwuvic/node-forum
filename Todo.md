@@ -51,5 +51,16 @@ What to test
 - do a look up for channel id before creating thread
 
 - channel should be unique
-- channel should user the find or create method to create new channel
-- fine tune validation error to either array or object 
+- channel should use the find or create method to create new channel
+- fine tune validation error to either array or object
+
+- how to add each count of each eager loader resources
+
+
+psuedo code
+- backend to frontend
+- how to paginate in sequelize
+- how to paginate an eager loader resource
+- complete backend implementation
+- start frontend implementation
+- hold on on reply pagination (all pagination)

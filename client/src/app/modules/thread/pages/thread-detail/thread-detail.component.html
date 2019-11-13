@@ -12,7 +12,7 @@
 
       <!--Comments-->
       <div class="card card-comments mb-3 wow fadeIn" *ngIf="thread.replies.length">
-        <div class="card-header font-weight-bold">3 comments</div>
+        <div class="card-header font-weight-bold">{{ thread.replies.length | pluralize : 'comment' }}</div>
         <div class="card-body">
 
           <ng-container *ngFor="let reply of thread.replies">
@@ -32,6 +32,27 @@
           </ng-container>
         </div>
       </div>
+
+      <!-- Paginate Comments -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
       <!--/.Comments-->
 
       <!--Reply-->
@@ -74,7 +95,7 @@
           <p class="blog-post-meta">
             This thread was published
             {{ thread.createdAt | amTimeAgo }} by <a href="#">{{ thread.creator.fullName }}</a>, and
-            currently has 2 comments.
+            currently has {{ thread.replies.length | pluralize : 'comment' }}.
           </p>
         </div>
       </div>

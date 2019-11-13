@@ -1,3 +1,4 @@
+// import { Sequelize } from 'sequelize';
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
@@ -22,6 +23,10 @@ class ThreadService {
   static async findById(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },
+      // attributes: {
+      //   include: [Sequelize.fn('count', Sequelize.col('replies.threadId')), 'count']
+      // },
+      // group: ['replies.id', 'Thread.id'],
       include: [
         {
           model: Reply,
