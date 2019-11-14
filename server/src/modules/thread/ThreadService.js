@@ -25,6 +25,7 @@ class ThreadService {
         include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
       },
       group: ['Thread.id', 'channel.id'],
+      order: [['createdAt', 'DESC']]
     });
     return threads;
   }
@@ -51,6 +52,7 @@ class ThreadService {
         include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
       },
       group: ['Thread.id', 'channel.id'],
+      order: [['createdAt', 'DESC']]
     });
     return threads;
   }
@@ -77,6 +79,7 @@ class ThreadService {
         include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
       },
       group: ['Thread.id', 'channel.id'],
+      order: [['createdAt', 'DESC']]
     });
     return threads;
   }
