@@ -47,15 +47,15 @@ What to test
 - route back to same page and display the new reply
 
 
-- add backend validation to create thread
-- do a look up for channel id before creating thread
+- add backend validation to create thread (done)
+- do a look up for channel id before creating thread (done)
+- how to add count to all thread api resource (done)
 
 - channel should be unique
 - channel should use the find or create method to create new channel
 - fine tune validation error to either array or object
 
 - how to add each count of each eager loader resources
-
 
 psuedo code
 - backend to frontend
@@ -64,5 +64,3 @@ psuedo code
 - complete backend implementation
 - start frontend implementation
 - hold on on reply pagination (all pagination)
-
-- how to add count to api resource
