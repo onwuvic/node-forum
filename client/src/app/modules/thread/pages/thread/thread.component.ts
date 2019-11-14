@@ -17,9 +17,9 @@ export class ThreadComponent implements OnInit {
     private route: ActivatedRoute,
   ) { }
 
-  threads$ = this.route.queryParamMap
+  threads$ = this.route.queryParams
     .pipe(
-      map(query => query.get('by')),
+      map(data => data),
       switchMap(data => this.threadService.fetchAll({ filter: data })),
       map(data => data),
       catchError(() => EMPTY),
