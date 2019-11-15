@@ -9,7 +9,7 @@ class ThreadController {
     try {
       // if channel is provided
       if (req.params.channel) {
-        const threads = await ThreadService.findAllWithChannel(req.params.channel);
+        const threads = await ThreadService.findAllByChannel(req.params.channel);
         if (!threads) {
           return Response.notFound(res, 'Channel doesn\'t exist');
         }

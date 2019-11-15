@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+// import { Sequelize } from 'sequelize';
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
@@ -9,51 +9,20 @@ const {
 
 class ThreadService {
   static async findAll() {
-    const threads = await Thread.findAll({
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        },
-        {
-          model: Reply,
-          as: 'replies',
-          attributes: []
-        },
-      ],
-      attributes: {
-        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
-      },
-      group: ['Thread.id', 'channel.id'],
-      order: [['createdAt', 'DESC']]
-    });
+    const threads = await Thread.scope('all').findAll();
+
     return threads;
   }
 
-  static async findAllWithChannel(channelSlug) {
+  static async findAllByChannel(channelSlug) {
     const channel = await ChannelService.findBySlug(channelSlug);
     if (!channel) {
       return null;
     }
-    const threads = await Thread.findAll({
-      where: { channelId: channel.id },
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        },
-        {
-          model: Reply,
-          as: 'replies',
-          attributes: []
-        },
-      ],
-      attributes: {
-        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
-      },
-      group: ['Thread.id', 'channel.id'],
-      order: [['createdAt', 'DESC']]
-    });
+    const threads = await Thread
+      .scope('all', { method: ['byChannel', channel.id] })
+      .findAll();
+
     return threads;
   }
 
@@ -62,47 +31,18 @@ class ThreadService {
     if (!user) {
       return null;
     }
-    const threads = await Thread.findAll({
-      where: { userId: user.id },
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        },
-        {
-          model: Reply,
-          as: 'replies',
-          attributes: []
-        },
-      ],
-      attributes: {
-        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
-      },
-      group: ['Thread.id', 'channel.id'],
-      order: [['createdAt', 'DESC']]
-    });
+    const threads = await Thread
+      .scope('all', { method: ['byUser', user.id] })
+      .findAll();
+
     return threads;
   }
 
   static async findAllByPopular() {
-    const threads = await Thread.findAll({
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        },
-        {
-          model: Reply,
-          as: 'replies',
-          attributes: []
-        },
-      ],
-      attributes: {
-        include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
-      },
-      group: ['Thread.id', 'channel.id'],
-      order: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'DESC']]
-    });
+    const threads = await Thread
+      .scope('byPopular')
+      .findAll();
+
     return threads;
   }
 
@@ -134,12 +74,7 @@ class ThreadService {
           model: Channel,
           as: 'channel'
         }
-      ],
-      // attributes: {
-      //   include: [[Sequelize.fn('count', Sequelize.col('replies.id')), 'replyCount']]
-      // },
-      // group: ['Thread.id', 'channel.id', 'replies.id', 'replies->user.id', 'creator.id'],
-      // group: ['Thread.id'],
+      ]
     });
     return thread;
   }

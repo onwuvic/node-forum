@@ -25,6 +25,7 @@ export default (sequelize, DataTypes) => {
   }, {});
 
   Thread.associate = (models) => {
+    // associate defination
     Thread.hasMany(models.Reply, {
       foreignKey: 'threadId',
       sourceKey: 'id',
@@ -42,6 +43,54 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'channel'
     });
+
+    // scopes definition
+    Thread.addScope('all', {
+      include: [
+        {
+          model: models.Channel,
+          as: 'channel'
+        },
+        {
+          model: models.Reply,
+          as: 'replies',
+          attributes: []
+        },
+      ],
+      attributes: {
+        include: [[sequelize.fn('count', sequelize.col('replies.id')), 'replyCount']]
+      },
+      group: ['Thread.id', 'channel.id'],
+      order: [['createdAt', 'DESC']]
+    });
+
+    Thread.addScope('byChannel', channelId => ({
+      where: { channelId },
+    }));
+
+    Thread.addScope('byUser', userId => ({
+      where: { userId },
+    }));
+
+    Thread.addScope('byPopular', {
+      include: [
+        {
+          model: models.Channel,
+          as: 'channel'
+        },
+        {
+          model: models.Reply,
+          as: 'replies',
+          attributes: []
+        },
+      ],
+      attributes: {
+        include: [[sequelize.fn('count', sequelize.col('replies.id')), 'replyCount']]
+      },
+      group: ['Thread.id', 'channel.id'],
+      order: [[sequelize.fn('count', sequelize.col('replies.id')), 'DESC']]
+    });
   };
+
   return Thread;
 };
