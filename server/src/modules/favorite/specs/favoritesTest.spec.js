@@ -40,15 +40,23 @@ describe('', () => {
 
     describe('Favorite Test Suits', () => {
       describe('Favorite a reply', () => {
-        it('should be able to favorite a reply if authenticated', async () => {
+        it('should be able to favorite a reply if authenticated and only once', async () => {
           // when I hit this endpoint
           const response = await request
             .post(`${baseUrl}/replies/${reply.id}/favorites`)
             .set('authorization', `Bearer ${token}`);
 
-          // It should add a reply to the database
-          expect(response.status).toBe(200);
-          // expect(response.body.data).toBe();
+          expect(response.status).toBe(201);
+          expect(response.body.data.favorableType).toBe('reply');
+          expect(response.body.data.favorableId).toBe(+`${reply.id}`);
+
+          // const response2 = await request
+          //   .post(`${baseUrl}/replies/${reply.id}/favorites`)
+          //   .set('authorization', `Bearer ${token}`);
+
+          // // it should not add another favorite to the count
+          // expect(response2.status).toBe(400);
+          // expect(response2.body.message).toBe('You can favorite twice');
         });
 
         it('should not be able to favorite a reply if unauthenticated', async () => {
