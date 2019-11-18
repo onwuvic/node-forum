@@ -1,68 +1,62 @@
 import ThreadService from './ThreadService';
 import Response from '../../responses/response';
-import ChannelService from '../channel/ChannelService';
 import ThreadFilters from './ThreadFilters';
 
 class ThreadController {
   static async index(req, res) {
-    // refactor this method. A lot is going on here
-    try {
-      // if channel is provided
-      if (req.params.channel) {
-        const threads = await ThreadService.findAllWithChannel(req.params.channel);
-        if (!threads) {
-          return Response.notFound(res, 'Channel doesn\'t exist');
-        }
-        return Response.ok(res, threads);
-      }
-
-      // if query is provided
-      if (Object.keys(req.query).length) {
-        const threads = await ThreadFilters.filter(req.query);
-        return Response.ok(res, threads);
-      }
-
-      // else just get all the thread
-      const threads = await ThreadService.findAll();
-      return Response.ok(res, threads);
-    } catch (error) {
-      return Response.error(
-        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
-      );
+    const response = await ThreadController.getThreads(req);
+    if (response.status) {
+      return Response.ok(res, response);
     }
+    return Response.error(res, response);
   }
 
   static async show(req, res) {
-    try {
-      const channel = await ChannelService.findBySlug(req.params.channel);
-      if (!channel) {
-        return Response.notFound(res, 'Channel doesn\'t exist');
-      }
-      const thread = await ThreadService.findById(req.params.id, channel.id);
-      if (!thread) {
-        return Response.notFound(res, 'Thread doesn\'t exist');
-      }
-      return Response.ok(res, thread);
-    } catch (error) {
-      return Response.error(
-        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
-      );
+    const response = await ThreadService.findByIdAndChannel(req.params.id, req.params.channel);
+    if (response.status) {
+      return Response.ok(res, response);
     }
+    return Response.error(res, response);
   }
 
   static async create(req, res) {
+    const response = await ThreadService.create(req.body, req.user.id);
+    if (response.status) {
+      return Response.created(res, response);
+    }
+    return Response.error(res, response);
+  }
+
+  static async getThreads(request) {
     try {
-      const userId = req.user.id;
-      const channel = await ChannelService.findById(req.body.channelId);
-      if (!channel) {
-        return Response.badRequest(res, 'Channel id doesn\'t exist');
+      const channelSlug = request.params.channel;
+      const { query } = request;
+      // if channel is provided
+      if (channelSlug) {
+        const resource = await ThreadService.findAllByChannel(channelSlug);
+        if (!resource) {
+          return { status: false, statusCode: 404, message: 'Channel doesn\'t exist' };
+        }
+        return { status: true, resource };
       }
-      const thread = await ThreadService.create(req.body, userId);
-      return Response.created(res, thread);
+      // if query is provided
+      if (Object.keys(query).length) {
+        const response = await ThreadFilters.filter(query);
+        if (!response.status) {
+          return { status: false, statusCode: 400, message: response.message };
+        }
+        return { status: true, resource: response.resource };
+      }
+
+      // else just get all the thread
+      const resource = await ThreadService.findAll();
+      return { status: true, resource };
     } catch (error) {
-      return Response.error(
-        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
-      );
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
     }
   }
 }

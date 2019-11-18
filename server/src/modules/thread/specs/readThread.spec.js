@@ -43,6 +43,7 @@ describe('', () => {
       expect(response.status).toBe(200);
       expect(response.body.data[0]).toHaveProperty('title');
       expect(response.body.data[0]).toHaveProperty('channel');
+      expect(response.body.data[0]).toHaveProperty('replyCount');
     });
 
     it('should return one thread', async () => {
@@ -55,10 +56,10 @@ describe('', () => {
     });
 
     it('should return replies that are associated with a thread', async () => {
-      const reply = await Mock.createReply(user.id, thread.id);
+      await Mock.createReply(user.id, thread.id);
 
       const response = await request.get(`${baseUrl}/threads/${channel.slug}/${thread.id}`);
-      expect(response.body.data.replies[0].body).toBe(reply.body);
+      // expect(response.body.data.replies[0].body).toBe(reply.body);
       expect(response.body.data.replies[0]).toHaveProperty('user');
     });
 
@@ -85,7 +86,7 @@ describe('', () => {
       const response = await request.get(`${baseUrl}/threads/${secondChannel.slug}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.data[0]).toEqual(expect.not.objectContaining(thread));
+      expect(response.body.data).toEqual(expect.not.objectContaining(thread));
     });
 
     it('should return 404 if the thread does not exist', async () => {
@@ -109,7 +110,7 @@ describe('', () => {
       expect(response.body.message).toBe('Channel doesn\'t exist');
     });
 
-    it('should filter threads created by them only, by thier name', async () => {
+    it('should filter threads created by owners, by thier name', async () => {
       // given a thread created by a user
       // when the user try to get thread created by them
       // they should see the thread
@@ -120,8 +121,45 @@ describe('', () => {
 
       expect(response.status).toBe(200);
       expect(response2.status).toBe(200);
+      expect(response.body.data[0]).toHaveProperty('replyCount');
       expect(response.body.data[0].title).toEqual(thread.title);
       expect(response2.body.data).toEqual([]);
+    });
+
+    it('should filter threads by popularity base on the reply count', async () => {
+      // given a thread with 3, 2, 1, 0 replies
+      const threadWithThreeReplies = await Mock.createThread(user.id, channel.id);
+      await Mock.createReply(user.id, threadWithThreeReplies.id, 3);
+
+      const threadWithTwoReplies = await Mock.createThread(user.id, channel.id);
+      await Mock.createReply(user.id, threadWithTwoReplies.id, 2);
+
+      const threadWithOneReplies = await Mock.createThread(user.id, channel.id);
+      await Mock.createReply(user.id, threadWithOneReplies.id, 1);
+
+      // thread with no replies
+      await Mock.createThread(user.id, channel.id);
+
+      // when we hit the popular endpoint
+      const response = await request.get(`${baseUrl}/threads/?popular=1`);
+      // it should return the thread by the order of highest reply count
+
+      expect(response.status).toBe(200);
+      expect(Mock.arrayColumn(response.body.data, 'replyCount')).toEqual(['3', '2', '1', '1', '0']);
+    });
+
+    it('should throw an error if filters is incorrect', async () => {
+      const response = await request.get(`${baseUrl}/threads/?populr=1`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Incorrect filter parameters');
+    });
+
+    it('should throw an error if user filter name does not exist', async () => {
+      const response = await request.get(`${baseUrl}/threads/?by=49ij`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Filter User doesn\'t exist');
     });
   });
 });

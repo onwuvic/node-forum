@@ -1,66 +1,104 @@
-<ng-container *ngIf="(thread$ | async) as thread">
-  <div class="blog-post">
-    <h2 class="blog-post-title">{{ thread.title }}</h2>
-    <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by <a href="#">{{ thread.creator.fullName }}</a></p>
-    <hr>
-    <p>{{ thread.body }}</p>
-  </div>
+<div class="row">
+  <ng-container *ngIf="(thread$ | async) as thread">
+    <div class="col-8">
 
-  <!--Comments-->
-  <div class="card card-comments mb-3 wow fadeIn" *ngIf="thread.replies.length">
-    <div class="card-header font-weight-bold">3 comments</div>
-    <div class="card-body">
+      <div class="blog-post">
+        <h2 class="blog-post-title">{{ thread.title }}</h2>
+        <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by <a
+            href="#">{{ thread.creator.fullName }}</a></p>
+        <hr>
+        <p>{{ thread.body }}</p>
+      </div>
 
-      <ng-container *ngFor="let reply of thread.replies">
-        <div class="media d-block d-md-flex mt-4">
-          <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
-            alt="Generic placeholder image">
-          <div class="media-body text-center text-md-left ml-md-3 ml-0">
-            <h5 class="mt-0 font-weight-bold">
-              <a href="">{{ reply.user.fullName }}</a>
-            </h5>
-            <small>{{ reply.createdAt | amTimeAgo }}</small>
-            <p>{{ reply.body }}</p>
+      <!--Comments-->
+      <div class="card card-comments mb-3 wow fadeIn" *ngIf="thread.replies.length">
+        <div class="card-header font-weight-bold">{{ thread.replies.length | pluralize : 'comment' }}</div>
+        <div class="card-body">
+
+          <ng-container *ngFor="let reply of thread.replies">
+            <div class="media d-block d-md-flex mt-4">
+              <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
+                alt="Generic placeholder image">
+              <div class="media-body text-center text-md-left ml-md-3 ml-0">
+                <h5 class="mt-0 font-weight-bold">
+                  <a href="">{{ reply.user.fullName }}</a>
+                </h5>
+                <small>{{ reply.createdAt | amTimeAgo }}</small>
+                <p>{{ reply.body }}</p>
+              </div>
+            </div>
+
+            <hr>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Paginate Comments -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!--/.Comments-->
+
+      <!--Reply-->
+      <ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
+      <ng-container *ngIf="isLoggedIn.check">
+        <div class="card mb-3 wow fadeIn">
+          <div class="card-header font-weight-bold">Leave a reply</div>
+          <div class="card-body">
+
+            <!-- Default form reply -->
+            <form (ngSubmit)="sendReply(thread.id)" [formGroup]="replyForm" novalidate>
+
+              <!-- Comment -->
+              <div class="form-group">
+                <label for="comment">Your comment</label>
+                <textarea class="form-control" formControlName="body" rows="5"></textarea>
+              </div>
+
+              <div class="mt-4">
+                <mat-spinner *ngIf="loading" diameter="50"></mat-spinner>
+                <button *ngIf="!loading" mat-flat-button color="primary"
+                  [title]="replyForm.valid ? 'Click to submit' : 'Disabled until the form data is valid'"
+                  [disabled]="replyForm.invalid">Post</button>
+              </div>
+            </form>
+            <!-- Default form reply -->
           </div>
         </div>
-
-        <hr>
       </ng-container>
+      <ng-container *ngIf="!isLoggedIn.check">
+        <p class="text-center">Please <span class="btn-link" (click)="signIn()">sign in</span> to participate in this
+          discussion.</p>
+      </ng-container>
+      <!--/.Reply-->
     </div>
-  </div>
-  <!--/.Comments-->
 
-  <!--Reply-->
-  <ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
-  <ng-container *ngIf="isLoggedIn.check">
-    <div class="card mb-3 wow fadeIn">
-      <div class="card-header font-weight-bold">Leave a reply</div>
-      <div class="card-body">
-
-        <!-- Default form reply -->
-        <form (ngSubmit)="sendReply(thread.id)" [formGroup]="replyForm" novalidate>
-
-          <!-- Comment -->
-          <div class="form-group">
-            <label for="comment">Your comment</label>
-            <textarea class="form-control" formControlName="body" rows="5"></textarea>
-          </div>
-
-          <div class="mt-4">
-            <mat-spinner *ngIf="loading" diameter="50"></mat-spinner>
-            <button
-              *ngIf="!loading"
-              mat-flat-button color="primary"
-              [title]="replyForm.valid ? 'Click to submit' : 'Disabled until the form data is valid'"
-              [disabled]="replyForm.invalid">Post</button>
-          </div>
-        </form>
-        <!-- Default form reply -->
+    <div class="col-4">
+      <div class="card mb-3 wow fadeIn">
+        <div class="card-body">
+          <p class="blog-post-meta">
+            This thread was published
+            {{ thread.createdAt | amTimeAgo }} by <a href="#">{{ thread.creator.fullName }}</a>, and
+            currently has {{ thread.replies.length | pluralize : 'comment' }}.
+          </p>
+        </div>
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="!isLoggedIn.check">
-    <p class="text-center">Please <span class="btn-link" (click)="signIn()">sign in</span> to participate in this discussion.</p>
-  </ng-container>
-  <!--/.Reply-->
-</ng-container>
+</div>

@@ -14,8 +14,16 @@ class ChannelService {
   }
 
   static async findAll() {
-    const channels = await Channel.findAll();
-    return channels;
+    try {
+      const resource = await Channel.findAll();
+      return { status: true, resource };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
+    }
   }
 }
 

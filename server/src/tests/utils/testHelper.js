@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import faker from 'faker';
 import bcrypt from 'bcrypt';
@@ -44,7 +45,32 @@ class Mock {
     return thread;
   }
 
-  static async createReply(userId, threadId) {
+  // static async createReply(userId, threadId) {
+  //   const newReply = await models.Reply.create({
+  //     body: faker.lorem.sentences(),
+  //     userId,
+  //     threadId
+  //   });
+  //   const { dataValues: reply } = newReply;
+  //   return reply;
+  // }
+
+  static async createReply(userId, threadId, times = null) {
+    if (times) {
+      const replies = [];
+      for (let i = 0; i < times; i += 1) {
+        const seedData = {
+          userId,
+          threadId,
+          body: faker.lorem.sentences(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        replies.push(seedData);
+      }
+      const reply = await models.Reply.bulkCreate(replies, { returning: true });
+      return reply;
+    }
     const newReply = await models.Reply.create({
       body: faker.lorem.sentences(),
       userId,
@@ -52,6 +78,37 @@ class Mock {
     });
     const { dataValues: reply } = newReply;
     return reply;
+  }
+
+  static arrayColumn(input, ColumnKey, IndexKey = null) {
+    if (input !== null && (typeof input === 'object' || Array.isArray(input))) {
+      const newarray = [];
+      if (typeof input === 'object') {
+        const temparray = [];
+        for (const key of Object.keys(input)) {
+          temparray.push(input[key]);
+        }
+        // eslint-disable-next-line no-param-reassign
+        input = temparray;
+      }
+      if (Array.isArray(input)) {
+        for (const key of input.keys()) {
+          if (IndexKey && input[key][IndexKey]) {
+            if (ColumnKey) {
+              newarray[input[key][IndexKey]] = input[key][ColumnKey];
+            } else {
+              newarray[input[key][IndexKey]] = input[key];
+            }
+          } else if (ColumnKey) {
+            newarray.push(input[key][ColumnKey]);
+          } else {
+            newarray.push(input[key]);
+          }
+        }
+      }
+      // return Object.assign({}, newarray)
+      return newarray;
+    }
   }
 }
 

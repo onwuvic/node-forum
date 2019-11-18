@@ -5,6 +5,15 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 
+export interface APIFilterOption {
+  [key: string]: string | string[];
+}
+
+export interface APIListRequestOptions {
+  slug?: string;
+  filter?: APIFilterOption;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,9 +24,11 @@ export class ThreadService {
   private store = new BehaviorSubject([]);
   store$ = this.store.asObservable();
 
-  fetchAll(slug = null) {
-    const url = slug ? `${environment.baseUrl}/threads/${slug}` : `${environment.baseUrl}/threads`;
-    return this.http.get(url)
+  fetchAll(options: Partial<APIListRequestOptions> = {}) {
+    const url = options.slug ? `${environment.baseUrl}/threads/${options.slug}` : `${environment.baseUrl}/threads`;
+    const params = options.filter;
+
+    return this.http.get(url, { params })
       .pipe(
         map((res: any) => res.data)
       );

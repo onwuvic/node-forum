@@ -16,7 +16,7 @@ export class ThreadChannelComponent implements OnInit {
   threads$ = this.route.paramMap
     .pipe(
       map(params => params.get('channel')),
-      switchMap(slug => this.threadService.fetchAll(slug)),
+      switchMap(slug => this.threadService.fetchAll({slug})),
       map(data => data),
       catchError(() => EMPTY),
     );

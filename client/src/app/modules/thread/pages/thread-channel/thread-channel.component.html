@@ -7,7 +7,11 @@
           <h3 class="mb-0">{{ thread.title }}</h3>
           <div class="mb-1 text-muted">Nov 11</div>
           <p class="mb-auto">{{ thread.body }}</p>
-          <a [routerLink]="['.', thread.id]" class="stretched-link">Continue reading</a>
+          <div class="thread-comment">
+            <a [routerLink]="['.', thread.id]" class="stretched-link">Continue reading</a>
+            <a [routerLink]="['.', thread.id]"
+              class="stretched-link">{{ thread.replyCount | pluralize : 'comment' }}</a>
+          </div>
         </div>
         <div class="col-auto d-none d-lg-block">
           <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"

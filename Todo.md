@@ -47,9 +47,41 @@ What to test
 - route back to same page and display the new reply
 
 
-- add backend validation to create thread
-- do a look up for channel id before creating thread
+- add backend validation to create thread (done)
+- do a look up for channel id before creating thread (done)
+- how to add count to all thread api resource (done)
 
 - channel should be unique
-- channel should user the find or create method to create new channel
-- fine tune validation error to either array or object 
+- channel should use the find or create method to create new channel
+- fine tune validation error to either array or object
+
+- how to add each count of each eager loader resources
+
+psuedo code
+- backend to frontend
+- how to paginate in sequelize
+- how to paginate an eager loader resource
+- complete backend implementation
+- start frontend implementation
+- hold on on reply pagination (all pagination)
+
+
+- scopes
+ findAll 
+    default
+        include channel
+        include replyCount
+        order by createdAt in desc
+    
+    withChannel
+        where channelId = channel.id
+
+    byUser
+        where userId = user.id
+
+    byPopular
+        order by replyCount in desc
+
+
+- those that deal with db/model directly
+- those that use it to get all required resource before sending to the controller

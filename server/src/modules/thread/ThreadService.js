@@ -1,3 +1,4 @@
+// import { Sequelize } from 'sequelize';
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
@@ -7,19 +8,92 @@ const {
 } = models;
 
 class ThreadService {
+  static async findByIdAndChannel(id, channelSlug) {
+    try {
+      // check if channel exist
+      const channel = await ChannelService.findBySlug(channelSlug);
+      // if no, throw not found error
+      if (!channel) {
+        return { status: false, statusCode: 404, message: 'Channel doesn\'t exist' };
+      }
+      // check if the thread and channel exist on thread table
+      const resource = await ThreadService.findOne(id, channel.id);
+      // if no, throw not found error
+      if (!resource) {
+        return { status: false, statusCode: 404, message: 'Thread doesn\'t exist' };
+      }
+
+      return { status: true, resource };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
+    }
+  }
+
+  static async create(data, userId) {
+    try {
+      // check if channel exist
+      const channel = await ChannelService.findById(data.channelId);
+      // if no, throw bad request error
+      if (!channel) {
+        return { status: false, statusCode: 400, message: 'Channel doesn\'t exist' };
+      }
+      // create thread and add its channel to the resource
+      const resource = await Thread.create({ ...data, userId });
+      resource.setDataValue('channel', await resource.getChannel());
+
+      return { status: true, resource };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
+    }
+  }
+
   static async findAll() {
-    const threads = await Thread.findAll({
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        }
-      ]
-    });
+    const threads = await Thread.scope('all').findAll();
+
     return threads;
   }
 
-  static async findById(id, channelId) {
+  static async findAllByChannel(channelSlug) {
+    const channel = await ChannelService.findBySlug(channelSlug);
+    if (!channel) {
+      return null;
+    }
+    const threads = await Thread
+      .scope('all', { method: ['byChannel', channel.id] })
+      .findAll();
+
+    return threads;
+  }
+
+  static async findAllByUser(name) {
+    const user = await UserService.findUserByName(name);
+    if (!user) {
+      return null;
+    }
+    const threads = await Thread
+      .scope('all', { method: ['byUser', user.id] })
+      .findAll();
+
+    return threads;
+  }
+
+  static async findAllByPopular() {
+    const threads = await Thread
+      .scope('byPopular')
+      .findAll();
+
+    return threads;
+  }
+
+  static async findOne(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },
       include: [
@@ -50,46 +124,6 @@ class ThreadService {
       ]
     });
     return thread;
-  }
-
-  static async create(threadData, userId) {
-    const thread = await Thread.create({ ...threadData, userId });
-    thread.setDataValue('channel', await thread.getChannel());
-    return thread;
-  }
-
-  static async findAllWithChannel(channelSlug) {
-    const channel = await ChannelService.findBySlug(channelSlug);
-    if (!channel) {
-      return null;
-    }
-    const threads = await Thread.findAll({
-      where: { channelId: channel.id },
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        }
-      ]
-    });
-    return threads;
-  }
-
-  static async findAllByUser(name) {
-    const user = await UserService.findUserByName(name);
-    if (!user) {
-      return null;
-    }
-    const threads = await Thread.findAll({
-      where: { userId: user.id },
-      include: [
-        {
-          model: Channel,
-          as: 'channel'
-        }
-      ]
-    });
-    return threads;
   }
 }
 

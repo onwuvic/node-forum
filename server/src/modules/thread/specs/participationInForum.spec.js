@@ -33,6 +33,7 @@ describe('', () => {
 
     afterAll(async () => {
       await models.User.destroy({ where: {}, force: true });
+      await models.Channel.destroy({ where: {}, force: true });
     });
 
     describe('Authenticated user can participate', () => {

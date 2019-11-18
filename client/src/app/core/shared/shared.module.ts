@@ -8,9 +8,10 @@ import { MomentModule } from 'ngx-moment';
 import { MaterialModule } from './material-module/material.module';
 import { TemplateStoreDirective } from '../directives/template-store.directive';
 import { ErrorComponent } from '../error/error.component';
+import { PluralizePipe } from '../pipes/pluralize/pluralize.pipe';
 
 @NgModule({
-  declarations: [TemplateStoreDirective, ErrorComponent],
+  declarations: [TemplateStoreDirective, ErrorComponent, PluralizePipe],
   imports: [
     CommonModule,
     RouterModule
@@ -21,7 +22,8 @@ import { ErrorComponent } from '../error/error.component';
     MaterialModule,
     MomentModule,
     TemplateStoreDirective,
-    ErrorComponent
+    ErrorComponent,
+    PluralizePipe
   ]
 })
 export class SharedModule { }

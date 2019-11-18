@@ -34,6 +34,14 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'user'
     });
+
+    Reply.hasMany(models.Favorite, {
+      foreignKey: 'favorableId',
+      constraints: false,
+      scope: {
+        favorableType: 'reply'
+      }
+    });
   };
   return Reply;
 };
