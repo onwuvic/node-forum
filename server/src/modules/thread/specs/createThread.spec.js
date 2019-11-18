@@ -85,7 +85,7 @@ describe('', () => {
           .send({ body: 'I reply you', title: 'I reply you', channelId: 9999 });
 
         expect(response.status).toBe(400);
-        expect(response.body.message).toBe('Channel id doesn\'t exist');
+        expect(response.body.message).toBe('Channel doesn\'t exist');
       });
     });
   });

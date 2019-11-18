@@ -7,15 +7,11 @@ class ReplyController {
   }
 
   static async create(req, res) {
-    try {
-      const userId = req.user.id;
-      const reply = await ReplyService.create(req.body.body, userId, req.params.id);
-      return Response.created(res, reply);
-    } catch (error) {
-      return Response.error(
-        res, 'Server Error', 'Unable to perform this action at this time. Try again.', error
-      );
+    const response = await ReplyService.create(req.body.body, req.user.id, req.params.id);
+    if (response.status) {
+      return Response.created(res, response);
     }
+    return Response.error(res, response);
   }
 }
 

@@ -50,13 +50,13 @@ describe('', () => {
           expect(response.body.data.favorableType).toBe('reply');
           expect(response.body.data.favorableId).toBe(+`${reply.id}`);
 
-          // const response2 = await request
-          //   .post(`${baseUrl}/replies/${reply.id}/favorites`)
-          //   .set('authorization', `Bearer ${token}`);
+          const response2 = await request
+            .post(`${baseUrl}/replies/${reply.id}/favorites`)
+            .set('authorization', `Bearer ${token}`);
 
           // // it should not add another favorite to the count
-          // expect(response2.status).toBe(400);
-          // expect(response2.body.message).toBe('You can favorite twice');
+          expect(response2.status).toBe(400);
+          expect(response2.body.message).toBe('Already favorite this reply');
         });
 
         it('should not be able to favorite a reply if unauthenticated', async () => {

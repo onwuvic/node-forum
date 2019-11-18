@@ -83,3 +83,5 @@ psuedo code
         order by replyCount in desc
 
 
+- those that deal with db/model directly
+- those that use it to get all required resource before sending to the controller

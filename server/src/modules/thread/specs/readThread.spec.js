@@ -86,7 +86,7 @@ describe('', () => {
       const response = await request.get(`${baseUrl}/threads/${secondChannel.slug}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.data[0]).toEqual(expect.not.objectContaining(thread));
+      expect(response.body.data).toEqual(expect.not.objectContaining(thread));
     });
 
     it('should return 404 if the thread does not exist', async () => {
@@ -110,7 +110,7 @@ describe('', () => {
       expect(response.body.message).toBe('Channel doesn\'t exist');
     });
 
-    it('should filter threads created by them only, by thier name', async () => {
+    it('should filter threads created by owners, by thier name', async () => {
       // given a thread created by a user
       // when the user try to get thread created by them
       // they should see the thread
@@ -146,6 +146,20 @@ describe('', () => {
 
       expect(response.status).toBe(200);
       expect(Mock.arrayColumn(response.body.data, 'replyCount')).toEqual(['3', '2', '1', '1', '0']);
+    });
+
+    it('should throw an error if filters is incorrect', async () => {
+      const response = await request.get(`${baseUrl}/threads/?populr=1`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Incorrect filter parameters');
+    });
+
+    it('should throw an error if user filter name does not exist', async () => {
+      const response = await request.get(`${baseUrl}/threads/?by=49ij`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Filter User doesn\'t exist');
     });
   });
 });

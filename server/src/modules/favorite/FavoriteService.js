@@ -5,13 +5,22 @@ const { Favorite } = models;
 
 class FavoriteService {
   static async favoriteReply(userId, replyId) {
-    const reply = await ReplyService.findById(replyId);
-    if (!reply) {
-      return null;
-    }
-    if (!await FavoriteService.findUnique(userId, replyId, 'reply')) {
-      const favoritedReply = await reply.createFavorite({ userId });
-      return favoritedReply;
+    try {
+      const reply = await ReplyService.findById(replyId);
+      if (!reply) {
+        return { status: false, statusCode: 400, message: 'This reply doesn\'t exist' };
+      }
+      if (!await FavoriteService.findUnique(userId, replyId, 'reply')) {
+        const resource = await reply.createFavorite({ userId });
+        return { status: true, resource };
+      }
+      return { status: false, statusCode: 400, message: 'Already favorite this reply' };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
     }
   }
 
