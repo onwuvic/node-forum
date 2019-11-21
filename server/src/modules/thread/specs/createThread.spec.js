@@ -88,5 +88,46 @@ describe('', () => {
         expect(response.body.message).toBe('Channel doesn\'t exist');
       });
     });
+
+    describe('Delete thread', () => {
+      it('should not be able to delete thread as a guest user', async () => {
+        // given a thread
+        const newThread = await Mock.createThread(user.id, channel.id);
+        // given i'm not authenticated
+
+        const response = await request
+          .delete(`${baseUrl}/threads/${newThread.id}`);
+
+        // when this endpoint i should be forbidden
+        expect(response.status).toBe(401);
+      });
+
+      it('should be able to delete thread only as the owner', async () => {
+        // given a thread
+        const newThread = await Mock.createThread(user.id, channel.id);
+
+        const response = await request
+          .delete(`${baseUrl}/threads/${newThread.id}`)
+          .set('authorization', `Bearer ${token}`);
+
+        // when this endpoint i should be forbidden
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBe('Deleted Successfully');
+      });
+
+      it('should not be able to delete thread when you are not owner', async () => {
+        const newUser = await Mock.createUser();
+        // given a thread
+        const newThread = await Mock.createThread(newUser.id, channel.id);
+
+        const response = await request
+          .delete(`${baseUrl}/threads/${newThread.id}`)
+          .set('authorization', `Bearer ${token}`);
+
+        // when this endpoint i should be forbidden
+        expect(response.status).toBe(403);
+        expect(response.body.message).toBe('You are not permitted');
+      });
+    });
   });
 });

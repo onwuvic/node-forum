@@ -27,6 +27,14 @@ class ThreadController {
     return Response.error(res, response);
   }
 
+  static async destroy(req, res) {
+    const response = await ThreadService.findByIdAndDelete(req.params.id, req.user.id);
+    if (response.status) {
+      return Response.ok(res, response);
+    }
+    return Response.error(res, response);
+  }
+
   static async getThreads(request) {
     try {
       const channelSlug = request.params.channel;

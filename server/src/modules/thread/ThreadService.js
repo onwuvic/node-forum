@@ -55,6 +55,22 @@ class ThreadService {
     }
   }
 
+  static async findByIdAndDelete(id, userId) {
+    try {
+      const resource = await Thread.destroy({ where: { id, userId } });
+      if (resource) {
+        return { status: true, resource: 'Deleted Successfully' };
+      }
+      return { status: false, statusCode: 403, message: 'You are not permitted' };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
+    }
+  }
+
   static async findAll() {
     const threads = await Thread.scope('all').findAll();
 

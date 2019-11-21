@@ -15,6 +15,11 @@ threadRouter.post(
 );
 threadRouter.get('/threads', ThreadController.index);
 threadRouter.get('/threads/:channel', ThreadController.index);
+threadRouter.delete(
+  '/threads/:id',
+  Authentication.tokenAuthentication,
+  ThreadController.destroy
+);
 threadRouter.get('/threads/:channel/:id', ThreadController.show);
 threadRouter.post(
   '/threads/:id/replies',
