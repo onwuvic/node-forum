@@ -4,7 +4,7 @@ class ProfileService {
   static async findByUsername(username) {
     try {
       // find user
-      const user = await UserService.findUserByName(username);
+      const user = await UserService.findUserByNameWithThreads(username);
       // if user doesn't exist
       if (!user) {
         return { status: false, statusCode: 404, message: 'User doesn\'t exist' };

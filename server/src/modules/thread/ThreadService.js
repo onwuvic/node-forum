@@ -102,9 +102,6 @@ class ThreadService {
           as: 'replies',
           include: [
             {
-              attributes: {
-                exclude: 'password'
-              },
               model: User,
               as: 'user',
             },
@@ -116,10 +113,7 @@ class ThreadService {
         },
         {
           model: User,
-          as: 'creator',
-          attributes: {
-            exclude: 'password'
-          }
+          as: 'creator'
         },
         {
           model: Channel,

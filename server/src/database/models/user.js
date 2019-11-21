@@ -28,6 +28,7 @@ export default (sequelize, DataTypes) => {
   }, {});
 
   User.associate = (models) => {
+    // association goes here
     User.hasMany(models.Reply, {
       foreignKey: 'userId',
       sourceKey: 'id',
@@ -38,6 +39,15 @@ export default (sequelize, DataTypes) => {
       sourceKey: 'id',
       as: 'threads'
     });
+
+    // scopes goes here
+    User.addScope('defaultScope', {
+      attributes: {
+        exclude: 'password'
+      }
+    });
+
+    User.addScope('withPassword', {});
   };
   return User;
 };

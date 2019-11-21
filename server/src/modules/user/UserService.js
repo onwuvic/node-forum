@@ -2,10 +2,10 @@ import models from '../../database/models';
 import Utils from '../../helpers/Utils';
 import Token from '../../helpers/Token';
 
-const { User } = models;
+const { User, Thread } = models;
 class UserService {
   static async findUserByEmail(email) {
-    const user = await User.findOne({
+    const user = await User.scope('withPassword').findOne({
       where: { email }
     });
     return UserService.refineObject(user);
@@ -16,6 +16,20 @@ class UserService {
       where: { fullName }
     });
     return UserService.refineObject(user);
+  }
+
+  static async findUserByNameWithThreads(fullName) {
+    const resource = await User.findOne({
+      where: { fullName },
+      include: [
+        {
+          model: Thread,
+          as: 'threads'
+        },
+      ]
+    });
+
+    return resource;
   }
 
   static refineObject(user) {
