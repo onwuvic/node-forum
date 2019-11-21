@@ -79,4 +79,18 @@ export class ThreadDetailComponent implements OnInit {
     this.replyForm.reset();
   }
 
+  favarite(id) {
+    console.log('--->', id);
+    this.replyService.addFavorite(id)
+      .subscribe(
+        (data) => {
+          console.log('----> data', data);
+        },
+        (error) => {
+          console.log('----> data', error);
+          this.snackBar.open(error, 'Ok');
+        }
+      );
+  }
+
 }

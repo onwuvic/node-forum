@@ -1,6 +1,6 @@
 <div class="row">
   <ng-container *ngIf="(thread$ | async) as thread">
-    <div class="col-8">
+    <div class="col-12 col-md-8">
 
       <div class="blog-post">
         <h2 class="blog-post-title">{{ thread.title }}</h2>
@@ -20,8 +20,9 @@
               <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
                 alt="Generic placeholder image">
               <div class="media-body text-center text-md-left ml-md-3 ml-0">
-                <h5 class="mt-0 font-weight-bold">
+                <h5 class="mt-0 font-weight-bold thread-comment">
                   <a href="">{{ reply.user.fullName }}</a>
+                  <button mat-stroked-button (click)="favarite(reply.id)">{{ reply.favorites.length | pluralize : 'Favorite' }}</button>
                 </h5>
                 <small>{{ reply.createdAt | amTimeAgo }}</small>
                 <p>{{ reply.body }}</p>
@@ -89,7 +90,7 @@
       <!--/.Reply-->
     </div>
 
-    <div class="col-4">
+    <div class="col-12 col-md-4">
       <div class="card mb-3 wow fadeIn">
         <div class="card-body">
           <p class="blog-post-meta">

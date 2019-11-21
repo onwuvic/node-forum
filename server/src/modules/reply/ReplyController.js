@@ -3,7 +3,11 @@ import Response from '../../responses/response';
 
 class ReplyController {
   static async index(req, res) {
-    res.json('Main reply');
+    const response = await ReplyService.findAll();
+    if (response.status) {
+      return Response.ok(res, response);
+    }
+    return Response.error(res, response);
   }
 
   static async create(req, res) {

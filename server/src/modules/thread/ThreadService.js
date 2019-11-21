@@ -4,7 +4,7 @@ import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
 
 const {
-  Thread, Reply, User, Channel
+  Thread, Reply, User, Channel, Favorite
 } = models;
 
 class ThreadService {
@@ -107,8 +107,12 @@ class ThreadService {
               },
               model: User,
               as: 'user',
-            }
-          ]
+            },
+            {
+              model: Favorite,
+              as: 'favorites',
+            },
+          ],
         },
         {
           model: User,

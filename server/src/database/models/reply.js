@@ -21,6 +21,7 @@ export default (sequelize, DataTypes) => {
   }, {});
 
   Reply.associate = (models) => {
+    // associate defination
     Reply.belongsTo(models.Thread, {
       foreignKey: 'threadId',
       targetKey: 'id',
@@ -38,6 +39,7 @@ export default (sequelize, DataTypes) => {
     Reply.hasMany(models.Favorite, {
       foreignKey: 'favorableId',
       constraints: false,
+      as: 'favorites',
       scope: {
         favorableType: 'reply'
       }

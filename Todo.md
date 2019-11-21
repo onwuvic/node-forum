@@ -65,23 +65,5 @@ psuedo code
 - start frontend implementation
 - hold on on reply pagination (all pagination)
 
-
-- scopes
- findAll 
-    default
-        include channel
-        include replyCount
-        order by createdAt in desc
-    
-    withChannel
-        where channelId = channel.id
-
-    byUser
-        where userId = user.id
-
-    byPopular
-        order by replyCount in desc
-
-
-- those that deal with db/model directly
-- those that use it to get all required resource before sending to the controller
+- how to check if user has favorite a reply or not
+- auto reload
