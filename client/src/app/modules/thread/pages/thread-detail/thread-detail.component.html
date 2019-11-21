@@ -5,7 +5,7 @@
       <div class="blog-post">
         <h2 class="blog-post-title">{{ thread.title }}</h2>
         <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by <a
-            href="#">{{ thread.creator.fullName }}</a></p>
+           [routerLink]="['/profile', thread.creator.fullName]">{{ thread.creator.fullName }}</a></p>
         <hr>
         <p>{{ thread.body }}</p>
       </div>
@@ -21,7 +21,7 @@
                 alt="Generic placeholder image">
               <div class="media-body text-center text-md-left ml-md-3 ml-0">
                 <h5 class="mt-0 font-weight-bold thread-comment">
-                  <a href="">{{ reply.user.fullName }}</a>
+                  <a [routerLink]="['/profile', reply.user.fullName]">{{ reply.user.fullName }}</a>
                   <button mat-stroked-button (click)="favarite(reply.id)">{{ reply.favorites.length | pluralize : 'Favorite' }}</button>
                 </h5>
                 <small>{{ reply.createdAt | amTimeAgo }}</small>
@@ -95,7 +95,7 @@
         <div class="card-body">
           <p class="blog-post-meta">
             This thread was published
-            {{ thread.createdAt | amTimeAgo }} by <a href="#">{{ thread.creator.fullName }}</a>, and
+            {{ thread.createdAt | amTimeAgo }} by <a [routerLink]="['/profile', thread.creator.fullName]">{{ thread.creator.fullName }}</a>, and
             currently has {{ thread.replies.length | pluralize : 'comment' }}.
           </p>
         </div>

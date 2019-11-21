@@ -1,0 +1,30 @@
+<div class="row">
+  <ng-container *ngIf="(profile$ | async) as profile">
+    <div class="col-12">
+      <div>
+        <h2>
+          {{ profile.fullName }}
+          <small>{{ profile.createdAt | amTimeAgo }}</small>
+        </h2>
+        <hr>
+      </div>
+
+      <ng-container *ngIf="profile.threads.length">
+        <ng-container *ngFor="let thread of profile.threads">
+          <div class="card mb-3 wow fadeIn">
+            <div class="card-header font-weight-bold">
+              <a [routerLink]="['/profile', profile.fullName]">{{ profile.fullName }}</a>
+              posted:
+              <span class="h5">{{ thread.title }}</span>
+            </div>
+            <div class="card-body">
+              <div class="media d-block d-md-flex mt-4">
+                <p>{{ thread.body }}</p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
