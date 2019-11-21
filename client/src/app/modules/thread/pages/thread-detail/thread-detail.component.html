@@ -20,7 +20,7 @@
               <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
                 alt="Generic placeholder image">
               <div class="media-body text-center text-md-left ml-md-3 ml-0">
-                <h5 class="mt-0 font-weight-bold thread-comment">
+                <h5 class="mt-0 font-weight-bold flex-inline">
                   <a [routerLink]="['/profile', reply.user.fullName]">{{ reply.user.fullName }}</a>
                   <button mat-stroked-button (click)="favarite(reply.id)">{{ reply.favorites.length | pluralize : 'Favorite' }}</button>
                 </h5>
