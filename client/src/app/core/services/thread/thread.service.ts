@@ -49,4 +49,12 @@ export class ThreadService {
         map((res: any) => res.data)
       );
   }
+
+  destroy(id) {
+    const url = `${environment.baseUrl}/threads/${id}`;
+    return this.http.delete(url)
+      .pipe(
+        map((res: any) => res.data)
+      );
+  }
 }

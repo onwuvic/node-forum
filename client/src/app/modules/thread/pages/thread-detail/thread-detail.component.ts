@@ -79,6 +79,19 @@ export class ThreadDetailComponent implements OnInit {
     this.replyForm.reset();
   }
 
+  deleteThread(id) {
+    this.threadService.destroy(id)
+      .subscribe(
+        (data) => {
+          this.snackBar.open(data, 'Ok');
+          this.router.navigate(['/threads']);
+        },
+        (error) => {
+          this.snackBar.open(error, 'Ok');
+        }
+      );
+  }
+
   favarite(id) {
     console.log('--->', id);
     this.replyService.addFavorite(id)
