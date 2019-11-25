@@ -44,6 +44,15 @@ export default (sequelize, DataTypes) => {
         favorableType: 'reply'
       }
     });
+
+    Reply.hasMany(models.Activity, {
+      foreignKey: 'subjectId',
+      constraints: false,
+      as: 'activities',
+      scope: {
+        subjectType: 'reply'
+      }
+    });
   };
   return Reply;
 };

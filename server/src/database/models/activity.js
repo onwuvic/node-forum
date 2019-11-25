@@ -24,8 +24,20 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
 
+  Activity.prototype.getItem = () => this[
+    `get${
+      this.get('subjectType')[0]
+        .toUpperCase()
+    }${this.get('subjectType').substr(1)}`
+  ]();
+
   // eslint-disable-next-line no-unused-vars
   Activity.associate = (models) => {
+    Activity.belongsTo(models.Thread, {
+      foreignKey: 'subjectId',
+      constraints: false,
+      as: 'thread'
+    });
   };
   return Activity;
 };

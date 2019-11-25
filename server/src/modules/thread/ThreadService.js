@@ -2,6 +2,8 @@
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
+import ActivityService from '../activity/ActivityService';
+import { CREATE_THREAD } from '../activity/activityConstants';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -44,6 +46,9 @@ class ThreadService {
       // create thread and add its channel to the resource
       const resource = await Thread.create({ ...data, userId });
       resource.setDataValue('channel', await resource.getChannel());
+
+      // create activity
+      await ActivityService.createActivity(resource, CREATE_THREAD, userId);
 
       return { status: true, resource };
     } catch (error) {

@@ -50,12 +50,12 @@ class Mock {
   }
 
   static async findActivity(type, userId, subjectId, subjectType) {
-    const activity = await Activity.findOne({
+    const newActivity = await Activity.findOne({
       where: {
         type, userId, subjectId, subjectType
       }
     });
-
+    const { dataValues: activity } = newActivity;
     return activity;
   }
 

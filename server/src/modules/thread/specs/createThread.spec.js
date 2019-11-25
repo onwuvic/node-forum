@@ -43,6 +43,8 @@ describe('', () => {
 
         expect(response.status).toBe(201);
         expect(response.body.data.body).toBe('I reply you');
+        expect(response.body.data).toHaveProperty('channel');
+        expect(response.body.data.channel.id).toEqual(channel.id);
       });
     });
 

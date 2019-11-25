@@ -43,6 +43,14 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'channel'
     });
+    Thread.hasMany(models.Activity, {
+      foreignKey: 'subjectId',
+      constraints: false,
+      as: 'activities',
+      scope: {
+        subjectType: 'thread'
+      }
+    });
 
     // scopes definition
     Thread.addScope('all', {
