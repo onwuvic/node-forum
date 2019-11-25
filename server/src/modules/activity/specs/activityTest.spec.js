@@ -43,10 +43,12 @@ describe('', () => {
           .set('authorization', `Bearer ${token}`)
           .send({ title: 'the world', body: 'I reply you', channelId: channel.id });
 
-        const threadId = response.data.id;
+        const threadId = response.body.data.id;
 
         // it should record a createthread activity
         const activity = await Mock.findActivity('createThread', user.id, threadId, 'thread');
+
+        console.log('---->', activity);
 
         expect(Object.keys(activity).length).toEqual(1);
       });

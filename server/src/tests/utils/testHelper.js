@@ -49,10 +49,10 @@ class Mock {
     return thread;
   }
 
-  static async findActivity(type, UserId, subjectId, subjectType) {
+  static async findActivity(type, userId, subjectId, subjectType) {
     const activity = await Activity.findOne({
       where: {
-        type, UserId, subjectId, subjectType
+        type, userId, subjectId, subjectType
       }
     });
 
