@@ -21,11 +21,21 @@ class JoiHelper {
     if (validate.error) {
       // eslint-disable-next-line no-unused-vars
       const { error, ...rest } = validate;
+      // const errors = JoiHelper.refine(rest);
       return Response.badRequest(res, rest);
     }
     req.body = validate;
     return next();
   }
+
+  // static refine(error) {
+  //   const errors = [];
+  //   // eslint-disable-next-line no-restricted-syntax
+  //   for (const key of Object.keys(error)) {
+  //     errors.push(error[key]);
+  //   }
+  //   return errors;
+  // }
 
   static handleError(errorDetails) {
     const errorObject = { error: 'validation error' };

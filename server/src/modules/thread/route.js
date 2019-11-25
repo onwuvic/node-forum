@@ -1,9 +1,9 @@
 import express from 'express';
 import ThreadController from './ThreadController';
 import ReplyController from '../reply/ReplyController';
-import Authentication from '../../middleware/authentication';
-import ThreadValidator from '../../middleware/validations/threadValidator';
-import ReplyValidator from '../../middleware/validations/replyValidator';
+import Authentication from '../../middlewares/authentication';
+import ThreadValidator from '../../middlewares/validations/threadValidator';
+import ReplyValidator from '../../middlewares/validations/replyValidator';
 
 const threadRouter = express.Router();
 

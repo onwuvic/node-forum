@@ -44,6 +44,8 @@ export class ThreadDetailComponent implements OnInit {
       catchError(() =>  EMPTY),
     );
 
+  authUser$ = this.authService.authUser;
+
   ngOnInit() {
     this.replyForm = this.fb.group({
       body: ['', [Validators.required]]
@@ -70,7 +72,9 @@ export class ThreadDetailComponent implements OnInit {
         (error) => {
           console.log('----> error', error);
           this.loading = false;
-          this.snackBar.open(error, 'Ok');
+          this.snackBar.open(error, 'Ok', {
+            duration: 3000
+          });
         }
       );
   }
@@ -87,7 +91,9 @@ export class ThreadDetailComponent implements OnInit {
           this.router.navigate(['/threads']);
         },
         (error) => {
-          this.snackBar.open(error, 'Ok');
+          this.snackBar.open(error, 'Ok', {
+            duration: 3000
+          });
         }
       );
   }
@@ -104,6 +110,13 @@ export class ThreadDetailComponent implements OnInit {
           this.snackBar.open(error, 'Ok');
         }
       );
+  }
+
+  //
+  canDelete() {
+    // methd 1, pass parameters, not reusable
+    // get auth user id
+    // get thread user id
   }
 
 }
