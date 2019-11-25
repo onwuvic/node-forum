@@ -4,10 +4,14 @@ import faker from 'faker';
 import bcrypt from 'bcrypt';
 import models from '../../database/models';
 
+const {
+  User, Reply, Thread, Channel, Activity
+} = models;
+
 class Mock {
   static async createUser() {
     const gender = ['male', 'female'];
-    const newUser = await models.User.create({
+    const newUser = await User.create({
       fullName: faker.name.findName(),
       email: faker.internet.email(),
       password: bcrypt.hashSync('password', 10),
@@ -19,7 +23,7 @@ class Mock {
 
   static async createChannel() {
     const name = faker.lorem.word();
-    const newChannel = await models.Channel.create({
+    const newChannel = await Channel.create({
       name,
       slug: name,
     });
@@ -35,7 +39,7 @@ class Mock {
   }
 
   static async createThread(userId, channelId) {
-    const newThread = await models.Thread.create({
+    const newThread = await Thread.create({
       title: faker.lorem.words(),
       body: faker.lorem.paragraphs(),
       userId,
@@ -45,15 +49,15 @@ class Mock {
     return thread;
   }
 
-  // static async createReply(userId, threadId) {
-  //   const newReply = await models.Reply.create({
-  //     body: faker.lorem.sentences(),
-  //     userId,
-  //     threadId
-  //   });
-  //   const { dataValues: reply } = newReply;
-  //   return reply;
-  // }
+  static async findActivity(type, UserId, subjectId, subjectType) {
+    const activity = await Activity.findOne({
+      where: {
+        type, UserId, subjectId, subjectType
+      }
+    });
+
+    return activity;
+  }
 
   static async createReply(userId, threadId, times = null) {
     if (times) {
@@ -68,10 +72,10 @@ class Mock {
         };
         replies.push(seedData);
       }
-      const reply = await models.Reply.bulkCreate(replies, { returning: true });
+      const reply = await Reply.bulkCreate(replies, { returning: true });
       return reply;
     }
-    const newReply = await models.Reply.create({
+    const newReply = await Reply.create({
       body: faker.lorem.sentences(),
       userId,
       threadId
