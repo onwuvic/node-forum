@@ -28,7 +28,7 @@ class ThreadController {
   }
 
   static async destroy(req, res) {
-    const response = await ThreadService.findByIdAndDelete(req.params.id, req.user.id);
+    const response = await ThreadService.findByIdAndDelete(req.params.id);
     if (response.status) {
       return Response.ok(res, response);
     }

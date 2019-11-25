@@ -4,6 +4,7 @@ import ReplyController from '../reply/ReplyController';
 import Authentication from '../../middlewares/authentication';
 import ThreadValidator from '../../middlewares/validations/threadValidator';
 import ReplyValidator from '../../middlewares/validations/replyValidator';
+import Policy from '../../policies/index';
 
 const threadRouter = express.Router();
 
@@ -18,6 +19,7 @@ threadRouter.get('/threads/:channel', ThreadController.index);
 threadRouter.delete(
   '/threads/:id',
   Authentication.tokenAuthentication,
+  Policy.isThreadOwner,
   ThreadController.destroy
 );
 threadRouter.get('/threads/:channel/:id', ThreadController.show);

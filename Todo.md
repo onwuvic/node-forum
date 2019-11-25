@@ -67,4 +67,5 @@ psuedo code
 - Link to see thread from user profile
 - best way to add check like: isAuth, hasPermit
 - add role table
-- policies (middleware): role permit (authUser.role === 'user' | 'admin'), thread permit (authUser.id === thread.user.id)
+- policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
+thread permit (authUser.id === thread.user.id [done])

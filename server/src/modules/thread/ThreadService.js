@@ -17,7 +17,7 @@ class ThreadService {
         return { status: false, statusCode: 404, message: 'Channel doesn\'t exist' };
       }
       // check if the thread and channel exist on thread table
-      const resource = await ThreadService.findOne(id, channel.id);
+      const resource = await ThreadService.findOneByIdAndChannel(id, channel.id);
       // if no, throw not found error
       if (!resource) {
         return { status: false, statusCode: 404, message: 'Thread doesn\'t exist' };
@@ -55,13 +55,10 @@ class ThreadService {
     }
   }
 
-  static async findByIdAndDelete(id, userId) {
+  static async findByIdAndDelete(id) {
     try {
-      const resource = await Thread.destroy({ where: { id, userId } });
-      if (resource) {
-        return { status: true, resource: 'Deleted Successfully' };
-      }
-      return { status: false, statusCode: 403, message: 'You are not permitted' };
+      await Thread.destroy({ where: { id } });
+      return { status: true, resource: 'Deleted Successfully' };
     } catch (error) {
       return {
         status: false,
@@ -109,7 +106,15 @@ class ThreadService {
     return threads;
   }
 
-  static async findOne(id, channelId) {
+  static async findOneById(id) {
+    const thread = await Thread.findOne({
+      where: { id }
+    });
+
+    return thread;
+  }
+
+  static async findOneByIdAndChannel(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },
       include: [
