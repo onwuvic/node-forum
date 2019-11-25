@@ -7,7 +7,7 @@
           <h3 class="mb-0">{{ thread.title }}</h3>
           <div class="mb-1 text-muted">Nov 11</div>
           <p class="mb-auto">{{ thread.body }}</p>
-          <div class="thread-comment">
+          <div class="flex-inline">
             <a [routerLink]="['.', thread.id]" class="stretched-link">Continue reading</a>
             <a [routerLink]="['.', thread.id]"
               class="stretched-link">{{ thread.replyCount | pluralize : 'comment' }}</a>

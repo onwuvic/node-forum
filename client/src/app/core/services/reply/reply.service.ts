@@ -19,4 +19,13 @@ export class ReplyService {
         map((res: any) => res.data)
       );
   }
+
+  addFavorite(replyId: number) {
+    const url = `${environment.baseUrl}/replies/${replyId}/favorites`;
+    return this.http.post(url, {})
+      .pipe(
+        tap(res => console.log('----->', res)),
+        map((res: any) => res.data)
+      );
+  }
 }

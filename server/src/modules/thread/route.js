@@ -1,9 +1,10 @@
 import express from 'express';
 import ThreadController from './ThreadController';
 import ReplyController from '../reply/ReplyController';
-import Authentication from '../../middleware/authentication';
-import ThreadValidator from '../../middleware/validations/threadValidator';
-import ReplyValidator from '../../middleware/validations/replyValidator';
+import Authentication from '../../middlewares/authentication';
+import ThreadValidator from '../../middlewares/validations/threadValidator';
+import ReplyValidator from '../../middlewares/validations/replyValidator';
+import Policy from '../../policies/index';
 
 const threadRouter = express.Router();
 
@@ -15,6 +16,12 @@ threadRouter.post(
 );
 threadRouter.get('/threads', ThreadController.index);
 threadRouter.get('/threads/:channel', ThreadController.index);
+threadRouter.delete(
+  '/threads/:id',
+  Authentication.tokenAuthentication,
+  Policy.isThreadOwner,
+  ThreadController.destroy
+);
 threadRouter.get('/threads/:channel/:id', ThreadController.show);
 threadRouter.post(
   '/threads/:id/replies',

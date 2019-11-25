@@ -1,11 +1,41 @@
+<!-- store state here -->
+<ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
+<ng-container [templateStore]="{ user: (authUser$ | async) }" #auth="templateStore"></ng-container>
+
 <div class="row">
   <ng-container *ngIf="(thread$ | async) as thread">
-    <div class="col-8">
+    <div class="col-12 col-md-8">
 
       <div class="blog-post">
         <h2 class="blog-post-title">{{ thread.title }}</h2>
-        <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by <a
-            href="#">{{ thread.creator.fullName }}</a></p>
+        <div class="flex-inline">
+          <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by
+            <a [routerLink]="['/profile', thread.creator.fullName]">{{ thread.creator.fullName }}</a>
+          </p>
+          <ng-container *ngIf="isLoggedIn.check">
+            <ng-container *ngIf="auth.user.userObject.id === thread.creator.id">
+              <div>
+                <button mat-icon-button [matMenuTriggerFor]="moreOptions" aria-label="Delete thread">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #moreOptions="matMenu" yPosition="below">
+                  <button mat-menu-item (click)="deleteThread(thread.id)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                  <!-- <button mat-menu-item disabled>
+                                        <mat-icon>voicemail</mat-icon>
+                                        <span>Check voice mail</span>
+                                      </button>
+                                      <button mat-menu-item>
+                                        <mat-icon>notifications_off</mat-icon>
+                                        <span>Disable alerts</span>
+                                      </button> -->
+                </mat-menu>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
         <hr>
         <p>{{ thread.body }}</p>
       </div>
@@ -20,8 +50,9 @@
               <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
                 alt="Generic placeholder image">
               <div class="media-body text-center text-md-left ml-md-3 ml-0">
-                <h5 class="mt-0 font-weight-bold">
-                  <a href="">{{ reply.user.fullName }}</a>
+                <h5 class="mt-0 font-weight-bold flex-inline">
+                  <a [routerLink]="['/profile', reply.user.fullName]">{{ reply.user.fullName }}</a>
+                  <button mat-stroked-button (click)="favarite(reply.id)">{{ reply.favorites.length | pluralize : 'Favorite' }}</button>
                 </h5>
                 <small>{{ reply.createdAt | amTimeAgo }}</small>
                 <p>{{ reply.body }}</p>
@@ -89,12 +120,12 @@
       <!--/.Reply-->
     </div>
 
-    <div class="col-4">
+    <div class="col-12 col-md-4">
       <div class="card mb-3 wow fadeIn">
         <div class="card-body">
           <p class="blog-post-meta">
             This thread was published
-            {{ thread.createdAt | amTimeAgo }} by <a href="#">{{ thread.creator.fullName }}</a>, and
+            {{ thread.createdAt | amTimeAgo }} by <a [routerLink]="['/profile', thread.creator.fullName]">{{ thread.creator.fullName }}</a>, and
             currently has {{ thread.replies.length | pluralize : 'comment' }}.
           </p>
         </div>

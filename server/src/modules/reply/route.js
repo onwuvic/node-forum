@@ -1,7 +1,7 @@
 import express from 'express';
 import ReplyController from './ReplyController';
 import FavoriteController from '../favorite/FavoriteController';
-import Authentication from '../../middleware/authentication';
+import Authentication from '../../middlewares/authentication';
 
 
 const replyRouter = express.Router();

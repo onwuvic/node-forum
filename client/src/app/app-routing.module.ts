@@ -17,6 +17,10 @@ const routes: Routes = [
     path: 'auth',
     loadChildren: './modules/auth/auth.module#AuthModule'
   },
+  {
+    path: 'profile',
+    loadChildren: './modules/profile/profile.module#ProfileModule'
+  },
   { path: 'error/**', component: ErrorComponent },
   { path: '**', component: ErrorComponent }
 ];

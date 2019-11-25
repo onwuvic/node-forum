@@ -42,15 +42,12 @@ What to test
 - add 404 page (done)
 - add catch all route error (done)
 - add channel to parameter call (done)
-
-- fix running test on circleCI (when done update postgres api generator)
-- route back to same page and display the new reply
-
-
 - add backend validation to create thread (done)
 - do a look up for channel id before creating thread (done)
 - how to add count to all thread api resource (done)
 
+- fix running test on circleCI (when done update postgres api generator)
+- route back to same page and display the new reply
 - channel should be unique
 - channel should use the find or create method to create new channel
 - fine tune validation error to either array or object
@@ -65,23 +62,10 @@ psuedo code
 - start frontend implementation
 - hold on on reply pagination (all pagination)
 
-
-- scopes
- findAll 
-    default
-        include channel
-        include replyCount
-        order by createdAt in desc
-    
-    withChannel
-        where channelId = channel.id
-
-    byUser
-        where userId = user.id
-
-    byPopular
-        order by replyCount in desc
-
-
-- those that deal with db/model directly
-- those that use it to get all required resource before sending to the controller
+- how to check if user has favorite a reply or not
+- auto reload
+- Link to see thread from user profile
+- best way to add check like: isAuth, hasPermit
+- add role table
+- policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
+thread permit (authUser.id === thread.user.id [done])

@@ -47,6 +47,7 @@
             </span>
             <mat-menu #profileDropdown="matMenu">
               <a [routerLink]="['/threads', 'create']" mat-menu-item>New Thread</a>
+              <a [routerLink]="['/profile', auth.user.userObject.fullName]" mat-menu-item>My Profile</a>
               <span mat-menu-item (click)="logout()">LogOut</span>
             </mat-menu>
           </ng-container>

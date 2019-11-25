@@ -4,7 +4,7 @@ import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
 
 const {
-  Thread, Reply, User, Channel
+  Thread, Reply, User, Channel, Favorite
 } = models;
 
 class ThreadService {
@@ -17,7 +17,7 @@ class ThreadService {
         return { status: false, statusCode: 404, message: 'Channel doesn\'t exist' };
       }
       // check if the thread and channel exist on thread table
-      const resource = await ThreadService.findOne(id, channel.id);
+      const resource = await ThreadService.findOneByIdAndChannel(id, channel.id);
       // if no, throw not found error
       if (!resource) {
         return { status: false, statusCode: 404, message: 'Thread doesn\'t exist' };
@@ -46,6 +46,19 @@ class ThreadService {
       resource.setDataValue('channel', await resource.getChannel());
 
       return { status: true, resource };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: 'Unable to perform this action at this time. Try again later.'
+      };
+    }
+  }
+
+  static async findByIdAndDelete(id) {
+    try {
+      await Thread.destroy({ where: { id } });
+      return { status: true, resource: 'Deleted Successfully' };
     } catch (error) {
       return {
         status: false,
@@ -93,7 +106,15 @@ class ThreadService {
     return threads;
   }
 
-  static async findOne(id, channelId) {
+  static async findOneById(id) {
+    const thread = await Thread.findOne({
+      where: { id }
+    });
+
+    return thread;
+  }
+
+  static async findOneByIdAndChannel(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },
       include: [
@@ -102,20 +123,18 @@ class ThreadService {
           as: 'replies',
           include: [
             {
-              attributes: {
-                exclude: 'password'
-              },
               model: User,
               as: 'user',
-            }
-          ]
+            },
+            {
+              model: Favorite,
+              as: 'favorites',
+            },
+          ],
         },
         {
           model: User,
-          as: 'creator',
-          attributes: {
-            exclude: 'password'
-          }
+          as: 'creator'
         },
         {
           model: Channel,
