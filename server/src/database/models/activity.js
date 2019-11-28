@@ -38,6 +38,12 @@ export default (sequelize, DataTypes) => {
       constraints: false,
       as: 'thread'
     });
+
+    Activity.belongsTo(models.Reply, {
+      foreignKey: 'subjectId',
+      constraints: false,
+      as: 'reply'
+    });
   };
   return Activity;
 };

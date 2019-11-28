@@ -19,6 +19,7 @@ class UserService {
   }
 
   static async findUserByNameWithThreads(fullName) {
+    // TODO: ADD aCTIVIIES WITH IT CHILDREN WHEN YOU FIGURED IT OUT.
     const resource = await User.findOne({
       where: { fullName },
       include: [
