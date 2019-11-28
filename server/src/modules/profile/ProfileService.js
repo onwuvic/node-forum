@@ -1,4 +1,5 @@
 import UserService from '../user/UserService';
+import Response from '../../responses/response';
 
 class ProfileService {
   static async findByUsername(username) {
@@ -7,15 +8,11 @@ class ProfileService {
       const user = await UserService.findUserByNameWithThreads(username);
       // if user doesn't exist
       if (!user) {
-        return { status: false, statusCode: 404, message: 'User doesn\'t exist' };
+        return Response.failureResponseObject(404, 'User doesn\'t exist');
       }
-      return { status: true, resource: user };
+      return Response.successResponseObject(user);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 }

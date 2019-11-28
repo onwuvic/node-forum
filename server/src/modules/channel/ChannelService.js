@@ -1,4 +1,5 @@
 import models from '../../database/models';
+import Response from '../../responses/response';
 
 const { Channel } = models;
 
@@ -16,13 +17,9 @@ class ChannelService {
   static async findAll() {
     try {
       const resource = await Channel.findAll();
-      return { status: true, resource };
+      return Response.successResponseObject(resource);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 }

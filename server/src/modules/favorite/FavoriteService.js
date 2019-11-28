@@ -1,5 +1,6 @@
 import ReplyService from '../reply/ReplyService';
 import models from '../../database/models';
+import Response from '../../responses/response';
 
 const { Favorite } = models;
 
@@ -8,20 +9,16 @@ class FavoriteService {
     try {
       const reply = await ReplyService.findById(replyId);
       if (!reply) {
-        return { status: false, statusCode: 400, message: 'This reply doesn\'t exist' };
+        return Response.failureResponseObject(400, 'This reply doesn\'t exist');
       }
       if (!await FavoriteService.findUnique(userId, replyId, 'reply')) {
         // const resource = await reply.createFavorite({ userId });
         const resource = await FavoriteService.createFavorite(reply, userId);
-        return { status: true, resource };
+        return Response.successResponseObject(resource);
       }
-      return { status: false, statusCode: 400, message: 'Already favorite this reply' };
+      return Response.failureResponseObject(400, 'Already favorite this reply');
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 

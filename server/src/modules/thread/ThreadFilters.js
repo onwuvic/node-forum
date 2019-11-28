@@ -1,28 +1,29 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import ThreadService from './ThreadService';
+import Response from '../../responses/response';
 
 class ThreadFilters {
   static async filter(query) {
     const filters = ThreadFilters.getFilters(query);
-    
+
     if (filters.length) {
       for (const filter of filters) {
         // manual check. this will be refactored soon
         if (filter === 'by') {
           const resource = await ThreadFilters.by(query[filter]);
           if (!resource) {
-            return { status: false, message: 'Filter User doesn\'t exist' };
+            return Response.failureResponseObject(404, 'Filter User doesn\'t exist');
           }
-          return { status: true, resource };
+          return Response.successResponseObject(resource);
         }
         if (filter === 'popular') {
           const resource = await ThreadFilters.popular();
-          return { status: true, resource };
+          return Response.successResponseObject(resource);
         }
       }
     }
-    return { status: false, message: 'Incorrect filter parameters' };
+    return Response.failureResponseObject(400, 'Incorrect filter parameters');
   }
 
   static getFilters(query) {

@@ -1,4 +1,5 @@
 import models from '../../database/models';
+import Response from '../../responses/response';
 
 const { Activity, Thread } = models;
 
@@ -21,14 +22,10 @@ class ActivityService {
         }
       );
       // resource.setDataValue('subject', await resource.getItem());
-      return { status: true, resource };
+      return Response.successResponseObject(resource);
     } catch (error) {
       console.log('-------->activity', error);
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 }

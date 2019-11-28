@@ -43,28 +43,24 @@ class ThreadController {
       if (channelSlug) {
         const resource = await ThreadService.findAllByChannel(channelSlug);
         if (!resource) {
-          return { status: false, statusCode: 404, message: 'Channel doesn\'t exist' };
+          return Response.failureResponseObject(404, 'Channel doesn\'t exist');
         }
-        return { status: true, resource };
+        return Response.successResponseObject(resource);
       }
       // if query is provided
       if (Object.keys(query).length) {
         const response = await ThreadFilters.filter(query);
         if (!response.status) {
-          return { status: false, statusCode: 400, message: response.message };
+          return Response.failureResponseObject(400, response.message);
         }
-        return { status: true, resource: response.resource };
+        return Response.successResponseObject(response.resource);
       }
 
       // else just get all the thread
       const resource = await ThreadService.findAll();
-      return { status: true, resource };
+      return Response.successResponseObject(resource);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 }
