@@ -39,6 +39,11 @@ export default (sequelize, DataTypes) => {
       sourceKey: 'id',
       as: 'threads'
     });
+    User.hasMany(models.Activity, {
+      foreignKey: 'userId',
+      sourceKey: 'id',
+      as: 'activities'
+    });
 
     // scopes goes here
     User.addScope('defaultScope', {

@@ -1,6 +1,7 @@
 import models from '../../database/models';
 import Utils from '../../helpers/Utils';
 import Token from '../../helpers/Token';
+import Response from '../../responses/response';
 
 const { User, Thread } = models;
 class UserService {
@@ -19,6 +20,7 @@ class UserService {
   }
 
   static async findUserByNameWithThreads(fullName) {
+    // TODO: ADD aCTIVIIES WITH IT CHILDREN WHEN YOU FIGURED IT OUT.
     const resource = await User.findOne({
       where: { fullName },
       include: [
@@ -46,7 +48,7 @@ class UserService {
       const user = await UserService.findUserByEmail(request.email);
       if (!user) {
         // if not, return a forbidden error
-        return { status: false, statusCode: 403, message: 'Invalid user credentials' };
+        return Response.failureResponseObject(403, 'Invalid user credentials');
       }
       // check if the user is verified
       // if (!user.dataValues.isVerified) {
@@ -56,7 +58,7 @@ class UserService {
       const match = await Utils.comparePassword(request.password, user.password);
       if (!match) {
         // if not, return a forbidden error
-        return { status: false, statusCode: 403, message: 'Invalid user credentials' };
+        return Response.failureResponseObject(403, 'Invalid user credentials');
       }
 
       // remove user password for the user data
@@ -65,14 +67,9 @@ class UserService {
       // generate a token from the user data
       const token = await Token.generateToken(logInUser);
       // return a token
-      // return Response.ok(res, { token });
-      return { status: true, resource: { token } };
+      return Response.successResponseObject({ token });
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 }

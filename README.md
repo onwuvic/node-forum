@@ -1,33 +1,35 @@
 # api-pen
 [![CircleCI](https://circleci.com/gh/onwuvic/node-forum/tree/develop.svg?style=svg)](https://circleci.com/gh/onwuvic/node-forum/tree/develop) [![Maintainability](https://api.codeclimate.com/v1/badges/d44a0af08f04fb0d7c94/maintainability)](https://codeclimate.com/github/onwuvic/node-forum/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d44a0af08f04fb0d7c94/test_coverage)](https://codeclimate.com/github/onwuvic/node-forum/test_coverage) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-A PENS (Postgres, Express, Node and Sequelize ORM) API template for building API application. It allows you to start developing your application without the stress of basic setup.
+A TDD (Test Driven Development) Forum web application (Postgres, Express, Node and Sequelize ORM, Angular) API and frontend. 
+
+## feature
+- User can start a discussion thread.
+- User can reply a thread
+- User can subscribe to a thread
+- user can get instant notification for all their subscription
+- User can follow another user
+- user can perform all CRUD Operation a thread they created
+- user can perform all CRUD Operation a reply they created
+- lot more coming...
 
 ## tools
-babel, eslint, airbnb javascript style guide, code-climate, circle-ci, sequelize, express, node, postgres, dotenv, jest
-
-## Basic setup already done for you
-- Sequelize setup
-- Dotenv for storing secret environment variables
-- MIT License
-- Code-Climate setup
-- Circle CI setup
-- Jest testing setup
-- Eslint Setup
-- Editor Configuration setup
-- GitIgnore file
-- Babel configuration for using latest JavaScript features
-- Code of Conduct file for Open Source project
+babel, eslint, airbnb javascript style guide, code-climate, circle-ci, sequelize, express, node, postgres, dotenv, jest, Angular 7, 
 
 ## Usage
-- clone it `git clone git@github.com:onwuvic/api-postgres-node-express-sequelize.git` or use the template generator.
-- npm install
+- clone it `git clone git@github.com:onwuvic/node-forum.git`.
+### Backend Setup
+- cd into `node-forum/server`
+- run `npm install`
 - rename .env.sample to .env and populate the required parameters
+- set up your postgres database
+- run `npm run dev`
+- to test with postman with these API'S ``
 
-## Code Climate and Circle-CI Settings
-- add your repo to code-climate and circle-ci
-- copy your code-climate Test Reporter ID from code-climate
-- create environment variable on your Circle-CI as name: CC_TEST_REPORTER_ID, key: your_code_climate_test_reporter_id
+### Frontend Setup
+- cd into `node-forum/client`
+- run `npm install`
+- run `ng serve`
 
 ## Package.json Scripts and usage
 `npm run [name_of_the_script]`
@@ -45,13 +47,3 @@ babel, eslint, airbnb javascript style guide, code-climate, circle-ci, sequelize
 - clean: This is used to remove and recreate `dist` folder.
 - build-server: This is used transpile your ES6/7/8/9 code to ES5 into the `dist` folder.
 - build: This runs the `clean` and `build-server` scripts.
-
-## Optional
-### Sequelize configuration
-if you like to customize the way your database folder (migrations, models and seeders) should be, delete the database folder and you can specify your structure in .sequelizerc and then run `sequelize init`.
-
-### eslint
-You can configure your eslint in .eslintrc file
-
-### jest
-By default we make used of `jest` for testing but you are free to make used of any testing suite like `mocha` etc.

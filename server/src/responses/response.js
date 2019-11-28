@@ -47,6 +47,22 @@ class Response {
       message
     });
   }
+
+  static successResponseObject(resource) {
+    return { status: true, resource };
+  }
+
+  static failureResponseObject(statusCode, message) {
+    return { status: false, statusCode, message };
+  }
+
+  static serverErrorResponseObject() {
+    return {
+      status: false,
+      statusCode: 500,
+      message: 'Unable to perform this action at this time. Try again later.'
+    };
+  }
 }
 
 export default Response;

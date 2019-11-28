@@ -2,6 +2,9 @@
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
+import ActivityService from '../activity/ActivityService';
+import { CREATE_THREAD } from '../activity/activityConstants';
+import Response from '../../responses/response';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -14,22 +17,18 @@ class ThreadService {
       const channel = await ChannelService.findBySlug(channelSlug);
       // if no, throw not found error
       if (!channel) {
-        return { status: false, statusCode: 404, message: 'Channel doesn\'t exist' };
+        return Response.failureResponseObject(404, 'Channel doesn\'t exist');
       }
       // check if the thread and channel exist on thread table
       const resource = await ThreadService.findOneByIdAndChannel(id, channel.id);
       // if no, throw not found error
       if (!resource) {
-        return { status: false, statusCode: 404, message: 'Thread doesn\'t exist' };
+        return Response.failureResponseObject(404, 'Thread doesn\'t exist');
       }
 
-      return { status: true, resource };
+      return Response.successResponseObject(resource);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 
@@ -39,32 +38,27 @@ class ThreadService {
       const channel = await ChannelService.findById(data.channelId);
       // if no, throw bad request error
       if (!channel) {
-        return { status: false, statusCode: 400, message: 'Channel doesn\'t exist' };
+        return Response.failureResponseObject(400, 'Channel doesn\'t exist');
       }
       // create thread and add its channel to the resource
       const resource = await Thread.create({ ...data, userId });
       resource.setDataValue('channel', await resource.getChannel());
 
-      return { status: true, resource };
+      // create activity
+      await ActivityService.createActivity(resource, CREATE_THREAD, userId);
+
+      return Response.successResponseObject(resource);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 
   static async findByIdAndDelete(id) {
     try {
       await Thread.destroy({ where: { id } });
-      return { status: true, resource: 'Deleted Successfully' };
+      return Response.successResponseObject('Deleted Successfully');
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 

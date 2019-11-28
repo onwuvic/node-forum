@@ -1,31 +1,30 @@
 import models from '../../database/models';
+import ActivityService from '../activity/ActivityService';
+import { CREATE_REPLY } from '../activity/activityConstants';
+import Response from '../../responses/response';
 
 const { Reply } = models;
 
 class ReplyService {
   static async create(body, userId, threadId) {
     try {
+      // create reply
       const resource = await Reply.create({ body, userId, threadId });
-      return { status: true, resource };
+
+      // create reply activity
+      await ActivityService.createActivity(resource, CREATE_REPLY, userId);
+      return Response.successResponseObject(resource);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 
   static async findAll() {
     try {
       const resource = await Reply.findAll();
-      return { status: true, resource };
+      return Response.successResponseObject(resource);
     } catch (error) {
-      return {
-        status: false,
-        statusCode: 500,
-        message: 'Unable to perform this action at this time. Try again later.'
-      };
+      return Response.serverErrorResponseObject();
     }
   }
 
