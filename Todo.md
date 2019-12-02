@@ -45,6 +45,8 @@ What to test
 - add backend validation to create thread (done)
 - do a look up for channel id before creating thread (done)
 - how to add count to all thread api resource (done)
+- when deleting a thread (done)
+- also delete its thread activity and delete its reply activity (done)
 
 - fix running test on circleCI (when done update postgres api generator)
 - route back to same page and display the new reply
@@ -78,5 +80,8 @@ thread permit (authUser.id === thread.user.id [done])
 - auto add different component base on the activity type
 
 //
-- when deleting a thread
-- also delete its thread activity and delete its reply activity
+- Add favorite activity api
+- add deleting reply api
+- refactor policies to be : ReplyPolicy, ThreadPolicy
+
+// refactor frontend
