@@ -32,6 +32,14 @@ class ReplyService {
     const reply = await Reply.findOne({ where: { id } });
     return reply;
   }
+
+  static async findAllWithThread(id) {
+    const resource = await Reply.findAll({
+      where: { threadId: id },
+      attributes: ['id']
+    });
+    return resource;
+  }
 }
 
 export default ReplyService;

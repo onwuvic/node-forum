@@ -69,3 +69,14 @@ psuedo code
 - add role table
 - policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
 thread permit (authUser.id === thread.user.id [done])
+
+
+// Activities
+- get all activity and eager load its subjectType explictly
+- use this knowledge to eager it from the user model
+- group the subjectType by createdAt date
+- auto add different component base on the activity type
+
+//
+- when deleting a thread
+- also delete its thread activity and delete its reply activity

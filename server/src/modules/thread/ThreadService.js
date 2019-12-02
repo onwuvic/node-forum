@@ -5,6 +5,7 @@ import UserService from '../user/UserService';
 import ActivityService from '../activity/ActivityService';
 import { CREATE_THREAD } from '../activity/activityConstants';
 import Response from '../../responses/response';
+import ReplyService from '../reply/ReplyService';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -55,11 +56,31 @@ class ThreadService {
 
   static async findByIdAndDelete(id) {
     try {
+      // delete all thread related activities
+      await ThreadService.deleteThreadRelatedActivities(id);
+      // delete the thread
       await Thread.destroy({ where: { id } });
+
       return Response.successResponseObject('Deleted Successfully');
     } catch (error) {
       return Response.serverErrorResponseObject();
     }
+  }
+
+  static async deleteThreadRelatedActivities(id) {
+    // get all replies with this thread id
+    const replies = await ReplyService.findAllWithThread(id);
+
+    if (replies.length) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const reply of replies) {
+        // eslint-disable-next-line no-await-in-loop
+        await ActivityService.deleteActivity(reply.id, 'reply');
+      }
+    }
+
+    // and also delete it thread activity
+    await ActivityService.deleteActivity(id, 'thread');
   }
 
   static async findAll() {
