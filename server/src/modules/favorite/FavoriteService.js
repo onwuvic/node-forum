@@ -7,7 +7,7 @@ const { Favorite } = models;
 class FavoriteService {
   static async favoriteReply(userId, replyId) {
     try {
-      const reply = await ReplyService.findById(replyId);
+      const reply = await ReplyService.findOneById(replyId);
       if (!reply) {
         return Response.failureResponseObject(400, 'This reply doesn\'t exist');
       }

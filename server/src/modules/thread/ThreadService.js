@@ -36,7 +36,7 @@ class ThreadService {
   static async create(data, userId) {
     try {
       // check if channel exist
-      const channel = await ChannelService.findById(data.channelId);
+      const channel = await ChannelService.findOneById(data.channelId);
       // if no, throw bad request error
       if (!channel) {
         return Response.failureResponseObject(400, 'Channel doesn\'t exist');

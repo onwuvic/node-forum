@@ -39,7 +39,7 @@ class ReplyService {
     }
   }
 
-  static async findById(id) {
+  static async findOneById(id) {
     const reply = await Reply.findOne({ where: { id } });
     return reply;
   }
