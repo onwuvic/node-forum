@@ -80,7 +80,7 @@ thread permit (authUser.id === thread.user.id [done])
 - auto add different component base on the activity type
 
 //
-- Add favorite activity api
+- Add favorite activity api (done)
 - add deleting reply api (done)
 - refactor policies to be : ReplyPolicy, ThreadPolicy (done)
 - add bulk delete to activity (done)

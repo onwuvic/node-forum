@@ -44,6 +44,12 @@ export default (sequelize, DataTypes) => {
       constraints: false,
       as: 'reply'
     });
+
+    Activity.belongsTo(models.Favorite, {
+      foreignKey: 'subjectId',
+      constraints: false,
+      as: 'favorite'
+    });
   };
   return Activity;
 };
