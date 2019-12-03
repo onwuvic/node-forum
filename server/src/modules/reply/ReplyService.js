@@ -30,6 +30,9 @@ class ReplyService {
 
   static async findByIdAndDelete(id) {
     try {
+      // delete reply activity as well
+      await ActivityService.deleteActivity(id, 'reply');
+      
       // delete the thread
       await Reply.destroy({ where: { id } });
 

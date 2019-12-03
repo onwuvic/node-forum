@@ -3,6 +3,7 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
+import { CREATE_REPLY } from '../../activity/activityConstants';
 
 describe('', () => {
   let server;
@@ -11,9 +12,6 @@ describe('', () => {
   let user;
   let token;
   let channel;
-  // let userTwo;
-  // let tokenTwo;
-  // let reply;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -32,9 +30,6 @@ describe('', () => {
       channel = await Mock.createChannel();
       thread = await Mock.createThread(user.id, channel.id);
       token = await Mock.authUser(request, `${baseUrl}/auth/login`, user.email);
-      // userTwo = await Mock.createUser();
-      // reply = await Mock.createReply(userTwo.id, thread.id);
-      // tokenTwo = await Mock.authUser(request, `${baseUrl}/auth/login`, userTwo.email);
     });
 
     afterAll(async () => {
@@ -92,28 +87,48 @@ describe('', () => {
       });
 
       it('should not be able to delete a reply if you are not the owner', async () => {
-        // given user2
         const userTwo = await Mock.createUser();
-        // const tokenTwo = await Mock.authUser(request, `${baseUrl}/auth/login`, userTwo.email);
 
-        // given user two reply
-        // const reply = await request
-        //   .post(`${baseUrl}/threads/${thread.id}/replies`)
-        //   .set('authorization', `Bearer ${tokenTwo}`)
-        //   .send({ body: 'I reply you' });
         const reply = await Mock.createReply(userTwo.id, thread.id);
 
-        // console.log('------>', reply);
-
-        // const replyId = reply.body.data.id;
-
-        // when user 1 try to delete it
         const response = await request
           .delete(`${baseUrl}/replies/${reply.id}`)
           .set('authorization', `Bearer ${token}`);
 
         expect(response.status).toBe(401);
         expect(response.body.message).toBe('You are not authorized to do this');
+      });
+
+      it('should be able to delete a reply if you are the owner', async () => {
+        // create reply by enpoint to create activity
+        const reply = await request
+          .post(`${baseUrl}/threads/${thread.id}/replies`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'I reply you' });
+
+        const replyId = reply.body.data.id;
+
+        // check if activity was created
+        const replyActivity = await Mock.findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+
+        expect(replyActivity.subjectId).toBe(replyId);
+
+
+        // delete reply
+        const response = await request
+          .delete(`${baseUrl}/replies/${replyId}`)
+          .set('authorization', `Bearer ${token}`);
+
+        // check if reply activity is in the db
+        const deletedReplyActivity = await Mock
+          .findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+
+        // check if reply was deleted
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBe('Deleted Successfully');
+
+        // also confirm that the activity was deleted too
+        expect(deletedReplyActivity).toBe(null);
       });
     });
   });
