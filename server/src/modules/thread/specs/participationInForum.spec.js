@@ -11,6 +11,9 @@ describe('', () => {
   let user;
   let token;
   let channel;
+  // let userTwo;
+  // let tokenTwo;
+  // let reply;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -29,6 +32,9 @@ describe('', () => {
       channel = await Mock.createChannel();
       thread = await Mock.createThread(user.id, channel.id);
       token = await Mock.authUser(request, `${baseUrl}/auth/login`, user.email);
+      // userTwo = await Mock.createUser();
+      // reply = await Mock.createReply(userTwo.id, thread.id);
+      // tokenTwo = await Mock.authUser(request, `${baseUrl}/auth/login`, userTwo.email);
     });
 
     afterAll(async () => {
@@ -73,6 +79,41 @@ describe('', () => {
 
         expect(response.status).toBe(400);
         expect(response.body.message.body).toBe('Please provide body');
+      });
+    });
+
+    describe('Delete Reply', () => {
+      it('should not be able to delete a reply as a guest', async () => {
+        const response = await request
+          .delete(`${baseUrl}/replies/9999`);
+
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBe('No token provided');
+      });
+
+      it('should not be able to delete a reply if you are not the owner', async () => {
+        // given user2
+        const userTwo = await Mock.createUser();
+        // const tokenTwo = await Mock.authUser(request, `${baseUrl}/auth/login`, userTwo.email);
+
+        // given user two reply
+        // const reply = await request
+        //   .post(`${baseUrl}/threads/${thread.id}/replies`)
+        //   .set('authorization', `Bearer ${tokenTwo}`)
+        //   .send({ body: 'I reply you' });
+        const reply = await Mock.createReply(userTwo.id, thread.id);
+
+        // console.log('------>', reply);
+
+        // const replyId = reply.body.data.id;
+
+        // when user 1 try to delete it
+        const response = await request
+          .delete(`${baseUrl}/replies/${reply.id}`)
+          .set('authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBe('You are not authorized to do this');
       });
     });
   });

@@ -28,6 +28,17 @@ class ReplyService {
     }
   }
 
+  static async findByIdAndDelete(id) {
+    try {
+      // delete the thread
+      await Reply.destroy({ where: { id } });
+
+      return Response.successResponseObject('Deleted Successfully');
+    } catch (error) {
+      return Response.serverErrorResponseObject();
+    }
+  }
+
   static async findById(id) {
     const reply = await Reply.findOne({ where: { id } });
     return reply;

@@ -83,5 +83,6 @@ thread permit (authUser.id === thread.user.id [done])
 - Add favorite activity api
 - add deleting reply api
 - refactor policies to be : ReplyPolicy, ThreadPolicy
+- add bulk delete to activity
 
 // refactor frontend

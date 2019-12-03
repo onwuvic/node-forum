@@ -6,7 +6,17 @@ import Authentication from '../../middlewares/authentication';
 
 const replyRouter = express.Router();
 
-replyRouter.get('/replies', ReplyController.index);
+replyRouter.get(
+  '/replies',
+  ReplyController.index
+);
+
+replyRouter.delete(
+  '/replies/:id',
+  Authentication.tokenAuthentication,
+  ReplyController.destroy
+);
+
 replyRouter.post(
   '/replies/:replyId/favorites',
   Authentication.tokenAuthentication,
