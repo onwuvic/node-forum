@@ -72,13 +72,9 @@ class ThreadService {
     const replies = await ReplyService.findAllWithThread(id);
 
     if (replies.length) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const reply of replies) {
-        // eslint-disable-next-line no-await-in-loop
-        await ActivityService.deleteActivity(reply.id, 'reply');
-      }
+      const ids = replies.map(reply => reply.id);
+      await ActivityService.deleteActivity(ids, 'reply');
     }
-
     // and also delete it thread activity
     await ActivityService.deleteActivity(id, 'thread');
   }
