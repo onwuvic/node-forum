@@ -45,6 +45,8 @@ What to test
 - add backend validation to create thread (done)
 - do a look up for channel id before creating thread (done)
 - how to add count to all thread api resource (done)
+- when deleting a thread (done)
+- also delete its thread activity and delete its reply activity (done)
 
 - fix running test on circleCI (when done update postgres api generator)
 - route back to same page and display the new reply
@@ -69,3 +71,18 @@ psuedo code
 - add role table
 - policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
 thread permit (authUser.id === thread.user.id [done])
+
+
+// Activities
+- get all activity and eager load its subjectType explictly
+- use this knowledge to eager it from the user model
+- group the subjectType by createdAt date
+- auto add different component base on the activity type
+
+//
+- Add favorite activity api (done)
+- add deleting reply api (done)
+- refactor policies to be : ReplyPolicy, ThreadPolicy (done)
+- add bulk delete to activity (done)
+
+// refactor frontend

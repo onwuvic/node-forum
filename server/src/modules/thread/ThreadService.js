@@ -5,6 +5,7 @@ import UserService from '../user/UserService';
 import ActivityService from '../activity/ActivityService';
 import { CREATE_THREAD } from '../activity/activityConstants';
 import Response from '../../responses/response';
+import ReplyService from '../reply/ReplyService';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -35,7 +36,7 @@ class ThreadService {
   static async create(data, userId) {
     try {
       // check if channel exist
-      const channel = await ChannelService.findById(data.channelId);
+      const channel = await ChannelService.findOneById(data.channelId);
       // if no, throw bad request error
       if (!channel) {
         return Response.failureResponseObject(400, 'Channel doesn\'t exist');
@@ -55,11 +56,27 @@ class ThreadService {
 
   static async findByIdAndDelete(id) {
     try {
+      // delete all thread related activities
+      await ThreadService.deleteThreadRelatedActivities(id);
+      // delete the thread
       await Thread.destroy({ where: { id } });
+
       return Response.successResponseObject('Deleted Successfully');
     } catch (error) {
       return Response.serverErrorResponseObject();
     }
+  }
+
+  static async deleteThreadRelatedActivities(id) {
+    // get all replies with this thread id
+    const replies = await ReplyService.findAllWithThread(id);
+
+    if (replies.length) {
+      const ids = replies.map(reply => reply.id);
+      await ActivityService.deleteActivity(ids, 'reply');
+    }
+    // and also delete it thread activity
+    await ActivityService.deleteActivity(id, 'thread');
   }
 
   static async findAll() {

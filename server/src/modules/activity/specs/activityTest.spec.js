@@ -3,7 +3,7 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
-import { CREATE_THREAD, CREATE_REPLY } from '../activityConstants';
+import { CREATE_THREAD, CREATE_REPLY, CREATE_FAVORITE } from '../activityConstants';
 
 describe('', () => {
   let server;
@@ -11,6 +11,7 @@ describe('', () => {
   let channel;
   let user;
   let token;
+  let thread;
   const baseUrl = '/api/v1';
 
   beforeAll((done) => {
@@ -28,6 +29,7 @@ describe('', () => {
       user = await Mock.createUser();
       channel = await Mock.createChannel();
       token = await Mock.authUser(request, `${baseUrl}/auth/login`, user.email);
+      thread = await Mock.createThread(user.id, channel.id);
     });
 
     afterAll(async () => {
@@ -54,10 +56,11 @@ describe('', () => {
         expect(activity.subjectId).toBe(threadId);
         expect(activity.subjectType).toBe('thread');
       });
+    });
 
+    describe('Reply Event', () => {
       it('should create an activity record when user reply', async () => {
         // when I hit this endpoint to create a thread
-        const thread = await Mock.createThread(user.id, channel.id);
         const response = await request
           .post(`${baseUrl}/threads/${thread.id}/replies`)
           .set('authorization', `Bearer ${token}`)
@@ -72,6 +75,28 @@ describe('', () => {
         expect(activity.userId).toBe(user.id);
         expect(activity.subjectId).toBe(replyId);
         expect(activity.subjectType).toBe('reply');
+      });
+    });
+
+    describe('Favorite Event', () => {
+      it('should create an activity record when user favorite a reply', async () => {
+        // given a reply
+        const reply = await Mock.createReply(user.id, thread.id);
+
+        // when i hit the endpoint to favorite the reply
+        const response = await request
+          .post(`${baseUrl}/replies/${reply.id}/favorites`)
+          .set('authorization', `Bearer ${token}`);
+
+        const favoriteId = response.body.data.id;
+
+        // it should record a created favorite activity
+        const activity = await Mock.findActivity(CREATE_FAVORITE, user.id, favoriteId, 'favorite');
+
+        expect(activity.type).toBe(CREATE_FAVORITE);
+        expect(activity.userId).toBe(user.id);
+        expect(activity.subjectId).toBe(favoriteId);
+        expect(activity.subjectType).toBe('favorite');
       });
     });
   });

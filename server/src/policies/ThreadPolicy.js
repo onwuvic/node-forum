@@ -1,9 +1,8 @@
 import ThreadService from '../modules/thread/ThreadService';
 import Response from '../responses/response';
 
-
-class Policy {
-  static async isThreadOwner(req, res, next) {
+class ThreadPolicy {
+  static async belongToUser(req, res, next) {
     const authId = req.user.id;
     const thread = await ThreadService.findOneById(req.params.id);
     if (!thread) {
@@ -18,4 +17,4 @@ class Policy {
   }
 }
 
-export default Policy;
+export default ThreadPolicy;

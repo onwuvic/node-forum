@@ -17,6 +17,14 @@ class ReplyController {
     }
     return Response.error(res, response);
   }
+
+  static async destroy(req, res) {
+    const response = await ReplyService.findByIdAndDelete(req.params.id);
+    if (response.status) {
+      return Response.ok(res, response);
+    }
+    return Response.error(res, response);
+  }
 }
 
 export default ReplyController;

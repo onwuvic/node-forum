@@ -4,7 +4,7 @@ import Response from '../../responses/response';
 const { Channel } = models;
 
 class ChannelService {
-  static async findById(id) {
+  static async findOneById(id) {
     const channel = await Channel.findOne({ where: { id } });
     return channel;
   }

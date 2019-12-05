@@ -28,9 +28,31 @@ class ReplyService {
     }
   }
 
-  static async findById(id) {
+  static async findByIdAndDelete(id) {
+    try {
+      // delete reply activity as well
+      await ActivityService.deleteActivity(id, 'reply');
+      
+      // delete the thread
+      await Reply.destroy({ where: { id } });
+
+      return Response.successResponseObject('Deleted Successfully');
+    } catch (error) {
+      return Response.serverErrorResponseObject();
+    }
+  }
+
+  static async findOneById(id) {
     const reply = await Reply.findOne({ where: { id } });
     return reply;
+  }
+
+  static async findAllWithThread(id) {
+    const resource = await Reply.findAll({
+      where: { threadId: id },
+      attributes: ['id']
+    });
+    return resource;
   }
 }
 

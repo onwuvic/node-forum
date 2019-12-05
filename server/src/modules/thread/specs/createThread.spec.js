@@ -3,6 +3,7 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
+import { CREATE_THREAD, CREATE_REPLY } from '../../activity/activityConstants';
 
 describe('', () => {
   let server;
@@ -106,11 +107,45 @@ describe('', () => {
 
       it('should be able to delete thread only as the owner', async () => {
         // given a thread
-        const newThread = await Mock.createThread(user.id, channel.id);
+        const newThread = await request
+          .post(`${baseUrl}/threads`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ title: 'the world', body: 'I reply you', channelId: channel.id });
 
+        const threadId = newThread.body.data.id;
+
+        // given we create a reply for this thread
+        const newReply = await request
+          .post(`${baseUrl}/threads/${threadId}/replies`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'I reply you' });
+
+        const replyId = newReply.body.data.id;
+
+        // it activity should be created
+        const replyActivity = await Mock.findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+
+        // createdThread activity should be created
+        const threadActivity = await Mock.findActivity(CREATE_THREAD, user.id, threadId, 'thread');
+
+        // expect activity to exist
+        expect(threadActivity.subjectId).toBe(threadId);
+        expect(replyActivity.subjectId).toBe(replyId);
+
+        // when the thread is deleted expect createdThread to be delated too
+        // all activity related to this thread should be deleted also e.g reply
         const response = await request
-          .delete(`${baseUrl}/threads/${newThread.id}`)
+          .delete(`${baseUrl}/threads/${threadId}`)
           .set('authorization', `Bearer ${token}`);
+
+        const deletedThreadActivity = await Mock
+          .findActivity(CREATE_THREAD, user.id, threadId, 'thread');
+        const deletedReplyActivity = await Mock
+          .findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+
+        // expect activity not to exist
+        expect(deletedThreadActivity).toBe(null);
+        expect(deletedReplyActivity).toBe(null);
 
         // when this endpoint i should be forbidden
         expect(response.status).toBe(200);

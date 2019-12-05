@@ -33,6 +33,15 @@ export default (sequelize, DataTypes) => {
       constraints: false,
       as: 'reply'
     });
+
+    Favorite.hasMany(models.Activity, {
+      foreignKey: 'subjectId',
+      constraints: false,
+      as: 'activities',
+      scope: {
+        subjectType: 'favorite'
+      }
+    });
   };
   return Favorite;
 };

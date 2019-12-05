@@ -55,8 +55,11 @@ class Mock {
         type, userId, subjectId, subjectType
       }
     });
-    const { dataValues: activity } = newActivity;
-    return activity;
+    if (newActivity) {
+      const { dataValues: activity } = newActivity;
+      return activity;
+    }
+    return newActivity;
   }
 
   static async createReply(userId, threadId, times = null) {

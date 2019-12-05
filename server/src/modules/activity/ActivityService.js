@@ -8,6 +8,10 @@ class ActivityService {
     await model.createActivity({ type, userId });
   }
 
+  static async deleteActivity(subjectId, subjectType) {
+    await Activity.destroy({ where: { subjectId, subjectType } });
+  }
+
   // WILL Remove this once adding activity children is figured out.
   static async findAll() {
     try {
@@ -17,6 +21,7 @@ class ActivityService {
             {
               model: Thread,
               as: 'thread',
+              // where: { subjectType: 'thread' }
             },
           ]
         }
