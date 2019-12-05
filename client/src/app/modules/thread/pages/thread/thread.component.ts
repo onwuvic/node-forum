@@ -11,6 +11,7 @@ import { ThreadService } from '../../../../core/services/thread/thread.service';
   styleUrls: ['./thread.component.scss']
 })
 export class ThreadComponent implements OnInit {
+  errorMessage = '';
 
   constructor(
     private threadService: ThreadService,
@@ -22,7 +23,10 @@ export class ThreadComponent implements OnInit {
       map(data => data),
       switchMap(data => this.threadService.fetchAll({ filter: data })),
       map(data => data),
-      catchError(() => EMPTY),
+      catchError((error) => {
+        this.errorMessage = error;
+        return EMPTY;
+      }),
     );
 
   ngOnInit() { }
