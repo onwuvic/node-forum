@@ -3,7 +3,7 @@
 <ng-container [templateStore]="{ user: (authUser$ | async) }" #auth="templateStore"></ng-container>
 
 <div class="row">
-  <ng-container *ngIf="(thread$ | async) as thread">
+  <ng-container *ngIf="(threads$ | async) as thread">
     <div class="col-12 col-md-8">
 
       <div class="blog-post">

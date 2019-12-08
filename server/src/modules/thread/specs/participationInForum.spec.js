@@ -46,11 +46,24 @@ describe('', () => {
 
         expect(response.status).toBe(201);
         expect(response.body.data.body).toBe('I reply you');
+        expect(response.body.data).toHaveProperty('body');
+        expect(response.body.data).toHaveProperty('user');
+        expect(response.body.data).toHaveProperty('favorites');
 
         const threadResponse = await request.get(`${baseUrl}/threads/${channel.slug}/${thread.id}`);
 
         expect(threadResponse.status).toBe(200);
         expect(threadResponse.body.data.replies[0].body).toBe('I reply you');
+      });
+
+      it('should not be able to add a reply to non existing thread', async () => {
+        const response = await request
+          .post(`${baseUrl}/threads/9999/replies`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'I reply you' });
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toBe('Thread doesn\'t exist');
       });
     });
 

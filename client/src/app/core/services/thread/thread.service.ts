@@ -26,7 +26,7 @@ export class ThreadService {
   store$ = this.store.asObservable();
 
   fetchAll(options: Partial<APIListRequestOptions> = {}): Observable<Thread[]> {
-    const url = options.slug ? `${environment.baseUrl}/threads/${options.slug}` : `${environment.baseUrl}/thread`;
+    const url = options.slug ? `${environment.baseUrl}/threads/${options.slug}` : `${environment.baseUrl}/threads`;
     const params = options.filter;
 
     return this.http.get<Thread[]>(url, { params })

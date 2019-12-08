@@ -25,9 +25,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               return throwError('No Internet Connection');
             }
             // redirect 404 to 404 error page
-            if (error.status === 404) {
-              this.router.navigate(['/error']);
-            }
+            // if (error.status === 404) {
+            //   this.router.navigate(['/error']);
+            // }
             // Http Error
             // Send the error to the server
             console.log('ERROR - HTTP ISSUES', error);

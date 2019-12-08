@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 // import { Sequelize } from 'sequelize';
 import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
@@ -6,6 +7,7 @@ import ActivityService from '../activity/ActivityService';
 import { CREATE_THREAD } from '../activity/activityConstants';
 import Response from '../../responses/response';
 import ReplyService from '../reply/ReplyService';
+import ThreadFilters from './ThreadFilters';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -154,6 +156,35 @@ class ThreadService {
       ]
     });
     return thread;
+  }
+
+  static async getThreads(request) {
+    try {
+      const channelSlug = request.params.channel;
+      const { query } = request;
+      // if channel is provided
+      if (channelSlug) {
+        const resource = await ThreadService.findAllByChannel(channelSlug);
+        if (!resource) {
+          return Response.failureResponseObject(404, 'Channel doesn\'t exist');
+        }
+        return Response.successResponseObject(resource);
+      }
+      // if query is provided
+      if (Object.keys(query).length) {
+        const response = await ThreadFilters.filter(query);
+        if (!response.status) {
+          return Response.failureResponseObject(400, response.message);
+        }
+        return Response.successResponseObject(response.resource);
+      }
+
+      // else just get all the thread
+      const resource = await ThreadService.findAll();
+      return Response.successResponseObject(resource);
+    } catch (error) {
+      return Response.serverErrorResponseObject();
+    }
   }
 }
 

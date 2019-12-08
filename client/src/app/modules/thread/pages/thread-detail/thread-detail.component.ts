@@ -1,19 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { EMPTY } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { EMPTY, BehaviorSubject, combineLatest } from 'rxjs';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { ReplyService } from '../../../../core/services/reply/reply.service';
 
+const replied = {
+  id: 8,
+  body: 'Omnis impedit aut dolores consequuntur autem quia magnam et. Ut quam nulla aut quaerat dolores.',
+  userId: 6,
+  threadId: 5,
+  createdAt: '2019-12-02T18:31:51.669Z',
+  updatedAt: '2019-12-02T18:31:51.669Z',
+  user: {
+    id: 6,
+    fullName: 'Kris Ankunding',
+    email: 'Jaron_Champlin@hotmail.com',
+    gender: 'female',
+    createdAt: '2019-12-02T18:31:51.374Z',
+    updatedAt: '2019-12-02T18:31:51.374Z'
+  },
+  favorites: []
+};
+
 @Component({
   selector: 'app-thread-detail',
   templateUrl: './thread-detail.component.html',
-  styleUrls: ['./thread-detail.component.scss']
+  styleUrls: ['./thread-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThreadDetailComponent implements OnInit {
   replyForm: FormGroup;
@@ -21,6 +40,9 @@ export class ThreadDetailComponent implements OnInit {
   errorMessage: string;
 
   isLoggedIn$ = this.authService.isLoggedIn$;
+
+  private replySubject = new BehaviorSubject<any>(null);
+  replyAction$ = this.replySubject.asObservable();
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +68,20 @@ export class ThreadDetailComponent implements OnInit {
 
   authUser$ = this.authService.authUser;
 
+  threads$ = combineLatest([
+    this.thread$,
+    this.replyAction$
+  ])
+    .pipe(
+      map(([thread, reply]) => {
+        if (reply) {
+          thread.replies.push(reply);
+        }
+        return thread;
+      }),
+      tap(data => console.log('----> thread', data))
+    );
+
   ngOnInit() {
     this.replyForm = this.fb.group({
       body: ['', [Validators.required]]
@@ -64,13 +100,14 @@ export class ThreadDetailComponent implements OnInit {
     this.replyService.addReply(id, this.replyForm.value)
       .subscribe(
         (data) => {
-          console.log('----> data', data);
           this.loading = false;
           this.resetForm();
-          this.snackBar.open('Reply added!', 'Ok');
+          this.replySubject.next(data);
+          this.snackBar.open('Reply added!', 'Ok', {
+            duration: 3000
+          });
         },
         (error) => {
-          console.log('----> error', error);
           this.loading = false;
           this.snackBar.open(error, 'Ok', {
             duration: 3000

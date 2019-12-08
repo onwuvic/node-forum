@@ -2,14 +2,23 @@ import models from '../../database/models';
 import ActivityService from '../activity/ActivityService';
 import { CREATE_REPLY } from '../activity/activityConstants';
 import Response from '../../responses/response';
+// eslint-disable-next-line import/no-cycle
+import ThreadService from '../thread/ThreadService';
 
 const { Reply } = models;
 
 class ReplyService {
   static async create(body, userId, threadId) {
     try {
+      const thread = await ThreadService.findOneById(threadId);
+      if (!thread) {
+        return Response.failureResponseObject(404, 'Thread doesn\'t exist');
+      }
       // create reply
       const resource = await Reply.create({ body, userId, threadId });
+      // add other resources to the reply object
+      resource.setDataValue('user', await resource.getUser());
+      resource.setDataValue('favorites', await resource.getFavorites());
 
       // create reply activity
       await ActivityService.createActivity(resource, CREATE_REPLY, userId);
@@ -32,7 +41,7 @@ class ReplyService {
     try {
       // delete reply activity as well
       await ActivityService.deleteActivity(id, 'reply');
-      
+
       // delete the thread
       await Reply.destroy({ where: { id } });
 
