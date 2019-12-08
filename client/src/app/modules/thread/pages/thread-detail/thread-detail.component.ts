@@ -58,9 +58,7 @@ export class ThreadDetailComponent implements OnInit {
   ])
     .pipe(
       map(([thread, reply]) => {
-        if (reply) {
-          thread.replies.unshift(reply);
-        }
+        this.triggerAddNewReply(thread, reply);
         return thread;
       }),
       catchError((error) => {
@@ -82,7 +80,7 @@ export class ThreadDetailComponent implements OnInit {
     this.router.navigate(['/auth', 'login']);
   }
 
-  sendReply(id) {
+  addReply(id) {
     this.loading = true;
     this.replyService.addReply(id, this.replyForm.value)
       .subscribe(
@@ -120,6 +118,12 @@ export class ThreadDetailComponent implements OnInit {
           });
         }
       );
+  }
+
+  triggerAddNewReply(thread, reply) {
+    if (reply) {
+      thread.replies.unshift(reply);
+    }
   }
 
   favarite(id) {

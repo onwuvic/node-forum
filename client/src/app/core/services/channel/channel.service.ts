@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../../../environments/environment';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,8 @@ export class ChannelService {
     const url = `${environment.baseUrl}/channels/`;
     return this.http.get(url)
       .pipe(
-        map((res: any) => res.data)
+        map((res: any) => res.data),
+        shareReplay(1)
       );
   }
 }

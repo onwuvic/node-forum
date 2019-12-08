@@ -92,3 +92,4 @@ thread permit (authUser.id === thread.user.id [done])
 - check the new type before adding it. (done)
 - contemplate to either make new api call for one thread or do a search all for the thread. (let make api call)
 - observable error (done)
+-
