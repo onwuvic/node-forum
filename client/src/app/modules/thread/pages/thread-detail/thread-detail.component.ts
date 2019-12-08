@@ -4,29 +4,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { EMPTY, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { ReplyService } from '../../../../core/services/reply/reply.service';
-
-const replied = {
-  id: 8,
-  body: 'Omnis impedit aut dolores consequuntur autem quia magnam et. Ut quam nulla aut quaerat dolores.',
-  userId: 6,
-  threadId: 5,
-  createdAt: '2019-12-02T18:31:51.669Z',
-  updatedAt: '2019-12-02T18:31:51.669Z',
-  user: {
-    id: 6,
-    fullName: 'Kris Ankunding',
-    email: 'Jaron_Champlin@hotmail.com',
-    gender: 'female',
-    createdAt: '2019-12-02T18:31:51.374Z',
-    updatedAt: '2019-12-02T18:31:51.374Z'
-  },
-  favorites: []
-};
+import { Reply } from '../../../../core/models/reply.model';
 
 @Component({
   selector: 'app-thread-detail',
@@ -41,7 +24,7 @@ export class ThreadDetailComponent implements OnInit {
 
   isLoggedIn$ = this.authService.isLoggedIn$;
 
-  private replySubject = new BehaviorSubject<any>(null);
+  private replySubject = new BehaviorSubject<Reply>(null);
   replyAction$ = this.replySubject.asObservable();
 
   constructor(
@@ -75,11 +58,10 @@ export class ThreadDetailComponent implements OnInit {
     .pipe(
       map(([thread, reply]) => {
         if (reply) {
-          thread.replies.push(reply);
+          thread.replies.unshift(reply);
         }
         return thread;
-      }),
-      tap(data => console.log('----> thread', data))
+      })
     );
 
   ngOnInit() {

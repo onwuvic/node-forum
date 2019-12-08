@@ -153,6 +153,9 @@ class ThreadService {
           model: Channel,
           as: 'channel'
         }
+      ],
+      order: [
+        [{ model: Reply, as: 'replies' }, 'createdAt', 'DESC']
       ]
     });
     return thread;

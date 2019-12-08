@@ -86,3 +86,8 @@ thread permit (authUser.id === thread.user.id [done])
 - add bulk delete to activity (done)
 
 // refactor frontend
+- ordering reply (done) backend 
+- auto loading reply (done)
+- add reply type to the behaviour subject (done)
+- check the new type before adding it. (done)
+- contemplate to either make new api call for one thread or do a search all for the thread. (let make api call)
