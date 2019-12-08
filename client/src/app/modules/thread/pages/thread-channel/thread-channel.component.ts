@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { ActivatedRoute } from '@angular/router';
 import { map, tap, switchMap, catchError } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-thread-channel',
@@ -10,6 +10,8 @@ import { EMPTY } from 'rxjs';
   styleUrls: ['./thread-channel.component.scss']
 })
 export class ThreadChannelComponent implements OnInit {
+  private errorMessageSubject = new Subject<string>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
   constructor(private threadService: ThreadService, private route: ActivatedRoute) { }
 
@@ -18,7 +20,10 @@ export class ThreadChannelComponent implements OnInit {
       map(params => params.get('channel')),
       switchMap(slug => this.threadService.fetchAll({slug})),
       map(data => data),
-      catchError(() => EMPTY),
+      catchError((error) => {
+        this.errorMessageSubject.next(error);
+        return EMPTY;
+      }),
     );
 
   ngOnInit() {

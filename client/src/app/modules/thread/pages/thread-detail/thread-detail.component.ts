@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { EMPTY, BehaviorSubject, combineLatest } from 'rxjs';
+import { EMPTY, BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
@@ -20,7 +20,9 @@ import { Reply } from '../../../../core/models/reply.model';
 export class ThreadDetailComponent implements OnInit {
   replyForm: FormGroup;
   loading = false;
-  errorMessage: string;
+
+  private errorMessageSubject = new Subject<string>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
   isLoggedIn$ = this.authService.isLoggedIn$;
 
@@ -45,8 +47,7 @@ export class ThreadDetailComponent implements OnInit {
         return { id, slug };
       }),
       switchMap(data => this.threadService.fetch(data)),
-      map(data => data),
-      catchError(() =>  EMPTY),
+      map(data => data)
     );
 
   authUser$ = this.authService.authUser;
@@ -61,7 +62,11 @@ export class ThreadDetailComponent implements OnInit {
           thread.replies.unshift(reply);
         }
         return thread;
-      })
+      }),
+      catchError((error) => {
+        this.errorMessageSubject.next(error);
+        return EMPTY;
+      }),
     );
 
   ngOnInit() {

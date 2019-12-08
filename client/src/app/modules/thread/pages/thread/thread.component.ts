@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 
@@ -12,7 +12,8 @@ import { ThreadService } from '../../../../core/services/thread/thread.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThreadComponent implements OnInit {
-  errorMessage = '';
+  private errorMessageSubject = new Subject<string>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
   constructor(
     private threadService: ThreadService,
@@ -29,7 +30,7 @@ export class ThreadComponent implements OnInit {
         // because the component now only detect reactive changes.
         // e.g @input, event emits, a bound observable emit
         // our error message isn't any of this. we will change it to an observable
-        this.errorMessage = error;
+        this.errorMessageSubject.next(error);
         return EMPTY;
       }),
     );
