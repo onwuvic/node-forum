@@ -10,6 +10,7 @@ import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { ReplyService } from '../../../../core/services/reply/reply.service';
 import { Reply } from '../../../../core/models/reply.model';
+import { Favorite } from '../../../../core/models/favorite.model';
 
 @Component({
   selector: 'app-thread-detail',
@@ -28,6 +29,9 @@ export class ThreadDetailComponent implements OnInit {
 
   private replySubject = new BehaviorSubject<Reply>(null);
   replyAction$ = this.replySubject.asObservable();
+
+  private favoriteSubject = new BehaviorSubject<Favorite>(null);
+  favoriteAction$ = this.favoriteSubject.asObservable();
 
   constructor(
     private route: ActivatedRoute,
@@ -58,10 +62,11 @@ export class ThreadDetailComponent implements OnInit {
 
   threadWithActions$ = combineLatest([
     this.thread$,
-    this.replyAction$
+    this.replyAction$,
+    this.favoriteAction$
   ])
     .pipe(
-      map(([thread, reply]) => this.triggerChange(thread, reply))
+      map(([thread, reply, favorite]) => this.triggerChange(thread, reply, favorite))
     );
 
   data$ = combineLatest([
@@ -123,22 +128,26 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  triggerChange(thread, reply) {
+  triggerChange(thread, reply, favorite) {
     if (reply) {
       thread.replies.unshift(reply);
+    }
+    if (favorite) {
+      thread.replies
+        .find(replied => replied.id === favorite.favorableId)
+        .favorites
+        .push(favorite);
     }
     return thread;
   }
 
-  favarite(id) {
-    console.log('--->', id);
+  addFavorite(id) {
     this.replyService.addFavorite(id)
       .subscribe(
         (data) => {
-          console.log('----> data', data);
+          this.favoriteSubject.next(data);
         },
         (error) => {
-          console.log('----> data', error);
           this.snackBar.open(error, 'Ok');
         }
       );

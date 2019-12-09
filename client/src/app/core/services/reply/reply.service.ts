@@ -15,7 +15,6 @@ export class ReplyService {
     const url = `${environment.baseUrl}/threads/${id}/replies`;
     return this.http.post(url, data)
       .pipe(
-        tap(res => console.log('----->', res)),
         map((res: any) => res.data)
       );
   }
@@ -24,7 +23,6 @@ export class ReplyService {
     const url = `${environment.baseUrl}/replies/${replyId}/favorites`;
     return this.http.post(url, {})
       .pipe(
-        tap(res => console.log('----->', res)),
         map((res: any) => res.data)
       );
   }
