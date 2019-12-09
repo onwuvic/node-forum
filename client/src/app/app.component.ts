@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { AuthService } from './core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ChannelService } from './core/services/channel/channel.service';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const REDIRECT_TO_LOGIN = ['/threads/create'];
 
@@ -22,6 +24,15 @@ export class AppComponent {
   isLoggedIn$ = this.authService.isLoggedIn$;
   authUser$ = this.authService.authUser;
   channels$ = this.channelService.fetchAll();
+
+  data$ = combineLatest([
+    this.isLoggedIn$,
+    this.authUser$,
+    this.channels$
+  ])
+    .pipe(
+      map(([isLoggedIn, authUser, channels]) => ({ isLoggedIn, authUser, channels }))
+    );
 
   logout() {
     // dirty fix

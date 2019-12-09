@@ -1,7 +1,3 @@
-<!-- store state here -->
-<ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
-<ng-container [templateStore]="{ user: (authUser$ | async) }" #auth="templateStore"></ng-container>
-
 <div>
   <header>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -9,45 +5,44 @@
         <a [routerLink]="['./']" class="brand-logo">Forum</a>
       </h5>
       <nav class="my-2 my-md-0 mr-md-3">
+        <ng-container *ngIf="(data$ | async) as data">
+          <ng-container>
+            <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="browseDropdown">
+              Browse
+            </span>
+            <mat-menu #browseDropdown="matMenu">
+              <a [routerLink]="['threads']" mat-menu-item>All Threads</a>
+              <ng-container *ngIf="data.isLoggedIn">
+                <a [routerLink]="['threads']" [queryParams]="{by: data.authUser.userObject.fullName }" mat-menu-item>My Threads</a>
+              </ng-container>
+              <a [routerLink]="['threads']" [queryParams]="{popular: 1 }" mat-menu-item>Popular Threads</a>
+            </mat-menu>
+          </ng-container>
 
-        <ng-container>
-          <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="browseDropdown">
-            Browse
-          </span>
-          <mat-menu #browseDropdown="matMenu">
-            <a [routerLink]="['threads']" mat-menu-item>All Threads</a>
-            <ng-container *ngIf="isLoggedIn.check">
-              <a [routerLink]="['threads']" [queryParams]="{by: auth.user.userObject.fullName }" mat-menu-item>My Threads</a>
-            </ng-container>
-            <a [routerLink]="['threads']" [queryParams]="{popular: 1 }" mat-menu-item>Popular Threads</a>
-          </mat-menu>
-        </ng-container>
-
-        <ng-container *ngIf="(channels$ | async) as channels">
-          <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="channelDropdown">
-            Channels
-          </span>
-          <mat-menu #channelDropdown="matMenu">
-            <ng-container *ngFor="let channel of channels">
-              <a [routerLink]="['/threads', channel.slug]" mat-menu-item>{{ channel.name }}</a>
-            </ng-container>
-          </mat-menu>
-        </ng-container>
+          <ng-container *ngIf="data.channels">
+            <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="channelDropdown">
+              Channels
+            </span>
+            <mat-menu #channelDropdown="matMenu">
+              <ng-container *ngFor="let channel of data.channels">
+                <a [routerLink]="['/threads', channel.slug]" mat-menu-item>{{ channel.name }}</a>
+              </ng-container>
+            </mat-menu>
+          </ng-container>
 
 
-        <ng-container *ngIf="!isLoggedIn.check">
-          <a class="p-2 text-dark" [routerLink]="['auth', 'login']">Login</a>
-          <a class="p-2 text-dark" [routerLink]="['auth', 'register']">Register</a>
-        </ng-container>
+          <ng-container *ngIf="!data.isLoggedIn">
+            <a class="p-2 text-dark" [routerLink]="['auth', 'login']">Login</a>
+            <a class="p-2 text-dark" [routerLink]="['auth', 'register']">Register</a>
+          </ng-container>
 
-        <ng-container *ngIf="isLoggedIn.check">
-          <ng-container *ngIf="auth.user">
+          <ng-container *ngIf="data.isLoggedIn">
             <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="profileDropdown">
-              {{ auth.user.userObject.fullName }}
+              {{ data.authUser.userObject.fullName }}
             </span>
             <mat-menu #profileDropdown="matMenu">
               <a [routerLink]="['/threads', 'create']" mat-menu-item>New Thread</a>
-              <a [routerLink]="['/profile', auth.user.userObject.fullName]" mat-menu-item>My Profile</a>
+              <a [routerLink]="['/profile', data.authUser.userObject.fullName]" mat-menu-item>My Profile</a>
               <span mat-menu-item (click)="logout()">LogOut</span>
             </mat-menu>
           </ng-container>
