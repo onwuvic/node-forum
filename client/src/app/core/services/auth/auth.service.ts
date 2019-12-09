@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 
@@ -12,7 +13,11 @@ import { JwtHelperService } from '../jwt-helper/jwt-helper.service';
 export class AuthService {
   private redirectUrl: string;
 
-  constructor(private http: HttpClient, private jwt: JwtHelperService) { }
+  constructor(
+    private http: HttpClient,
+    private jwt: JwtHelperService,
+    private router: Router,
+  ) { }
 
   private loggedInSubject = new BehaviorSubject<boolean>(false);
 
@@ -44,6 +49,13 @@ export class AuthService {
   clear(): void {
     this.loggedInSubject.next(false);
     localStorage.clear();
+  }
+
+  signIn() {
+    // set the url
+    this.setRedirectUrl(this.router.url);
+    // navigate to login page
+    this.router.navigate(['/auth', 'login']);
   }
 
   authenticate(user: {email: string, password: string }): Observable<any> {

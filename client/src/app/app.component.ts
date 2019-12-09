@@ -42,4 +42,8 @@ export class AppComponent {
     }
     this.authService.clear();
   }
+
+  signIn() {
+    this.authService.signIn();
+  }
 }

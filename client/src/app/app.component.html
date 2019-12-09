@@ -7,7 +7,7 @@
       <nav class="my-2 my-md-0 mr-md-3">
         <ng-container *ngIf="(data$ | async) as data">
           <ng-container>
-            <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="browseDropdown">
+            <span class="p-2 text-dark dropdown-toggle cursor" mat-button [matMenuTriggerFor]="browseDropdown">
               Browse
             </span>
             <mat-menu #browseDropdown="matMenu">
@@ -20,7 +20,7 @@
           </ng-container>
 
           <ng-container *ngIf="data.channels">
-            <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="channelDropdown">
+            <span class="p-2 text-dark dropdown-toggle cursor" mat-button [matMenuTriggerFor]="channelDropdown">
               Channels
             </span>
             <mat-menu #channelDropdown="matMenu">
@@ -32,12 +32,12 @@
 
 
           <ng-container *ngIf="!data.isLoggedIn">
-            <a class="p-2 text-dark" [routerLink]="['auth', 'login']">Login</a>
+            <span class="p-2 text-dark cursor" (click)="signIn()">Login</span>
             <a class="p-2 text-dark" [routerLink]="['auth', 'register']">Register</a>
           </ng-container>
 
           <ng-container *ngIf="data.isLoggedIn">
-            <span class="p-2 text-dark dropdown-toggle drop-down" mat-button [matMenuTriggerFor]="profileDropdown">
+            <span class="p-2 text-dark dropdown-toggle cursor" mat-button [matMenuTriggerFor]="profileDropdown">
               {{ data.authUser.userObject.fullName }}
             </span>
             <mat-menu #profileDropdown="matMenu">

@@ -80,10 +80,7 @@ export class ThreadDetailComponent implements OnInit {
   }
 
   signIn() {
-    // set the url
-    this.authService.setRedirectUrl(this.router.url);
-    // navigate to login page
-    this.router.navigate(['/auth', 'login']);
+    this.authService.signIn();
   }
 
   addReply(id) {
