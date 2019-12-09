@@ -1,25 +1,21 @@
-<!-- store state here -->
-<ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
-<ng-container [templateStore]="{ user: (authUser$ | async) }" #auth="templateStore"></ng-container>
-
 <div class="row">
-  <ng-container *ngIf="(threads$ | async) as thread">
+  <ng-container *ngIf="(data$ | async) as data">
     <div class="col-12 col-md-8">
 
       <div class="blog-post">
-        <h2 class="blog-post-title">{{ thread.title }}</h2>
+        <h2 class="blog-post-title">{{ data.thread.title }}</h2>
         <div class="flex-inline">
-          <p class="blog-post-meta">{{ thread.createdAt | amDateFormat:'LL' }} by
-            <a [routerLink]="['/profile', thread.creator.fullName]">{{ thread.creator.fullName }}</a>
+          <p class="blog-post-meta">{{ data.thread.createdAt | amDateFormat:'LL' }} by
+            <a [routerLink]="['/profile', data.thread.creator.fullName]">{{ data.thread.creator.fullName }}</a>
           </p>
-          <ng-container *ngIf="isLoggedIn.check">
-            <ng-container *ngIf="auth.user.userObject.id === thread.creator.id">
+          <ng-container *ngIf="data.isLoggedIn">
+            <ng-container *ngIf="data.authUser.userObject.id === data.thread.creator.id">
               <div>
                 <button mat-icon-button [matMenuTriggerFor]="moreOptions" aria-label="Delete thread">
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #moreOptions="matMenu" yPosition="below">
-                  <button mat-menu-item (click)="deleteThread(thread.id)">
+                  <button mat-menu-item (click)="deleteThread(data.thread.id)">
                     <mat-icon>delete</mat-icon>
                     <span>Delete</span>
                   </button>
@@ -37,15 +33,15 @@
           </ng-container>
         </div>
         <hr>
-        <p>{{ thread.body }}</p>
+        <p>{{ data.thread.body }}</p>
       </div>
 
       <!--Comments-->
-      <div class="card card-comments mb-3 wow fadeIn" *ngIf="thread.replies.length">
-        <div class="card-header font-weight-bold">{{ thread.replies.length | pluralize : 'comment' }}</div>
+      <div class="card card-comments mb-3 wow fadeIn" *ngIf="data.thread.replies.length">
+        <div class="card-header font-weight-bold">{{ data.thread.replies.length | pluralize : 'comment' }}</div>
         <div class="card-body">
 
-          <ng-container *ngFor="let reply of thread.replies">
+          <ng-container *ngFor="let reply of data.thread.replies">
             <div class="media d-block d-md-flex mt-4">
               <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
                 alt="Generic placeholder image">
@@ -87,14 +83,13 @@
       <!--/.Comments-->
 
       <!--Reply-->
-      <ng-container [templateStore]="{ check: (isLoggedIn$ | async) }" #isLoggedIn="templateStore"></ng-container>
-      <ng-container *ngIf="isLoggedIn.check">
+      <ng-container *ngIf="data.isLoggedIn">
         <div class="card mb-3 wow fadeIn">
           <div class="card-header font-weight-bold">Leave a reply</div>
           <div class="card-body">
 
             <!-- Default form reply -->
-            <form (ngSubmit)="addReply(thread.id)" [formGroup]="replyForm" novalidate>
+            <form (ngSubmit)="addReply(data.thread.id)" [formGroup]="replyForm" novalidate>
 
               <!-- Comment -->
               <div class="form-group">
@@ -113,7 +108,7 @@
           </div>
         </div>
       </ng-container>
-      <ng-container *ngIf="!isLoggedIn.check">
+      <ng-container *ngIf="!data.isLoggedIn">
         <p class="text-center">Please <span class="btn-link" (click)="signIn()">sign in</span> to participate in this
           discussion.</p>
       </ng-container>
@@ -125,8 +120,8 @@
         <div class="card-body">
           <p class="blog-post-meta">
             This thread was published
-            {{ thread.createdAt | amTimeAgo }} by <a [routerLink]="['/profile', thread.creator.fullName]">{{ thread.creator.fullName }}</a>, and
-            currently has {{ thread.replies.length | pluralize : 'comment' }}.
+            {{ data.thread.createdAt | amTimeAgo }} by <a [routerLink]="['/profile', data.thread.creator.fullName]">{{ data.thread.creator.fullName }}</a>, and
+            currently has {{ data.thread.replies.length | pluralize : 'comment' }}.
           </p>
         </div>
       </div>

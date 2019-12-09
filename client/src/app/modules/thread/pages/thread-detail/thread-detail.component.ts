@@ -47,24 +47,30 @@ export class ThreadDetailComponent implements OnInit {
         return { id, slug };
       }),
       switchMap(data => this.threadService.fetch(data)),
-      map(data => data)
-    );
-
-  authUser$ = this.authService.authUser;
-
-  threads$ = combineLatest([
-    this.thread$,
-    this.replyAction$
-  ])
-    .pipe(
-      map(([thread, reply]) => {
-        this.triggerAddNewReply(thread, reply);
-        return thread;
-      }),
+      map(data => data),
       catchError((error) => {
         this.errorMessageSubject.next(error);
         return EMPTY;
       }),
+    );
+
+  authUser$ = this.authService.authUser;
+
+  threadWithActions$ = combineLatest([
+    this.thread$,
+    this.replyAction$
+  ])
+    .pipe(
+      map(([thread, reply]) => this.triggerChange(thread, reply))
+    );
+
+  data$ = combineLatest([
+    this.isLoggedIn$,
+    this.authUser$,
+    this.threadWithActions$
+  ])
+    .pipe(
+      map(([isLoggedIn, authUser, thread]) => ({ isLoggedIn, authUser, thread }))
     );
 
   ngOnInit() {
@@ -120,10 +126,11 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  triggerAddNewReply(thread, reply) {
+  triggerChange(thread, reply) {
     if (reply) {
       thread.replies.unshift(reply);
     }
+    return thread;
   }
 
   favarite(id) {
