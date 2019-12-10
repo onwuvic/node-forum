@@ -4,10 +4,10 @@ import models from '../../database/models';
 import ChannelService from '../channel/ChannelService';
 import UserService from '../user/UserService';
 import ActivityService from '../activity/ActivityService';
-import { CREATE_THREAD } from '../activity/activityConstants';
 import Response from '../../responses/response';
 import ReplyService from '../reply/ReplyService';
 import ThreadFilters from './ThreadFilters';
+import { CREATE_THREAD_ACTIVITY, MODEL_REPLY, MODEL_THREAD } from '../../helpers/constants';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -48,7 +48,7 @@ class ThreadService {
       resource.setDataValue('channel', await resource.getChannel());
 
       // create activity
-      await ActivityService.createActivity(resource, CREATE_THREAD, userId);
+      await ActivityService.createActivity(resource, CREATE_THREAD_ACTIVITY, userId);
 
       return Response.successResponseObject(resource);
     } catch (error) {
@@ -75,10 +75,10 @@ class ThreadService {
 
     if (replies.length) {
       const ids = replies.map(reply => reply.id);
-      await ActivityService.deleteActivity(ids, 'reply');
+      await ActivityService.deleteActivity(ids, MODEL_REPLY);
     }
     // and also delete it thread activity
-    await ActivityService.deleteActivity(id, 'thread');
+    await ActivityService.deleteActivity(id, MODEL_THREAD);
   }
 
   static async findAll() {

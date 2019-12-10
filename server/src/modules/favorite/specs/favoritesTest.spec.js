@@ -3,6 +3,7 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
+import { MODEL_REPLY } from '../../../helpers/constants';
 
 describe('', () => {
   let server;
@@ -47,7 +48,7 @@ describe('', () => {
             .set('authorization', `Bearer ${token}`);
 
           expect(response.status).toBe(201);
-          expect(response.body.data.favorableType).toBe('reply');
+          expect(response.body.data.favorableType).toBe(MODEL_REPLY);
           expect(response.body.data.favorableId).toBe(+`${reply.id}`);
 
           const response2 = await request

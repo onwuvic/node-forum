@@ -1,8 +1,8 @@
 import ReplyService from '../reply/ReplyService';
 import models from '../../database/models';
 import Response from '../../responses/response';
-import { CREATE_FAVORITE } from '../activity/activityConstants';
 import ActivityService from '../activity/ActivityService';
+import { CREATE_FAVORITE_ACTIVITY, MODEL_REPLY } from '../../helpers/constants';
 
 const { Favorite } = models;
 
@@ -13,12 +13,12 @@ class FavoriteService {
       if (!reply) {
         return Response.failureResponseObject(400, 'This reply doesn\'t exist');
       }
-      if (!await FavoriteService.findUnique(userId, replyId, 'reply')) {
+      if (!await FavoriteService.findUnique(userId, replyId, MODEL_REPLY)) {
         // const resource = await reply.createFavorite({ userId });
         const resource = await FavoriteService.createFavorite(reply, userId);
 
         // also create favorite activity
-        await ActivityService.createActivity(resource, CREATE_FAVORITE, userId);
+        await ActivityService.createActivity(resource, CREATE_FAVORITE_ACTIVITY, userId);
         return Response.successResponseObject(resource);
       }
       return Response.failureResponseObject(400, 'Already favorite this reply');

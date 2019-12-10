@@ -3,7 +3,9 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
-import { CREATE_THREAD, CREATE_REPLY } from '../../activity/activityConstants';
+import {
+  CREATE_THREAD_ACTIVITY, CREATE_REPLY_ACTIVITY, MODEL_REPLY, MODEL_THREAD
+} from '../../../helpers/constants';
 
 describe('', () => {
   let server;
@@ -123,10 +125,12 @@ describe('', () => {
         const replyId = newReply.body.data.id;
 
         // it activity should be created
-        const replyActivity = await Mock.findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+        const replyActivity = await Mock
+          .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
 
         // createdThread activity should be created
-        const threadActivity = await Mock.findActivity(CREATE_THREAD, user.id, threadId, 'thread');
+        const threadActivity = await Mock
+          .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
 
         // expect activity to exist
         expect(threadActivity.subjectId).toBe(threadId);
@@ -139,9 +143,10 @@ describe('', () => {
           .set('authorization', `Bearer ${token}`);
 
         const deletedThreadActivity = await Mock
-          .findActivity(CREATE_THREAD, user.id, threadId, 'thread');
+          .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
+
         const deletedReplyActivity = await Mock
-          .findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+          .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
 
         // expect activity not to exist
         expect(deletedThreadActivity).toBe(null);

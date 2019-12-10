@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import models from '../../database/models';
 
 const {
-  User, Reply, Thread, Channel, Activity
+  User, Reply, Thread, Channel, Activity, Favorite
 } = models;
 
 class Mock {
@@ -85,6 +85,14 @@ class Mock {
     });
     const { dataValues: reply } = newReply;
     return reply;
+  }
+
+  static async createFavorite(userId, favorableId, favorableType) {
+    const newFavorite = await Favorite.create({
+      userId, favorableId, favorableType
+    });
+    const { dataValues: favorite } = newFavorite;
+    return favorite;
   }
 
   static arrayColumn(input, ColumnKey, IndexKey = null) {

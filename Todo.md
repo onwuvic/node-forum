@@ -93,3 +93,7 @@ thread permit (authUser.id === thread.user.id [done])
 - contemplate to either make new api call for one thread or do a search all for the thread. (let make api call)
 - observable error (done)
 -
+
+// deleting reply 
+- should delete reply activity (done)
+- should also delete favoriting a reply activity

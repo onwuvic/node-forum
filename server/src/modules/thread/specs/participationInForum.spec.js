@@ -3,7 +3,6 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
-import { CREATE_REPLY } from '../../activity/activityConstants';
 
 describe('', () => {
   let server;
@@ -87,61 +86,6 @@ describe('', () => {
 
         expect(response.status).toBe(400);
         expect(response.body.message.body).toBe('Please provide body');
-      });
-    });
-
-    describe('Delete Reply', () => {
-      it('should not be able to delete a reply as a guest', async () => {
-        const response = await request
-          .delete(`${baseUrl}/replies/9999`);
-
-        expect(response.status).toBe(401);
-        expect(response.body.message).toBe('No token provided');
-      });
-
-      it('should not be able to delete a reply if you are not the owner', async () => {
-        const userTwo = await Mock.createUser();
-
-        const reply = await Mock.createReply(userTwo.id, thread.id);
-
-        const response = await request
-          .delete(`${baseUrl}/replies/${reply.id}`)
-          .set('authorization', `Bearer ${token}`);
-
-        expect(response.status).toBe(401);
-        expect(response.body.message).toBe('You are not authorized to do this');
-      });
-
-      it('should be able to delete a reply if you are the owner', async () => {
-        // create reply by enpoint to create activity
-        const reply = await request
-          .post(`${baseUrl}/threads/${thread.id}/replies`)
-          .set('authorization', `Bearer ${token}`)
-          .send({ body: 'I reply you' });
-
-        const replyId = reply.body.data.id;
-
-        // check if activity was created
-        const replyActivity = await Mock.findActivity(CREATE_REPLY, user.id, replyId, 'reply');
-
-        expect(replyActivity.subjectId).toBe(replyId);
-
-
-        // delete reply
-        const response = await request
-          .delete(`${baseUrl}/replies/${replyId}`)
-          .set('authorization', `Bearer ${token}`);
-
-        // check if reply activity is in the db
-        const deletedReplyActivity = await Mock
-          .findActivity(CREATE_REPLY, user.id, replyId, 'reply');
-
-        // check if reply was deleted
-        expect(response.status).toBe(200);
-        expect(response.body.data).toBe('Deleted Successfully');
-
-        // also confirm that the activity was deleted too
-        expect(deletedReplyActivity).toBe(null);
       });
     });
   });

@@ -3,7 +3,9 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
-import { CREATE_THREAD, CREATE_REPLY, CREATE_FAVORITE } from '../activityConstants';
+import {
+  CREATE_THREAD_ACTIVITY, CREATE_REPLY_ACTIVITY, CREATE_FAVORITE_ACTIVITY, MODEL_REPLY, MODEL_THREAD
+} from '../../../helpers/constants';
 
 describe('', () => {
   let server;
@@ -49,12 +51,13 @@ describe('', () => {
         const threadId = response.body.data.id;
 
         // it should record a createthread activity
-        const activity = await Mock.findActivity(CREATE_THREAD, user.id, threadId, 'thread');
+        const activity = await Mock
+          .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
 
-        expect(activity.type).toBe(CREATE_THREAD);
+        expect(activity.type).toBe(CREATE_THREAD_ACTIVITY);
         expect(activity.userId).toBe(user.id);
         expect(activity.subjectId).toBe(threadId);
-        expect(activity.subjectType).toBe('thread');
+        expect(activity.subjectType).toBe(MODEL_THREAD);
       });
     });
 
@@ -69,12 +72,12 @@ describe('', () => {
         const replyId = response.body.data.id;
 
         // it should record a created reply activity
-        const activity = await Mock.findActivity(CREATE_REPLY, user.id, replyId, 'reply');
+        const activity = await Mock.findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
 
-        expect(activity.type).toBe(CREATE_REPLY);
+        expect(activity.type).toBe(CREATE_REPLY_ACTIVITY);
         expect(activity.userId).toBe(user.id);
         expect(activity.subjectId).toBe(replyId);
-        expect(activity.subjectType).toBe('reply');
+        expect(activity.subjectType).toBe(MODEL_REPLY);
       });
     });
 
@@ -91,9 +94,10 @@ describe('', () => {
         const favoriteId = response.body.data.id;
 
         // it should record a created favorite activity
-        const activity = await Mock.findActivity(CREATE_FAVORITE, user.id, favoriteId, 'favorite');
+        const activity = await Mock
+          .findActivity(CREATE_FAVORITE_ACTIVITY, user.id, favoriteId, 'favorite');
 
-        expect(activity.type).toBe(CREATE_FAVORITE);
+        expect(activity.type).toBe(CREATE_FAVORITE_ACTIVITY);
         expect(activity.userId).toBe(user.id);
         expect(activity.subjectId).toBe(favoriteId);
         expect(activity.subjectType).toBe('favorite');

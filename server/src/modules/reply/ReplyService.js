@@ -1,9 +1,9 @@
 import models from '../../database/models';
 import ActivityService from '../activity/ActivityService';
-import { CREATE_REPLY } from '../activity/activityConstants';
 import Response from '../../responses/response';
 // eslint-disable-next-line import/no-cycle
 import ThreadService from '../thread/ThreadService';
+import { CREATE_REPLY_ACTIVITY, MODEL_REPLY } from '../../helpers/constants';
 
 const { Reply } = models;
 
@@ -21,7 +21,7 @@ class ReplyService {
       resource.setDataValue('favorites', await resource.getFavorites());
 
       // create reply activity
-      await ActivityService.createActivity(resource, CREATE_REPLY, userId);
+      await ActivityService.createActivity(resource, CREATE_REPLY_ACTIVITY, userId);
       return Response.successResponseObject(resource);
     } catch (error) {
       return Response.serverErrorResponseObject();
@@ -40,7 +40,7 @@ class ReplyService {
   static async findByIdAndDelete(id) {
     try {
       // delete reply activity as well
-      await ActivityService.deleteActivity(id, 'reply');
+      await ActivityService.deleteActivity(id, MODEL_REPLY);
 
       // delete the thread
       await Reply.destroy({ where: { id } });
