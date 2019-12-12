@@ -97,10 +97,21 @@ describe('', () => {
       //   // given a reply
       //   const reply = await Mock.createReply(user.id, thread.id);
       //   // with favorite
-      //   const replyFavorite = await Mock.createFavorite(user.id, reply.id, MODEL_REPLY);
+      //   await Mock.createFavorite(user.id, reply.id, MODEL_REPLY);
 
       //   // when the reply is deleted
+      //   // delete reply
+      //   const response = await request
+      //     .delete(`${baseUrl}/replies/${reply.id}`)
+      //     .set('authorization', `Bearer ${token}`);
+
       //   // its favorite should be deleted also
+      //   const deletedReplyFavorite = await Mock.findFavorite(user.id, reply.id, MODEL_REPLY);
+
+      //   // check if reply was deleted
+      //   expect(response.status).toBe(200);
+      //   // also confirm that the activity was deleted too
+      //   expect(deletedReplyFavorite).toBe(null);
       // });
     });
   });

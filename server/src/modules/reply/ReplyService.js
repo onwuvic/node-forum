@@ -39,6 +39,11 @@ class ReplyService {
 
   static async findByIdAndDelete(id) {
     try {
+      // find and delete all reply favorites
+      // const reply = await ReplyService.findOneById(id);
+
+      // await reply.removeFavorite();
+
       // delete reply activity as well
       await ActivityService.deleteActivity(id, MODEL_REPLY);
 
@@ -47,6 +52,7 @@ class ReplyService {
 
       return Response.successResponseObject('Deleted Successfully');
     } catch (error) {
+      console.log('------>', error);
       return Response.serverErrorResponseObject();
     }
   }

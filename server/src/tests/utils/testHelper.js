@@ -95,6 +95,19 @@ class Mock {
     return favorite;
   }
 
+  static async findFavorite(userId, favorableId, favorableType) {
+    const getFavorite = await Favorite.findOne({
+      where: {
+        userId, favorableId, favorableType
+      }
+    });
+    if (getFavorite) {
+      const { dataValues: favorite } = getFavorite;
+      return favorite;
+    }
+    return getFavorite;
+  }
+
   static arrayColumn(input, ColumnKey, IndexKey = null) {
     if (input !== null && (typeof input === 'object' || Array.isArray(input))) {
       const newarray = [];

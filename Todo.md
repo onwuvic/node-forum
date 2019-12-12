@@ -97,3 +97,10 @@ thread permit (authUser.id === thread.user.id [done])
 // deleting reply 
 - should delete reply activity (done)
 - should also delete favoriting a reply activity
+- should also delete favorite activity of the reply
+
+// Activity
+- yet to do activity
+
+// indexing a column
+- userId in like/favorite table
