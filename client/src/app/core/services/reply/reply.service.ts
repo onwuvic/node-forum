@@ -26,4 +26,12 @@ export class ReplyService {
         map((res: any) => res.data)
       );
   }
+
+  deleteReply(replyId: number) {
+    const url = `${environment.baseUrl}/replies/${replyId}`;
+    return this.http.delete(url)
+      .pipe(
+        map((res: any) => res.data)
+      );
+  }
 }

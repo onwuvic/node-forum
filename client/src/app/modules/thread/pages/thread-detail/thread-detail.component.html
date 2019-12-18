@@ -37,28 +37,38 @@
       </div>
 
       <!--Comments-->
-      <div class="card card-comments mb-3 wow fadeIn" *ngIf="data.thread.replies.length">
-        <div class="card-header font-weight-bold">{{ data.thread.replies.length | pluralize : 'comment' }}</div>
-        <div class="card-body">
+      <h5>{{ data.thread.replies.length | pluralize : 'comment' }}</h5>
 
-          <ng-container *ngFor="let reply of data.thread.replies">
-            <div class="media d-block d-md-flex mt-4">
-              <img class="d-flex mb-3 mx-auto" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg"
-                alt="Generic placeholder image">
-              <div class="media-body text-center text-md-left ml-md-3 ml-0">
-                <h5 class="mt-0 font-weight-bold flex-inline">
-                  <a [routerLink]="['/profile', reply.user.fullName]">{{ reply.user.fullName }}</a>
-                  <button mat-stroked-button (click)="addFavorite(reply.id)">{{ reply.favorites.length | pluralize : 'Favorite' }}</button>
-                </h5>
-                <small>{{ reply.createdAt | amTimeAgo }}</small>
-                <p>{{ reply.body }}</p>
+      <ng-container *ngIf="data.thread.replies.length">
+        <ng-container *ngFor="let reply of data.thread.replies">
+          <div class="card mb-3">
+
+            <div class="card-header flex-inline">
+              <div>
+                <img class="reply-profile-img" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg" alt="Generic placeholder image">
+                <a class="left-space" [routerLink]="['/profile', reply.user.fullName]">{{ reply.user.fullName }}</a>
+                <small class="left-space">{{ reply.createdAt | amTimeAgo }}</small>
               </div>
+              <ng-container *ngIf="data.isLoggedIn">
+                <button mat-stroked-button (click)="addFavorite(reply.id)"
+                  [disabled]="disabled(data.authUser.userObject.id, reply.favorites)">
+                  {{ reply.favorites.length | pluralize : 'Favorite' }}
+                </button>
+              </ng-container>
             </div>
-
-            <hr>
-          </ng-container>
-        </div>
-      </div>
+            <div class="card-body">
+              <p>{{ reply.body }}</p>
+            </div>
+            <ng-container *ngIf="data.isLoggedIn">
+              <ng-container *ngIf="data.authUser.userObject.id === reply.userId">
+                <div class="card-footer">
+                  <button type="button" (click)="deleteReply(reply.id)" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
 
       <!-- Paginate Comments -->
       <nav aria-label="Page navigation example">

@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { EMPTY, BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError} from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
@@ -32,6 +32,9 @@ export class ThreadDetailComponent implements OnInit {
 
   private favoriteSubject = new BehaviorSubject<Favorite>(null);
   favoriteAction$ = this.favoriteSubject.asObservable();
+
+  private deleteReplySubject = new BehaviorSubject<number>(null);
+  deleteReplyAction$ = this.deleteReplySubject.asObservable();
 
   constructor(
     private route: ActivatedRoute,
@@ -63,10 +66,13 @@ export class ThreadDetailComponent implements OnInit {
   threadWithActions$ = combineLatest([
     this.thread$,
     this.replyAction$,
-    this.favoriteAction$
+    this.favoriteAction$,
+    this.deleteReplyAction$
   ])
     .pipe(
-      map(([thread, reply, favorite]) => this.triggerChange(thread, reply, favorite))
+      map(([
+        thread, reply, favorite, deleteReplyId
+      ]) => this.triggerChange(thread, reply, favorite, deleteReplyId))
     );
 
   data$ = combineLatest([
@@ -128,15 +134,22 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  triggerChange(thread, reply, favorite) {
+  triggerChange(thread, reply, favorite, deleteReplyId) {
     if (reply) {
       thread.replies.unshift(reply);
+      this.replySubject.next(null);
     }
     if (favorite) {
       thread.replies
         .find(replied => replied.id === favorite.favorableId)
         .favorites
         .push(favorite);
+    }
+    if (deleteReplyId) {
+      const foundIndex = thread.replies.findIndex(replied => replied.id === deleteReplyId);
+      if (foundIndex > -1) {
+        thread.replies.splice(foundIndex, 1);
+      }
     }
     return thread;
   }
@@ -153,11 +166,20 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  //
-  canDelete() {
-    // methd 1, pass parameters, not reusable
-    // get auth user id
-    // get thread user id
+  disabled(userId: number, favorites: Favorite[]) {
+    return !!favorites.find(favorite => userId === favorite.userId);
   }
 
+  deleteReply(replyId: number) {
+    this.replyService.deleteReply(replyId)
+      .subscribe(
+        (data) => {
+          this.deleteReplySubject.next(replyId);
+          this.snackBar.open(data, 'Ok');
+        },
+        (error) => {
+          this.snackBar.open(error, 'Ok');
+        }
+      );
+  }
 }
