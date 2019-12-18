@@ -8,10 +8,7 @@ class UserController {
 
   static async login(req, res) {
     const response = await UserService.login(req.body);
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 }
 

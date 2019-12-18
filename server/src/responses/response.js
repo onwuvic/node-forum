@@ -1,18 +1,4 @@
 class Response {
-  static ok(res, response, statusCode = 200) {
-    return res.status(statusCode).json({
-      status: response.status,
-      data: response.resource
-    });
-  }
-
-  static created(res, response, statusCode = 201) {
-    return res.status(statusCode).json({
-      status: response.status,
-      data: response.resource
-    });
-  }
-
   static success(res, response) {
     return res.status(response.statusCode).json({
       status: response.status,
@@ -69,6 +55,13 @@ class Response {
       statusCode: 500,
       message: 'Unable to perform this action at this time. Try again later.'
     };
+  }
+
+  static httpResponse(res, response) {
+    if (response.status) {
+      return Response.success(res, response);
+    }
+    return Response.error(res, response);
   }
 }
 

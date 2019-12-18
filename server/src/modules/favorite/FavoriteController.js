@@ -8,10 +8,7 @@ class FavoriteController {
 
   static async favoriteReply(req, res) {
     const response = await FavoriteService.favoriteReply(req.user.id, req.params.replyId);
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 }
 

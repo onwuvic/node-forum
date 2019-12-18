@@ -4,26 +4,17 @@ import Response from '../../responses/response';
 class ReplyController {
   static async index(req, res) {
     const response = await ReplyService.findAll();
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 
   static async create(req, res) {
     const response = await ReplyService.create(req.body.body, req.user.id, req.params.id);
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 
   static async destroy(req, res) {
     const response = await ReplyService.findByIdAndDelete(req.params.id);
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 }
 

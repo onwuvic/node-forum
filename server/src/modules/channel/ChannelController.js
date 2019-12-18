@@ -4,10 +4,7 @@ import Response from '../../responses/response';
 class ChannelController {
   static async index(req, res) {
     const response = await ChannelService.findAll();
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 }
 

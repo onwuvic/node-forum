@@ -5,19 +5,13 @@ import ActivityService from '../activity/ActivityService';
 class ProfileController {
   static async show(req, res) {
     const response = await ProfileService.findByUsername(req.params.username);
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 
   // WILL Remove this once adding activity children is figured out.
   static async findAll(req, res) {
     const response = await ActivityService.findAll();
-    if (response.status) {
-      return Response.success(res, response);
-    }
-    return Response.error(res, response);
+    return Response.httpResponse(res, response);
   }
 }
 
