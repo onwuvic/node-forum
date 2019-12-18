@@ -9,7 +9,7 @@ class FavoriteController {
   static async favoriteReply(req, res) {
     const response = await FavoriteService.favoriteReply(req.user.id, req.params.replyId);
     if (response.status) {
-      return Response.created(res, response);
+      return Response.success(res, response);
     }
     return Response.error(res, response);
   }

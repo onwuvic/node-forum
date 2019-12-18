@@ -5,7 +5,7 @@ class ReplyController {
   static async index(req, res) {
     const response = await ReplyService.findAll();
     if (response.status) {
-      return Response.ok(res, response);
+      return Response.success(res, response);
     }
     return Response.error(res, response);
   }
@@ -13,7 +13,7 @@ class ReplyController {
   static async create(req, res) {
     const response = await ReplyService.create(req.body.body, req.user.id, req.params.id);
     if (response.status) {
-      return Response.created(res, response);
+      return Response.success(res, response);
     }
     return Response.error(res, response);
   }
@@ -21,7 +21,7 @@ class ReplyController {
   static async destroy(req, res) {
     const response = await ReplyService.findByIdAndDelete(req.params.id);
     if (response.status) {
-      return Response.ok(res, response);
+      return Response.success(res, response);
     }
     return Response.error(res, response);
   }

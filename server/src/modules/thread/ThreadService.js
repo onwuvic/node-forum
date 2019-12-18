@@ -50,7 +50,7 @@ class ThreadService {
       // create activity
       await ActivityService.createActivity(resource, CREATE_THREAD_ACTIVITY, userId);
 
-      return Response.successResponseObject(resource);
+      return Response.successResponseObject(resource, 201);
     } catch (error) {
       return Response.serverErrorResponseObject();
     }

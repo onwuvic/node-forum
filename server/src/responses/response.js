@@ -13,6 +13,13 @@ class Response {
     });
   }
 
+  static success(res, response) {
+    return res.status(response.statusCode).json({
+      status: response.status,
+      data: response.resource
+    });
+  }
+
   static error(res, response) {
     return res.status(response.statusCode).json({
       status: response.status,
@@ -48,8 +55,8 @@ class Response {
     });
   }
 
-  static successResponseObject(resource) {
-    return { status: true, resource };
+  static successResponseObject(resource, statusCode = 200) {
+    return { status: true, statusCode, resource };
   }
 
   static failureResponseObject(statusCode, message) {

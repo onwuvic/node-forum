@@ -19,7 +19,7 @@ class FavoriteService {
 
         // also create favorite activity
         await ActivityService.createActivity(resource, CREATE_FAVORITE_ACTIVITY, userId);
-        return Response.successResponseObject(resource);
+        return Response.successResponseObject(resource, 201);
       }
       return Response.failureResponseObject(400, 'Already favorite this reply');
     } catch (error) {

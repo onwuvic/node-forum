@@ -22,7 +22,7 @@ class ReplyService {
 
       // create reply activity
       await ActivityService.createActivity(resource, CREATE_REPLY_ACTIVITY, userId);
-      return Response.successResponseObject(resource);
+      return Response.successResponseObject(resource, 201);
     } catch (error) {
       return Response.serverErrorResponseObject();
     }

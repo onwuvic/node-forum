@@ -6,7 +6,7 @@ class ProfileController {
   static async show(req, res) {
     const response = await ProfileService.findByUsername(req.params.username);
     if (response.status) {
-      return Response.ok(res, response);
+      return Response.success(res, response);
     }
     return Response.error(res, response);
   }
@@ -15,7 +15,7 @@ class ProfileController {
   static async findAll(req, res) {
     const response = await ActivityService.findAll();
     if (response.status) {
-      return Response.ok(res, response);
+      return Response.success(res, response);
     }
     return Response.error(res, response);
   }
