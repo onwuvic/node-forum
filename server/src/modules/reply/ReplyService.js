@@ -57,6 +57,24 @@ class ReplyService {
     }
   }
 
+  static async findByIdAndUpadte(id, body) {
+    try {
+      const [numberOfAffectedRows, [resource]] = await Reply.update(
+        { body },
+        {
+          where: { id },
+          returning: true
+        }
+      );
+      if (numberOfAffectedRows === 0) {
+        return Response.failureResponseObject(404, 'Reply doesn\'t exist');
+      }
+      return Response.successResponseObject(resource);
+    } catch (error) {
+      return Response.serverErrorResponseObject();
+    }
+  }
+
   static async findOneById(id) {
     const reply = await Reply.findOne({ where: { id } });
     return reply;

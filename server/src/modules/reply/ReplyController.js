@@ -12,6 +12,11 @@ class ReplyController {
     return Response.httpResponse(res, response);
   }
 
+  static async update(req, res) {
+    const response = await ReplyService.findByIdAndUpadte(req.params.id, req.body.body);
+    return Response.httpResponse(res, response);
+  }
+
   static async destroy(req, res) {
     const response = await ReplyService.findByIdAndDelete(req.params.id);
     return Response.httpResponse(res, response);

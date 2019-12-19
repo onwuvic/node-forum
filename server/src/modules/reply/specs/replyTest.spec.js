@@ -114,5 +114,67 @@ describe('', () => {
       //   expect(deletedReplyFavorite).toBe(null);
       // });
     });
+
+    describe('Updating Reply', () => {
+      it('should not be able to UPDATE a reply as a guest', async () => {
+        const response = await request
+          .put(`${baseUrl}/replies/9999`);
+
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBe('No token provided');
+      });
+
+      it('should not be able to UPDATE a reply if you are not the owner', async () => {
+        const userTwo = await Mock.createUser();
+
+        const reply = await Mock.createReply(userTwo.id, thread.id);
+
+        const response = await request
+          .put(`${baseUrl}/replies/${reply.id}`)
+          .set('authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBe('You are not authorized to do this');
+      });
+
+      it('should NOT be able to UPDATE if reply body is empty', async () => {
+        // GIVEN A REPLY
+        const reply = await Mock.createReply(user.id, thread.id);
+
+        const response = await request
+          .put(`${baseUrl}/replies/${reply.id}`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: '' });
+
+        // check if reply was deleted
+        expect(response.status).toBe(400);
+        expect(response.body.message.body).toBe('body is not allowed to be empty');
+      });
+
+      it('should NOT be able to UPDATE if reply id does not exist', async () => {
+        const response = await request
+          .put(`${baseUrl}/replies/99999`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'love you' });
+
+        // check if reply was deleted
+        expect(response.status).toBe(404);
+        expect(response.body.message).toBe('reply doesn\'t exist');
+      });
+
+      it('should be able to UPDATE a reply if you are the owner', async () => {
+        // GIVEN A REPLY
+        const reply = await Mock.createReply(user.id, thread.id);
+
+        const response = await request
+          .put(`${baseUrl}/replies/${reply.id}`)
+          .set('authorization', `Bearer ${token}`)
+          .send({ body: 'I reply you' });
+
+        // check if reply was deleted
+        expect(response.status).toBe(200);
+        expect(response.body.data.body).toBe('I reply you');
+      });
+    });
   });
 });
