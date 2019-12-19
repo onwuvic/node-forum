@@ -20,7 +20,9 @@ import { Favorite } from '../../../../core/models/favorite.model';
 })
 export class ThreadDetailComponent implements OnInit {
   replyForm: FormGroup;
+  editReplyForm: FormGroup;
   loading = false;
+  editing = false;
 
   private errorMessageSubject = new Subject<string>();
   errorMessage$ = this.errorMessageSubject.asObservable();
@@ -86,6 +88,9 @@ export class ThreadDetailComponent implements OnInit {
 
   ngOnInit() {
     this.replyForm = this.fb.group({
+      body: ['', [Validators.required]]
+    });
+    this.editReplyForm = this.fb.group({
       body: ['', [Validators.required]]
     });
   }
@@ -168,6 +173,17 @@ export class ThreadDetailComponent implements OnInit {
 
   disabled(userId: number, favorites: Favorite[]) {
     return !!favorites.find(favorite => userId === favorite.userId);
+  }
+
+  editReply(body) {
+    this.editing = true;
+    this.editReplyForm.patchValue({
+      body
+    });
+  }
+
+  updateReply() {
+    console.log('=====loading..... updating....', this.editReplyForm.value);
   }
 
   deleteReply(replyId: number) {
