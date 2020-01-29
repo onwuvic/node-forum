@@ -72,7 +72,8 @@ describe('', () => {
         const replyId = response.body.data.id;
 
         // it should record a created reply activity
-        const activity = await Mock.findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
+        const activity = await Mock
+          .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
 
         expect(activity.type).toBe(CREATE_REPLY_ACTIVITY);
         expect(activity.userId).toBe(user.id);

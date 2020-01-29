@@ -2,8 +2,9 @@ import models from '../../database/models';
 import Utils from '../../helpers/Utils';
 import Token from '../../helpers/Token';
 import Response from '../../responses/response';
+import ActivityService from '../activity/ActivityService';
 
-const { User, Thread } = models;
+const { User } = models;
 class UserService {
   static async findUserByEmail(email) {
     const user = await User.scope('withPassword').findOne({
@@ -19,17 +20,13 @@ class UserService {
     return UserService.refineObject(user);
   }
 
-  static async findUserByNameWithThreads(fullName) {
-    // TODO: ADD aCTIVIIES WITH IT CHILDREN WHEN YOU FIGURED IT OUT.
-    const resource = await User.findOne({
-      where: { fullName },
-      include: [
-        {
-          model: Thread,
-          as: 'threads'
-        },
-      ]
-    });
+  static async findUserByNameWithActivity(fullName) {
+    const resource = await User.findOne({ where: { fullName } });
+    if (!resource) {
+      return null;
+    }
+    const activities = await ActivityService.findAllActivityByUserId(resource.id);
+    resource.setDataValue('activities', activities);
 
     return resource;
   }

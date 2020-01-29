@@ -52,7 +52,6 @@ class ReplyService {
 
       return Response.successResponseObject('Deleted Successfully');
     } catch (error) {
-      console.log('------>', error);
       return Response.serverErrorResponseObject();
     }
   }

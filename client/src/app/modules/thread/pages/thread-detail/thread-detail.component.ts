@@ -16,7 +16,7 @@ import { Favorite } from '../../../../core/models/favorite.model';
   selector: 'app-thread-detail',
   templateUrl: './thread-detail.component.html',
   styleUrls: ['./thread-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThreadDetailComponent implements OnInit {
   replyForm: FormGroup;
@@ -182,8 +182,21 @@ export class ThreadDetailComponent implements OnInit {
     });
   }
 
-  updateReply() {
-    console.log('=====loading..... updating....', this.editReplyForm.value);
+  updateReply(replyId: number) {
+    this.replyService.updateReply(replyId, this.editReplyForm.value)
+      .subscribe(
+        (data) => {
+          this.editing = false;
+          console.log('------>', data);
+          // this.snackBar.open(data, 'Ok');
+        },
+        (error) => {
+          // this.editing = false;
+          console.log('------>', error);
+          // this.snackBar.open(error, 'Ok');
+        }
+      );
+
   }
 
   deleteReply(replyId: number) {

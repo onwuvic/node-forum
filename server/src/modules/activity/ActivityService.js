@@ -1,5 +1,4 @@
 import models from '../../database/models';
-import Response from '../../responses/response';
 
 const { Activity } = models;
 
@@ -13,29 +12,9 @@ class ActivityService {
   }
 
   // WILL Remove this once adding activity children is figured out.
-  static async findAll() {
-    try {
-      // const resource = await Activity.findAll(
-      //   // {
-      //   //   include: [
-      //   //     {
-      //   //       model: Thread,
-      //   //       as: 'thread',
-      //   //       // where: { subjectType: 'thread' }
-      //   //     },
-      //   //   ]
-      //   // }
-      // );
-
-      const resource = await Activity.findAll();
-      // resource.setDataValue('threads', await resource.getThread());
-
-      // resource.setDataValue('subject', await resource.getItem());
-      return Response.successResponseObject(resource);
-    } catch (error) {
-      console.log('-------->activity', error);
-      return Response.serverErrorResponseObject();
-    }
+  static async findAllActivityByUserId(userId) {
+    const resource = await Activity.scope({ method: ['all', userId] }).findAll();
+    return resource;
   }
 }
 

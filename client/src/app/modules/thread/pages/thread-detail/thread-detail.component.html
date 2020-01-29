@@ -65,15 +65,19 @@
             <!-- Reply body -->
             <div class="card-body">
               <ng-container *ngIf="editing; else elseReplyBody">
-                <form (ngSubmit)="updateReply()" [formGroup]="editReplyForm" novalidate>
+                <!-- Edit Reply Form -->
+                <form (ngSubmit)="updateReply(reply.id)" [formGroup]="editReplyForm" novalidate>
                   <div class="form-group">
                     <label for="body" class="sr-only">Body</label>
                     <textarea class="form-control" formControlName="body"></textarea>
                   </div>
-
-                  <button type="submit" class="btn btn-primary btn-xs">Update</button>
+                  <ng-container>
+                    <!-- <mat-spinner *ngIf="editSpinner" diameter="20"></mat-spinner> -->
+                    <button type="submit" class="btn btn-primary btn-xs">Update</button>
+                  </ng-container>
                   <button type="button" (click)="editing = false" class="btn btn-link btn-xs">Cancel</button>
                 </form>
+                <!-- End Edit Reply Form -->
               </ng-container>
               <ng-template #elseReplyBody>
                 <p>{{ reply.body }}</p>

@@ -53,13 +53,13 @@ describe('', () => {
         expect(response.body.message).toBe('User doesn\'t exist');
       });
 
-      it('should return all thread created by the user ', async () => {
+      it('should return all activities created by the user ', async () => {
         const response = await request
           .get(`${baseUrl}/profiles/${user.fullName}`);
 
         // I should see the thread
         expect(response.status).toBe(200);
-        expect(response.body.data).toHaveProperty('threads');
+        expect(response.body.data).toHaveProperty('activities');
       });
     });
   });

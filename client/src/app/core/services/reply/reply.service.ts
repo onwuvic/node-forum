@@ -34,4 +34,12 @@ export class ReplyService {
         map((res: any) => res.data)
       );
   }
+
+  updateReply(replyId: number, data) {
+    const url = `${environment.baseUrl}/replies/${replyId}`;
+    return this.http.put(url, data)
+      .pipe(
+        map((res: any) => res.data)
+      );
+  }
 }
