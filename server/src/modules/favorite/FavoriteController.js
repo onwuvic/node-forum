@@ -3,7 +3,8 @@ import Response from '../../responses/response';
 
 class FavoriteController {
   static async index(req, res) {
-    res.status(200).json('Its works!!! Favorites');
+    const response = await FavoriteService.findAll();
+    return Response.httpResponse(res, response);
   }
 
   static async favoriteReply(req, res) {

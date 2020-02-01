@@ -86,18 +86,35 @@ export default (sequelize, DataTypes) => {
             {
               model: models.User,
               as: 'creator',
+            },
+            {
+              model: models.Channel,
+              as: 'channel',
             }
           ],
         },
         {
           model: models.Reply,
           as: 'reply',
+          include: [
+            {
+              model: models.Thread,
+              as: 'thread',
+              include: [
+                {
+                  model: models.Channel,
+                  as: 'channel',
+                }
+              ]
+            }
+          ],
         },
         {
           model: models.Favorite,
           as: 'favorite',
         },
-      ]
+      ],
+      order: [['createdAt', 'DESC']],
     }));
   };
 

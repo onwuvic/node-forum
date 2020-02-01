@@ -4,7 +4,7 @@ import Response from '../../responses/response';
 import ActivityService from '../activity/ActivityService';
 import { CREATE_FAVORITE_ACTIVITY, MODEL_REPLY } from '../../helpers/constants';
 
-const { Favorite } = models;
+const { Favorite, Reply } = models;
 
 class FavoriteService {
   static async favoriteReply(userId, replyId) {
@@ -35,6 +35,24 @@ class FavoriteService {
   static async createFavorite(model, userId) {
     const favorite = await model.createFavorite({ userId });
     return favorite;
+  }
+
+  static async findAll() {
+    try {
+      const resource = await Favorite.findAll({
+        include: [
+          {
+            model: Reply,
+            as: 'reply',
+          }
+        ]
+      });
+
+      return Response.successResponseObject(resource);
+    } catch (error) {
+      console.log('----->', error);
+      return Response.serverErrorResponseObject();
+    }
   }
 }
 

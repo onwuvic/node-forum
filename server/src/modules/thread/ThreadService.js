@@ -127,6 +127,7 @@ class ThreadService {
     return thread;
   }
 
+  // this will be refactor into a scope
   static async findOneByIdAndChannel(id, channelId) {
     const thread = await Thread.findOne({
       where: { id, channelId },

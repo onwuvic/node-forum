@@ -12,6 +12,7 @@ class ProfileService {
       }
       return Response.successResponseObject(user);
     } catch (error) {
+      console.log('----->', error);
       return Response.serverErrorResponseObject();
     }
   }

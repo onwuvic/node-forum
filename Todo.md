@@ -23,12 +23,10 @@ Mock.setUser(); Mock.getUser();
 Mock.setAuthUser(); Mock.getAuthUser();
 Mock.setThread(userId); Mock.getThread(userId);
 Mock.createUser(); return a user object
-
 Mock.createAuthUser(); // return a token
-
 Mock.createThread(userId); return a thread object
-
 Mock.createReply(userId, threadId); return a reply object
+
 What to test
 - user can login (done)
 - test get all thread include its channel too (done)
@@ -49,7 +47,7 @@ What to test
 - also delete its thread activity and delete its reply activity (done)
 
 - fix running test on circleCI (when done update postgres api generator)
-- route back to same page and display the new reply
+- route back to same page and display the new reply (done)
 - channel should be unique
 - channel should use the find or create method to create new channel
 - fine tune validation error to either array or object
@@ -64,9 +62,9 @@ psuedo code
 - start frontend implementation
 - hold on on reply pagination (all pagination)
 
-- how to check if user has favorite a reply or not
+- how to check if user has favorite a reply or not (done)
 - auto reload
-- Link to see thread from user profile
+- Link to see thread from user profile (done)
 - best way to add check like: isAuth, hasPermit
 - add role table
 - policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
@@ -74,10 +72,10 @@ thread permit (authUser.id === thread.user.id [done])
 
 
 // Activities
-- get all activity and eager load its subjectType explictly
-- use this knowledge to eager it from the user model
-- group the subjectType by createdAt date
-- auto add different component base on the activity type
+- get all activity and eager load its subjectType explictly (done)
+- use this knowledge to eager it from the user model (done)
+- group the subjectType by createdAt date (done/half)
+- auto add different component base on the activity type (done)
 
 //
 - Add favorite activity api (done)
@@ -94,7 +92,7 @@ thread permit (authUser.id === thread.user.id [done])
 - observable error (done)
 -
 
-// deleting reply 
+// deleting reply | deep look into deleting thread/reply/favorite/activity
 - should delete reply activity (done)
 - should also delete favoriting a reply activity
 - should also delete favorite activity of the reply

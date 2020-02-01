@@ -9,9 +9,19 @@
         <hr>
       </div>
 
-      <ng-container *ngIf="profile.threads.length">
-        <ng-container *ngFor="let thread of profile.threads">
-          <div class="card mb-3 wow fadeIn">
+      <ng-container *ngIf="profile.activities.length">
+        <ng-container *ngFor="let activity of profile.activities">
+          <ng-container *ngIf="activity.subjectType === 'thread'">
+            <app-created-thread [name]="profile.fullName" [activity]="activity"></app-created-thread>
+          </ng-container>
+          <ng-container *ngIf="activity.subjectType === 'reply'">
+            <app-created-reply [name]="profile.fullName" [activity]="activity"></app-created-reply>
+          </ng-container>
+          <ng-container *ngIf="activity.subjectType === 'favorite'">
+            <app-created-favorite [name]="profile.fullName" [activity]="activity"></app-created-favorite>
+          </ng-container>
+
+          <!-- <div class="card mb-3 wow fadeIn">
             <div class="card-header font-weight-bold flex-inline">
               <div>
                 <a [routerLink]="['/profile', profile.fullName]">{{ profile.fullName }}</a>
@@ -25,7 +35,7 @@
                 <p>{{ thread.body }}</p>
               </div>
             </div>
-          </div>
+          </div> -->
         </ng-container>
       </ng-container>
     </div>
