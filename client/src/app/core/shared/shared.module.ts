@@ -9,12 +9,24 @@ import { MaterialModule } from './material-module/material.module';
 import { TemplateStoreDirective } from '../directives/template-store.directive';
 import { ErrorComponent } from '../error/error.component';
 import { PluralizePipe } from '../pipes/pluralize/pluralize.pipe';
+import { ThreadCardComponent } from './components/thread-card/thread-card.component';
+import { ReplyFormComponent } from './components/reply-form/reply-form.component';
 
 @NgModule({
-  declarations: [TemplateStoreDirective, ErrorComponent, PluralizePipe],
+  declarations: [
+    TemplateStoreDirective,
+    ErrorComponent,
+    PluralizePipe,
+    ThreadCardComponent,
+    ReplyFormComponent
+  ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    MomentModule,
   ],
   exports: [
     FormsModule,
@@ -23,7 +35,9 @@ import { PluralizePipe } from '../pipes/pluralize/pluralize.pipe';
     MomentModule,
     TemplateStoreDirective,
     ErrorComponent,
-    PluralizePipe
+    PluralizePipe,
+    ThreadCardComponent,
+    ReplyFormComponent
   ]
 })
 export class SharedModule { }

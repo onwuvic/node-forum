@@ -19,7 +19,6 @@ import { Favorite } from '../../../../core/models/favorite.model';
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThreadDetailComponent implements OnInit {
-  replyForm: FormGroup;
   editReplyForm: FormGroup;
   loading = false;
   editing = false;
@@ -87,9 +86,6 @@ export class ThreadDetailComponent implements OnInit {
     );
 
   ngOnInit() {
-    this.replyForm = this.fb.group({
-      body: ['', [Validators.required]]
-    });
     this.editReplyForm = this.fb.group({
       body: ['', [Validators.required]]
     });
@@ -99,13 +95,13 @@ export class ThreadDetailComponent implements OnInit {
     this.authService.signIn();
   }
 
-  addReply(id) {
+  addReply(event, id) {
     this.loading = true;
-    this.replyService.addReply(id, this.replyForm.value)
+    this.replyService.addReply(id, event.value)
       .subscribe(
         (data) => {
           this.loading = false;
-          this.resetForm();
+          event.reset();
           this.replySubject.next(data);
           this.snackBar.open('Reply added!', 'Ok', {
             duration: 3000
@@ -118,10 +114,6 @@ export class ThreadDetailComponent implements OnInit {
           });
         }
       );
-  }
-
-  resetForm() {
-    this.replyForm.reset();
   }
 
   deleteThread(id) {
