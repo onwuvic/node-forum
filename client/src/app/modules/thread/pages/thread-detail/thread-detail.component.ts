@@ -133,7 +133,12 @@ export class ThreadDetailComponent implements OnInit {
 
   triggerChange(thread, reply, favorite, deleteReplyId) {
     if (reply) {
-      thread.replies.unshift(reply);
+      const foundIndex = thread.replies.findIndex(replied => replied.id === reply.id);
+      if (foundIndex > -1) {
+        thread.replies[foundIndex] = { ...thread.replies[foundIndex], ...reply};
+      } else {
+        thread.replies.unshift(reply);
+      }
       this.replySubject.next(null);
     }
     if (favorite) {
@@ -163,29 +168,17 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  disabled(userId: number, favorites: Favorite[]) {
-    return !!favorites.find(favorite => userId === favorite.userId);
-  }
-
-  editReply(body) {
-    this.editing = true;
-    this.editReplyForm.patchValue({
-      body
-    });
-  }
-
-  updateReply(replyId: number) {
-    this.replyService.updateReply(replyId, this.editReplyForm.value)
+  updateReply(event, replyId: number) {
+    this.replyService.updateReply(replyId, event)
       .subscribe(
         (data) => {
-          this.editing = false;
-          console.log('------>', data);
-          // this.snackBar.open(data, 'Ok');
+          this.replySubject.next(data);
+          this.snackBar.open('Reply updated!', 'Ok');
         },
         (error) => {
-          // this.editing = false;
-          console.log('------>', error);
-          // this.snackBar.open(error, 'Ok');
+          this.snackBar.open(error, 'Ok', {
+            duration: 3000
+          });
         }
       );
 

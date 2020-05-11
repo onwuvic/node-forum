@@ -45,7 +45,6 @@ export class ThreadCreateComponent implements OnInit {
         },
         (error) => {
           this.loading = false;
-          console.log('-----> error', error);
           this.snackBar.open(error, 'Ok', {
             duration: 3000
           });

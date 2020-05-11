@@ -11,6 +11,7 @@ import { ErrorComponent } from '../error/error.component';
 import { PluralizePipe } from '../pipes/pluralize/pluralize.pipe';
 import { ThreadCardComponent } from './components/thread-card/thread-card.component';
 import { ReplyFormComponent } from './components/reply-form/reply-form.component';
+import { ReplyCardComponent } from './components/reply-card/reply-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ReplyFormComponent } from './components/reply-form/reply-form.component
     ErrorComponent,
     PluralizePipe,
     ThreadCardComponent,
-    ReplyFormComponent
+    ReplyFormComponent,
+    ReplyCardComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +39,8 @@ import { ReplyFormComponent } from './components/reply-form/reply-form.component
     ErrorComponent,
     PluralizePipe,
     ThreadCardComponent,
-    ReplyFormComponent
+    ReplyFormComponent,
+    ReplyCardComponent
   ]
 })
 export class SharedModule { }

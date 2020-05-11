@@ -41,62 +41,13 @@
 
       <ng-container *ngIf="data.thread.replies.length">
         <ng-container *ngFor="let reply of data.thread.replies">
-          <div class="card mb-3">
-
-            <div class="card-header flex-inline">
-              <!-- Reply profile Image, Name and Time Stamp  -->
-              <div>
-                <img class="reply-profile-img" src="https://mdbootstrap.com/img/Photos/Avatars/img (20).jpg" alt="Generic placeholder image">
-                <a class="ml-1" [routerLink]="['/profile', reply.user.fullName]">{{ reply.user.fullName }}</a>
-                <small class="ml-1">{{ reply.createdAt | amTimeAgo }}</small>
-              </div>
-              <!-- End Reply profile Image, Name and Time Stamp  -->
-
-              <!-- Favorite button -->
-              <ng-container *ngIf="data.isLoggedIn">
-                <button mat-stroked-button (click)="addFavorite(reply.id)"
-                  [disabled]="disabled(data.authUser.userObject.id, reply.favorites)">
-                  {{ reply.favorites.length | pluralize : 'Favorite' }}
-                </button>
-              </ng-container>
-              <!-- End Favorite button -->
-            </div>
-
-            <!-- Reply body -->
-            <div class="card-body">
-              <ng-container *ngIf="editing; else elseReplyBody">
-                <!-- Edit Reply Form -->
-                <form (ngSubmit)="updateReply(reply.id)" [formGroup]="editReplyForm" novalidate>
-                  <div class="form-group">
-                    <label for="body" class="sr-only">Body</label>
-                    <textarea class="form-control" formControlName="body"></textarea>
-                  </div>
-                  <ng-container>
-                    <!-- <mat-spinner *ngIf="editSpinner" diameter="20"></mat-spinner> -->
-                    <button type="submit" class="btn btn-primary btn-xs">Update</button>
-                  </ng-container>
-                  <button type="button" (click)="editing = false" class="btn btn-link btn-xs">Cancel</button>
-                </form>
-                <!-- End Edit Reply Form -->
-              </ng-container>
-              <ng-template #elseReplyBody>
-                <p>{{ reply.body }}</p>
-              </ng-template>
-            </div>
-            <!-- End Reply body -->
-
-            <!-- Reply Card footer Edit and Delete -->
-            <ng-container *ngIf="data.isLoggedIn">
-              <ng-container *ngIf="data.authUser.userObject.id === reply.userId">
-                <div class="card-footer">
-                  <button type="button" (click)="editReply(reply.body)" class="btn btn-secondary btn-sm mr-2">Edit</button>
-                  <button type="button" (click)="deleteReply(reply.id)" class="btn btn-danger btn-sm">Delete</button>
-                </div>
-              </ng-container>
-            </ng-container>
-            <!-- End Reply Card footer Edit and Delete -->
-
-          </div>
+          <app-reply-card
+            [reply]="reply"
+            [data]="data"
+            (clickFavorite)="addFavorite(reply.id)"
+            (clickDeleteReply)="deleteReply(reply.id)"
+            (clickUpdateReply)="updateReply($event, reply.id)"
+            ></app-reply-card>
         </ng-container>
       </ng-container>
 
