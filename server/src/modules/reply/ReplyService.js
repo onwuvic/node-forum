@@ -1,9 +1,10 @@
+/* eslint-disable import/no-cycle */
 import models from '../../database/models';
 import ActivityService from '../activity/ActivityService';
 import Response from '../../responses/response';
-// eslint-disable-next-line import/no-cycle
 import ThreadService from '../thread/ThreadService';
-import { CREATE_REPLY_ACTIVITY, MODEL_REPLY } from '../../helpers/constants';
+import { CREATE_REPLY_ACTIVITY, MODEL_REPLY, MODEL_FAVORITE } from '../../helpers/constants';
+import FavoriteService from '../favorite/FavoriteService';
 
 const { Reply } = models;
 
@@ -39,10 +40,18 @@ class ReplyService {
 
   static async findByIdAndDelete(id) {
     try {
-      // find and delete all reply favorites
-      // const reply = await ReplyService.findOneById(id);
+      // find all favorites with id and model
+      const favorites = await FavoriteService.findAllByFavorableIdAndFavorableType(id, MODEL_REPLY);
 
-      // await reply.removeFavorite();
+      // delete all the favorite activity associated with this reply
+      if (favorites.length) {
+        const ids = favorites.map(favorite => favorite.id);
+
+        await ActivityService.deleteActivity(ids, MODEL_FAVORITE);
+      }
+
+      // delete all the favorite associated with this reply
+      await FavoriteService.deleteFavorite(id, MODEL_REPLY);
 
       // delete reply activity as well
       await ActivityService.deleteActivity(id, MODEL_REPLY);

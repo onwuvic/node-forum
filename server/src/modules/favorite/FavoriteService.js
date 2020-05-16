@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import ReplyService from '../reply/ReplyService';
 import models from '../../database/models';
 import Response from '../../responses/response';
@@ -37,6 +38,18 @@ class FavoriteService {
     return favorite;
   }
 
+  static async deleteFavorite(favorableId, favorableType) {
+    await Favorite.destroy({ where: { favorableId, favorableType } });
+  }
+
+  static async findAllByFavorableIdAndFavorableType(favorableId, favorableType) {
+    const favorites = await Favorite.findAll({
+      where: { favorableId, favorableType },
+      attributes: ['id']
+    });
+    return favorites;
+  }
+
   static async findAll() {
     try {
       const resource = await Favorite.findAll({
@@ -50,7 +63,6 @@ class FavoriteService {
 
       return Response.successResponseObject(resource);
     } catch (error) {
-      console.log('----->', error);
       return Response.serverErrorResponseObject();
     }
   }

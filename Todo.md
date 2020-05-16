@@ -18,6 +18,12 @@
 - create form for thread basic validation required (done)
 - add auth guard for only auth user (done)
 - when created redirect to a single page of the form (done)
+- how to check if user has favorite a reply or not (done)
+- route back to same page and display the new reply (done)
+- Link to see thread from user profile (done)
+- get all activity and eager load its subjectType explictly (done)
+- use this knowledge to eager it from the user model (done)
+- userId in like/favorite table (done)
 // all done
 Mock.setUser(); Mock.getUser();
 Mock.setAuthUser(); Mock.getAuthUser();
@@ -46,38 +52,10 @@ What to test
 - when deleting a thread (done)
 - also delete its thread activity and delete its reply activity (done)
 
-- fix running test on circleCI (when done update postgres api generator)
-- route back to same page and display the new reply (done)
-- channel should be unique
-- channel should use the find or create method to create new channel
-- fine tune validation error to either array or object
-
-- how to add each count of each eager loader resources
-
-psuedo code
-- backend to frontend
-- how to paginate in sequelize
-- how to paginate an eager loader resource
-- complete backend implementation
-- start frontend implementation
-- hold on on reply pagination (all pagination)
-
-- how to check if user has favorite a reply or not (done)
-- auto reload
-- Link to see thread from user profile (done)
-- best way to add check like: isAuth, hasPermit
-- add role table
-- policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
-thread permit (authUser.id === thread.user.id [done])
-
-
 // Activities
-- get all activity and eager load its subjectType explictly (done)
-- use this knowledge to eager it from the user model (done)
 - group the subjectType by createdAt date (done/half)
 - auto add different component base on the activity type (done)
 
-//
 - Add favorite activity api (done)
 - add deleting reply api (done)
 - refactor policies to be : ReplyPolicy, ThreadPolicy (done)
@@ -90,15 +68,35 @@ thread permit (authUser.id === thread.user.id [done])
 - check the new type before adding it. (done)
 - contemplate to either make new api call for one thread or do a search all for the thread. (let make api call)
 - observable error (done)
--
 
 // deleting reply | deep look into deleting thread/reply/favorite/activity
 - should delete reply activity (done)
-- should also delete favoriting a reply activity
-- should also delete favorite activity of the reply
+- should also delete favoriting a reply activity (done)
+- should also delete favorite activity of the reply (done)
 
-// Activity
-- yet to do activity
 
-// indexing a column
-- userId in like/favorite table
+
+// Not yet done
+- fix running test on circleCI (when done update postgres api generator)
+- channel should be unique
+- channel should use the find or create method to create new channel
+- fine tune validation error to either array or object
+- how to add each count of each eager loader resources
+
+// Activities
+- group the subjectType by createdAt date (done/half)
+
+psuedo code
+- backend to frontend
+- how to paginate in sequelize
+- how to paginate an eager loader resource
+- complete backend implementation
+- start frontend implementation
+- hold on on reply pagination (all pagination)
+
+
+- auto reload
+- best way to add check like: isAuth, hasPermit
+- add role table
+- policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
+thread permit (authUser.id === thread.user.id [done])

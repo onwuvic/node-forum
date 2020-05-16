@@ -22,16 +22,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     }
-  },
-  {
-    indexes: [
-      {
-        unique: false,
-        fields: ['userId']
-      }
-    ]
-  },
-  {
+  }, {
     hooks: {
       afterFind: (findResult) => {
         if (!findResult) return;

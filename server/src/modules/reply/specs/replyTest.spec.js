@@ -3,7 +3,9 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
-import { CREATE_REPLY_ACTIVITY, MODEL_REPLY } from '../../../helpers/constants';
+import {
+  CREATE_REPLY_ACTIVITY, MODEL_REPLY, CREATE_FAVORITE_ACTIVITY, MODEL_FAVORITE
+} from '../../../helpers/constants';
 
 describe('', () => {
   let server;
@@ -93,26 +95,36 @@ describe('', () => {
           expect(deletedReplyActivity).toBe(null);
         });
 
-      // it('should delete a reply favorite when a reply is deleted', async () => {
-      //   // given a reply
-      //   const reply = await Mock.createReply(user.id, thread.id);
-      //   // with favorite
-      //   await Mock.createFavorite(user.id, reply.id, MODEL_REPLY);
+      it('should delete a reply favorite and favorite activities when a reply is deleted',
+        async () => {
+          // given a reply
+          const reply = await Mock.createReply(user.id, thread.id);
+          // with favorite
+          const favorite = await Mock.createFavorite(user.id, reply.id, MODEL_REPLY);
 
-      //   // when the reply is deleted
-      //   // delete reply
-      //   const response = await request
-      //     .delete(`${baseUrl}/replies/${reply.id}`)
-      //     .set('authorization', `Bearer ${token}`);
+          // record a favorite activities
+          await Mock.createActivity(CREATE_FAVORITE_ACTIVITY, user.id, favorite.id, MODEL_FAVORITE);
 
-      //   // its favorite should be deleted also
-      //   const deletedReplyFavorite = await Mock.findFavorite(user.id, reply.id, MODEL_REPLY);
 
-      //   // check if reply was deleted
-      //   expect(response.status).toBe(200);
-      //   // also confirm that the activity was deleted too
-      //   expect(deletedReplyFavorite).toBe(null);
-      // });
+          // when the reply is deleted
+          // delete reply
+          const response = await request
+            .delete(`${baseUrl}/replies/${reply.id}`)
+            .set('authorization', `Bearer ${token}`);
+
+          // its favorite should be deleted also
+          const deletedReplyFavorite = await Mock.findFavorite(user.id, reply.id, MODEL_REPLY);
+
+          // its favorite activities should be deleted also
+          const deletedFavoriteActivity = await Mock
+            .findAllActivity(CREATE_FAVORITE_ACTIVITY, user.id, favorite.id, MODEL_FAVORITE);
+
+          // check if reply was deleted
+          expect(response.status).toBe(200);
+          // also confirm that the activity was deleted too
+          expect(deletedReplyFavorite).toBe(null);
+          expect(deletedFavoriteActivity.length).toEqual(0);
+        });
     });
 
     describe('Updating Reply', () => {

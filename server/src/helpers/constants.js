@@ -3,3 +3,4 @@ export const CREATE_REPLY_ACTIVITY = 'createdReply';
 export const CREATE_FAVORITE_ACTIVITY = 'createdFavorite';
 export const MODEL_REPLY = 'reply';
 export const MODEL_THREAD = 'thread';
+export const MODEL_FAVORITE = 'favorite';
