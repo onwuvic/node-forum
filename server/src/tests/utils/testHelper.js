@@ -62,6 +62,23 @@ class Mock {
     return newActivity;
   }
 
+  static async createActivity(type, userId, subjectId, subjectType) {
+    const newActivity = await Activity.create({
+      type, userId, subjectId, subjectType
+    });
+    const { dataValues: activity } = newActivity;
+    return activity;
+  }
+
+  static async findAllActivity(type, userId, subjectId, subjectType) {
+    const activity = await Activity.findAll({
+      where: {
+        type, userId, subjectId, subjectType
+      }
+    });
+    return activity;
+  }
+
   static async createReply(userId, threadId, times = null) {
     if (times) {
       const replies = [];
