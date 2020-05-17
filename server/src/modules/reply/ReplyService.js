@@ -38,23 +38,27 @@ class ReplyService {
     }
   }
 
+  static async deleteRepliesWithAllRelatedActivities(ids) {
+    // find all favorites with id and model
+    const favorites = await FavoriteService.findAllByFavorableIdAndFavorableType(ids, MODEL_REPLY);
+
+    // delete all the favorite activity associated with this reply
+    if (favorites.length) {
+      const favoriteIds = favorites.map(favorite => favorite.id);
+
+      await ActivityService.deleteActivity(favoriteIds, MODEL_FAVORITE);
+    }
+
+    // delete all the favorite associated with this reply
+    await FavoriteService.deleteFavorite(ids, MODEL_REPLY);
+
+    // delete reply activity as well
+    await ActivityService.deleteActivity(ids, MODEL_REPLY);
+  }
+
   static async findByIdAndDelete(id) {
     try {
-      // find all favorites with id and model
-      const favorites = await FavoriteService.findAllByFavorableIdAndFavorableType(id, MODEL_REPLY);
-
-      // delete all the favorite activity associated with this reply
-      if (favorites.length) {
-        const ids = favorites.map(favorite => favorite.id);
-
-        await ActivityService.deleteActivity(ids, MODEL_FAVORITE);
-      }
-
-      // delete all the favorite associated with this reply
-      await FavoriteService.deleteFavorite(id, MODEL_REPLY);
-
-      // delete reply activity as well
-      await ActivityService.deleteActivity(id, MODEL_REPLY);
+      await ReplyService.deleteRepliesWithAllRelatedActivities(id);
 
       // delete the thread
       await Reply.destroy({ where: { id } });

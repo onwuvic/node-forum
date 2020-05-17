@@ -1,27 +1,22 @@
-<!-- <div class="card mb-3 wow fadeIn">
+<div class="card mb-3 wow fadeIn">
   <div class="card-header font-weight-bold flex-inline">
     <div>
-      <a [routerLink]="['/profile', name]">{{ name }}</a>
+      <!-- header -->
+      <!-- <a [routerLink]="['/profile', name]">{{ name }}</a>
       published
       <a [routerLink]="['/threads', activity.thread.channel.slug, activity.thread.id]">
         {{ activity.thread.title }}
       </a> -->
+      <ng-content select="header"></ng-content>
       <!-- <span class="h5">{{ activity.thread.title }}</span> -->
-    <!-- </div> -->
+    </div>
     <!-- <p>{{ activity.thread.createdAt | amTimeAgo }}</p> -->
-  <!-- </div>
+  </div>
   <div class="card-body">
     <div class="media d-block d-md-flex mt-4">
-      <p>{{ activity.thread.body }}</p>
+      <!-- body -->
+      <!-- <p>{{ activity.thread.body }}</p> -->
+      <ng-content></ng-content>
     </div>
   </div>
-</div> -->
-
-<app-activities>
-  <header>{{ name }} published
-    <a [routerLink]="['/threads', activity.thread.channel.slug, activity.thread.id]">
-      {{ activity.thread.title }}
-    </a>
-  </header>
-  <p>{{ activity.thread.body }}</p>
-</app-activities>
+</div>

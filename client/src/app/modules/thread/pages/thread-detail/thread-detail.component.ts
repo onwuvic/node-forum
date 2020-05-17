@@ -104,13 +104,13 @@ export class ThreadDetailComponent implements OnInit {
           event.reset();
           this.replySubject.next(data);
           this.snackBar.open('Reply added!', 'Ok', {
-            duration: 3000
+            panelClass: ['success']
           });
         },
         (error) => {
           this.loading = false;
           this.snackBar.open(error, 'Ok', {
-            duration: 3000
+            panelClass: ['error']
           });
         }
       );
@@ -120,12 +120,14 @@ export class ThreadDetailComponent implements OnInit {
     this.threadService.destroy(id)
       .subscribe(
         (data) => {
-          this.snackBar.open(data, 'Ok');
+          this.snackBar.open(data, 'Ok', {
+            panelClass: ['success']
+          });
           this.router.navigate(['/threads']);
         },
         (error) => {
           this.snackBar.open(error, 'Ok', {
-            duration: 3000
+            panelClass: ['error']
           });
         }
       );
@@ -163,7 +165,9 @@ export class ThreadDetailComponent implements OnInit {
           this.favoriteSubject.next(data);
         },
         (error) => {
-          this.snackBar.open(error, 'Ok');
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
         }
       );
   }
@@ -173,11 +177,13 @@ export class ThreadDetailComponent implements OnInit {
       .subscribe(
         (data) => {
           this.replySubject.next(data);
-          this.snackBar.open('Reply updated!', 'Ok');
+          this.snackBar.open('Reply updated!', 'Ok', {
+            panelClass: ['success']
+          });
         },
         (error) => {
           this.snackBar.open(error, 'Ok', {
-            duration: 3000
+            panelClass: ['error']
           });
         }
       );
@@ -189,10 +195,14 @@ export class ThreadDetailComponent implements OnInit {
       .subscribe(
         (data) => {
           this.deleteReplySubject.next(replyId);
-          this.snackBar.open(data, 'Ok');
+          this.snackBar.open(data, 'Ok', {
+            panelClass: ['success']
+          });
         },
         (error) => {
-          this.snackBar.open(error, 'Ok');
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
         }
       );
   }

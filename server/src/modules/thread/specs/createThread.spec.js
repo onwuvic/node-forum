@@ -4,7 +4,8 @@ import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
 import {
-  CREATE_THREAD_ACTIVITY, CREATE_REPLY_ACTIVITY, MODEL_REPLY, MODEL_THREAD
+  CREATE_THREAD_ACTIVITY, CREATE_REPLY_ACTIVITY, MODEL_REPLY, MODEL_THREAD, MODEL_FAVORITE,
+  CREATE_FAVORITE_ACTIVITY
 } from '../../../helpers/constants';
 
 describe('', () => {
@@ -107,55 +108,74 @@ describe('', () => {
         expect(response.status).toBe(401);
       });
 
-      it('should be able to delete thread only as the owner', async () => {
-        // given a thread
-        const newThread = await request
-          .post(`${baseUrl}/threads`)
-          .set('authorization', `Bearer ${token}`)
-          .send({ title: 'the world', body: 'I reply you', channelId: channel.id });
+      it('should be able to delete thread only as the owner with all related activities',
+        async () => {
+          // given a thread
+          const newThread = await request
+            .post(`${baseUrl}/threads`)
+            .set('authorization', `Bearer ${token}`)
+            .send({ title: 'the world', body: 'I reply you', channelId: channel.id });
 
-        const threadId = newThread.body.data.id;
+          const threadId = newThread.body.data.id;
 
-        // given we create a reply for this thread
-        const newReply = await request
-          .post(`${baseUrl}/threads/${threadId}/replies`)
-          .set('authorization', `Bearer ${token}`)
-          .send({ body: 'I reply you' });
+          // given we create a reply for this thread
+          const newReply = await request
+            .post(`${baseUrl}/threads/${threadId}/replies`)
+            .set('authorization', `Bearer ${token}`)
+            .send({ body: 'I reply you' });
 
-        const replyId = newReply.body.data.id;
+          const replyId = newReply.body.data.id;
 
-        // it activity should be created
-        const replyActivity = await Mock
-          .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
+          // given the reply has favorite
+          const newFavorite = await request
+            .post(`${baseUrl}/replies/${replyId}/favorites`)
+            .set('authorization', `Bearer ${token}`);
 
-        // createdThread activity should be created
-        const threadActivity = await Mock
-          .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
+          const favoriteId = newFavorite.body.data.id;
 
-        // expect activity to exist
-        expect(threadActivity.subjectId).toBe(threadId);
-        expect(replyActivity.subjectId).toBe(replyId);
+          // it activity should be created
+          const replyActivity = await Mock
+            .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
 
-        // when the thread is deleted expect createdThread to be delated too
-        // all activity related to this thread should be deleted also e.g reply
-        const response = await request
-          .delete(`${baseUrl}/threads/${threadId}`)
-          .set('authorization', `Bearer ${token}`);
+          // createdThread activity should be created
+          const threadActivity = await Mock
+            .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
 
-        const deletedThreadActivity = await Mock
-          .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
+          // createdFavorite activity should be created
+          const favoriteActivity = await Mock
+            .findActivity(CREATE_FAVORITE_ACTIVITY, user.id, favoriteId, MODEL_FAVORITE);
 
-        const deletedReplyActivity = await Mock
-          .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
+          // expect activity to exist
+          expect(threadActivity.subjectId).toBe(threadId);
+          expect(replyActivity.subjectId).toBe(replyId);
+          expect(favoriteActivity.subjectId).toBe(favoriteId);
 
-        // expect activity not to exist
-        expect(deletedThreadActivity).toBe(null);
-        expect(deletedReplyActivity).toBe(null);
+          // when the thread is deleted expect createdThread to be delated too
+          // all activity related to this thread should be deleted also e.g reply
+          const response = await request
+            .delete(`${baseUrl}/threads/${threadId}`)
+            .set('authorization', `Bearer ${token}`);
 
-        // when this endpoint i should be forbidden
-        expect(response.status).toBe(200);
-        expect(response.body.data).toBe('Deleted Successfully');
-      });
+          const deletedThreadActivity = await Mock
+            .findActivity(CREATE_THREAD_ACTIVITY, user.id, threadId, MODEL_THREAD);
+
+          const deletedReplyActivity = await Mock
+            .findActivity(CREATE_REPLY_ACTIVITY, user.id, replyId, MODEL_REPLY);
+
+          const deletedFavoriteActivity = await Mock
+            .findActivity(CREATE_FAVORITE_ACTIVITY, user.id, favoriteId, MODEL_FAVORITE);
+
+          // find the favorite
+          const favorite = await Mock.findFavorite(user.id, replyId, MODEL_REPLY);
+
+          // expect activity not to exist
+          expect(deletedThreadActivity).toBe(null);
+          expect(deletedReplyActivity).toBe(null);
+          expect(deletedFavoriteActivity).toBe(null);
+          expect(favorite).toBe(null);
+          expect(response.status).toBe(200);
+          expect(response.body.data).toBe('Deleted Successfully');
+        });
 
       it('should return not found if thread does not exist', async () => {
         // given a thread

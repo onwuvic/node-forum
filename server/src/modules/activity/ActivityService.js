@@ -11,7 +11,7 @@ class ActivityService {
     await Activity.destroy({ where: { subjectId, subjectType } });
   }
 
-  static async findAllActivityByUserId(userId) {
+  static async findAllActivityFeedsByUserId(userId) {
     const resource = await Activity.scope({ method: ['all', userId] }).findAll();
     return resource;
   }

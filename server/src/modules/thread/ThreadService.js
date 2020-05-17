@@ -75,7 +75,8 @@ class ThreadService {
 
     if (replies.length) {
       const ids = replies.map(reply => reply.id);
-      await ActivityService.deleteActivity(ids, MODEL_REPLY);
+      // delete replies with all it associated activities feeds including favorite
+      await ReplyService.deleteRepliesWithAllRelatedActivities(ids);
     }
     // and also delete it thread activity
     await ActivityService.deleteActivity(id, MODEL_THREAD);

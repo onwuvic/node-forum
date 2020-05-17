@@ -4,12 +4,12 @@
       <div>
         <h2>
           {{ profile.fullName }}
-          <small>{{ profile.createdAt | amTimeAgo }}</small>
         </h2>
         <hr>
       </div>
 
       <ng-container *ngIf="profile.activities.length">
+        <!-- for each -->
         <ng-container *ngFor="let activity of profile.activities">
           <ng-container *ngIf="activity.subjectType === 'thread'">
             <app-created-thread [name]="profile.fullName" [activity]="activity"></app-created-thread>
@@ -20,22 +20,6 @@
           <ng-container *ngIf="activity.subjectType === 'favorite'">
             <app-created-favorite [name]="profile.fullName" [activity]="activity"></app-created-favorite>
           </ng-container>
-
-          <!-- <div class="card mb-3 wow fadeIn">
-            <div class="card-header font-weight-bold flex-inline">
-              <div>
-                <a [routerLink]="['/profile', profile.fullName]">{{ profile.fullName }}</a>
-                posted:
-                <span class="h5">{{ thread.title }}</span>
-              </div>
-              <p>{{ thread.createdAt | amTimeAgo }}</p>
-            </div>
-            <div class="card-body">
-              <div class="media d-block d-md-flex mt-4">
-                <p>{{ thread.body }}</p>
-              </div>
-            </div>
-          </div> -->
         </ng-container>
       </ng-container>
     </div>
