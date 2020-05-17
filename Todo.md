@@ -100,3 +100,6 @@ psuedo code
 - add role table
 - policies (middleware): role permit (authUser.role === 'user' | 'admin'), 
 thread permit (authUser.id === thread.user.id [done])
+
+use for migration
+npx sequelize-cli migration:create --name modify_users_add_new_fields

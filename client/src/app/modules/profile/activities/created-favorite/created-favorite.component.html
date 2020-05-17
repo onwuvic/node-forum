@@ -1,18 +1,11 @@
-<div class="card mb-3 wow fadeIn">
-  <div class="card-header font-weight-bold flex-inline">
-    <div>
-      <a [routerLink]="['/profile', name]">{{ name }}</a>
-      favorited a reply
-      <!-- <a [routerLink]="['/threads', activity.reply.thread.channel.slug, activity.reply.thread.id]">
-        {{ activity.reply.thread.title }}
-      </a> -->
-      <!-- <span class="h5">{{ activity.thread.title }}</span> -->
-    </div>
-    <!-- <p>{{ activity.thread.createdAt | amTimeAgo }}</p> -->
-  </div>
-  <div class="card-body">
-    <div class="media d-block d-md-flex mt-4">
-      <p>{{ activity.reply.body }}</p>
-    </div>
-  </div>
-</div>
+<app-activities>
+  <header>
+    {{ name }} favorited a
+    <a [routerLink]="['/threads', activity.favorite.reply.thread.channel.slug, activity.favorite.reply.thread.id]"
+      fragment="reply-{{activity.favorite.reply.id}}"
+    >
+      reply
+    </a>
+  </header>
+  <p>{{ activity.favorite.reply.body }}</p>
+</app-activities>

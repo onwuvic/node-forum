@@ -20,12 +20,12 @@ class UserService {
     return UserService.refineObject(user);
   }
 
-  static async findUserByNameWithActivity(fullName) {
+  static async findUserByNameWithActivityFeeds(fullName) {
     const resource = await User.findOne({ where: { fullName } });
     if (!resource) {
       return null;
     }
-    const activities = await ActivityService.findAllActivityByUserId(resource.id);
+    const activities = await ActivityService.findAllActivityFeedsByUserId(resource.id);
     resource.setDataValue('activities', activities);
 
     return resource;

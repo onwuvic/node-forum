@@ -7,9 +7,10 @@ import { SharedModule } from '../../core/shared/shared.module';
 import { CreatedThreadComponent } from './activities/created-thread/created-thread.component';
 import { CreatedReplyComponent } from './activities/created-reply/created-reply.component';
 import { CreatedFavoriteComponent } from './activities/created-favorite/created-favorite.component';
+import { ActivitiesComponent } from './activities/activities.component';
 
 @NgModule({
-  declarations: [ProfileComponent, CreatedThreadComponent, CreatedReplyComponent, CreatedFavoriteComponent],
+  declarations: [ProfileComponent, CreatedThreadComponent, CreatedReplyComponent, CreatedFavoriteComponent, ActivitiesComponent],
   imports: [
     CommonModule,
     ProfileRoutingModule,

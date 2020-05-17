@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -24,7 +24,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSnackBarConfig, MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
@@ -46,14 +46,6 @@ const modules = [
   MatAutocompleteModule,
 ];
 
-export function defaultSnackBar(): MatSnackBarConfig<any> {
-  const config = new MatSnackBarConfig();
-  config.duration = 2000;
-  config.panelClass = 'snack-bar-success';
-
-  return config;
-}
-
 @NgModule({
   imports: [
     ...modules,
@@ -65,16 +57,10 @@ export function defaultSnackBar(): MatSnackBarConfig<any> {
   ],
   entryComponents: [
     MatIcon
+  ],
+  providers: [
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3000 } },
+    { provide: MAT_DIALOG_DATA, useValue: {} },
   ]
 })
-export class MaterialModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: MaterialModule,
-      providers: [
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useFactory: defaultSnackBar },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-      ]
-    };
-  }
-}
+export class MaterialModule {}
