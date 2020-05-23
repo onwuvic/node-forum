@@ -1,0 +1,68 @@
+backend_dir: &backend_dir
+  run:
+    name: Change into backend directory
+    command: cd $HOME/forum/server
+
+default_image: &default_image
+  docker:
+    - image: circleci/node:carbon # ...with this image as the primary container; this is where all `steps` will run
+      environment:
+        DB_USER: postgres
+        DB_PASS: ""
+        DB_NAME_TEST: forum_test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_DIALECT: postgres
+        JWTKEY: jcLxZXJjqn1ORmh33903dhndueehn
+        TOKEN_EXPIRATION: 48h
+        BEARER: Bearer
+    - image: circleci/postgres:9.6-alpine
+
+version: 2 # use CircleCI 2.0
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    <<: *default_image
+    working_directory: ~/forum
+    steps: # a collection of executable commands
+      - checkout
+      - *backend_dir # special step to check out source code to working directory
+      - run:
+          name: Install project dependencies
+          command: |
+            sudo npm install -g npm@latest && npm install
+      - restore_cache: 
+          key: dependency-cache-{{ checksum "server/package.json" }}
+      - save_cache:
+          key: dependency-cache-{{ checksum "server/package.json" }}
+          paths: server/node_modules
+      - run:
+          # https://discuss.circleci.com/t/how-do-you-use-postgres-9-6-x-or-9-x-x/9855/3
+          name: Database Setup
+          command: |
+            sudo apt-get update
+            sudo apt-get install postgresql-client
+            dockerize -wait tcp://localhost:5432 -timeout 1m
+            psql -U postgres -h localhost -p 5432 -c 'create extension ltree'
+            psql -U postgres -h localhost -p 5432 -c 'create database forum_test;'
+      - run: # run coverage report
+          name: Install code climate test reporter
+          command: |
+            cd $HOME/forum/server
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Run tests
+          command: |
+            cd $HOME/forum/server
+            ./cc-test-reporter before-build     # https://github.com/codeclimate/test-reporter/issues/260#issuecomment-369783913
+            npm test --coverage
+            ./cc-test-reporter after-build $CC_TEST_REPORTER_ID --exit-code $?
+      - store_artifacts: # special step to save test results as as artifact
+          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: server/test-results.xml
+          prefix: tests
+      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: server/coverage
+          prefix: coverage
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: server/test-results.xml
