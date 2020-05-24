@@ -3,7 +3,7 @@ import http from 'http';
 import app from '../../../app';
 import models from '../../../database/models';
 import Mock from '../../../tests/utils/testHelper';
-import { MODEL_REPLY } from '../../../helpers/constants';
+import { MODEL_REPLY, CREATE_FAVORITE_ACTIVITY, MODEL_FAVORITE } from '../../../helpers/constants';
 
 describe('', () => {
   let server;
@@ -62,6 +62,48 @@ describe('', () => {
 
         it('should not be able to favorite a reply if unauthenticated', async () => {
           const response = await request.post(`${baseUrl}/replies/${reply.id}/favorites`);
+
+          expect(response.status).toBe(401);
+          expect(response.body.message).toBe('No token provided');
+        });
+      });
+      describe('Unfavorite a reply', () => {
+        it('should be able to unfavorite a reply if authenticated', async () => {
+          // given a reply
+          const replyTwo = await Mock.createReply(user.id, thread.id);
+
+          // given a auth user favorite a post
+          const response = await request
+            .post(`${baseUrl}/replies/${replyTwo.id}/favorites`)
+            .set('authorization', `Bearer ${token}`);
+
+          expect(response.status).toBe(201);
+          expect(response.body.data.favorableType).toBe(MODEL_REPLY);
+          expect(response.body.data.favorableId).toBe(+`${replyTwo.id}`);
+
+          // when the unfavorite the reply
+          const responseTwo = await request
+            .delete(`${baseUrl}/replies/${response.body.data.id}/favorites`)
+            .set('authorization', `Bearer ${token}`);
+
+          // find the favorite in db
+          const favorite = await Mock.findFavorite(user.id, replyTwo.id, MODEL_REPLY);
+          // find the activities
+          const favoriteActivity = await Mock
+            .findActivity(
+              CREATE_FAVORITE_ACTIVITY, user.id, response.body.data.id, MODEL_FAVORITE
+            );
+
+          // it should delete the favorite and its activities
+          // when I hit this endpoint
+          expect(responseTwo.status).toBe(200);
+          expect(favorite).toBe(null);
+          expect(favoriteActivity).toBe(null);
+          // expect(responseTwo.body.message).toBe('Already favorite this reply');
+        });
+
+        it('should not be able to unfavorite a reply if unauthenticated', async () => {
+          const response = await request.delete(`${baseUrl}/replies/7/favorites`);
 
           expect(response.status).toBe(401);
           expect(response.body.message).toBe('No token provided');
