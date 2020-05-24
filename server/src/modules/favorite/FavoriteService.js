@@ -3,7 +3,7 @@ import ReplyService from '../reply/ReplyService';
 import models from '../../database/models';
 import Response from '../../responses/response';
 import ActivityService from '../activity/ActivityService';
-import { CREATE_FAVORITE_ACTIVITY, MODEL_REPLY } from '../../helpers/constants';
+import { CREATE_FAVORITE_ACTIVITY, MODEL_REPLY, MODEL_FAVORITE } from '../../helpers/constants';
 
 const { Favorite, Reply } = models;
 
@@ -48,6 +48,25 @@ class FavoriteService {
       attributes: ['id']
     });
     return favorites;
+  }
+
+  static async findOneById(id) {
+    const favorites = await Favorite.findOne({ where: { id } });
+    return favorites;
+  }
+
+  static async deleteFavoriteById(id) {
+    try {
+      // find all activities with favid and model
+      await ActivityService.deleteActivity(id, MODEL_FAVORITE);
+
+      // delete the favorite
+      await Favorite.destroy({ where: { id } });
+
+      return Response.successResponseObject('Deleted Successfully');
+    } catch (error) {
+      return Response.serverErrorResponseObject();
+    }
   }
 
   static async findAll() {
