@@ -8,17 +8,23 @@
         <hr>
       </div>
 
-      <ng-container *ngIf="profile.activities.length">
+      <ng-container *ngIf="(profile.activities | keyvalue)?.length">
         <!-- for each -->
-        <ng-container *ngFor="let activity of profile.activities">
-          <ng-container *ngIf="activity.subjectType === 'thread'">
-            <app-created-thread [name]="profile.fullName" [activity]="activity"></app-created-thread>
-          </ng-container>
-          <ng-container *ngIf="activity.subjectType === 'reply'">
-            <app-created-reply [name]="profile.fullName" [activity]="activity"></app-created-reply>
-          </ng-container>
-          <ng-container *ngIf="activity.subjectType === 'favorite'">
-            <app-created-favorite [name]="profile.fullName" [activity]="activity"></app-created-favorite>
+        <ng-container *ngFor="let record of profile.activities | keyvalue: keyDescOrder">
+          <h4>
+            {{ record.key | date }}
+          </h4>
+
+          <ng-container *ngFor="let activity of record.value">
+            <ng-container *ngIf="activity.subjectType === 'thread'">
+              <app-created-thread [name]="profile.fullName" [activity]="activity"></app-created-thread>
+            </ng-container>
+            <ng-container *ngIf="activity.subjectType === 'reply'">
+              <app-created-reply [name]="profile.fullName" [activity]="activity"></app-created-reply>
+            </ng-container>
+            <ng-container *ngIf="activity.subjectType === 'favorite'">
+              <app-created-favorite [name]="profile.fullName" [activity]="activity"></app-created-favorite>
+            </ng-container>
           </ng-container>
         </ng-container>
       </ng-container>
