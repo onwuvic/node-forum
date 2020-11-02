@@ -34,6 +34,9 @@ export class ThreadDetailComponent implements OnInit {
   private addFavoriteSubject = new BehaviorSubject<Favorite>(null);
   addFavoriteAction$ = this.addFavoriteSubject.asObservable();
 
+  private unFavoriteSubject = new BehaviorSubject<number>(null);
+  unFavoriteAction$ = this.unFavoriteSubject.asObservable();
+
   private deleteReplySubject = new BehaviorSubject<number>(null);
   deleteReplyAction$ = this.deleteReplySubject.asObservable();
 
@@ -133,7 +136,7 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  triggerChange(thread, reply, favorite, deleteReplyId) {
+  triggerChange(thread, reply, addFavorite, deleteReply) {
     if (reply) {
       const foundIndex = thread.replies.findIndex(replied => replied.id === reply.id);
       if (foundIndex > -1) {
@@ -144,18 +147,20 @@ export class ThreadDetailComponent implements OnInit {
       this.replySubject.next(null);
       return thread;
     }
-    if (favorite) {
+    if (addFavorite) {
       thread.replies
-        .find(replied => replied.id === favorite.favorableId)
+        .find(replied => replied.id === addFavorite.favorableId)
         .favorites
-        .push(favorite);
+        .push(addFavorite);
+      this.addFavoriteSubject.next(null);
       return thread;
     }
-    if (deleteReplyId) {
-      const foundIndex = thread.replies.findIndex(replied => replied.id === deleteReplyId);
+    if (deleteReply) {
+      const foundIndex = thread.replies.findIndex(replied => replied.id === deleteReply);
       if (foundIndex > -1) {
         thread.replies.splice(foundIndex, 1);
       }
+      this.deleteReplySubject.next(null);
       return thread;
     }
     return thread;
