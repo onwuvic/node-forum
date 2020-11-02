@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Favorite } from '../../../models/favorite.model';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -7,7 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   templateUrl: './reply-card.component.html',
   styleUrls: ['./reply-card.component.scss']
 })
-export class ReplyCardComponent implements OnInit {
+export class ReplyCardComponent implements OnInit, OnChanges {
   editReplyForm: FormGroup;
   @Input() reply: any;
   @Input() data: any;
@@ -15,6 +14,7 @@ export class ReplyCardComponent implements OnInit {
   @Output() clickDeleteReply = new EventEmitter();
   @Output() clickUpdateReply = new EventEmitter();
   editing = false;
+  isFavorite: boolean;
 
   constructor(private fb: FormBuilder) { }
 
@@ -24,12 +24,18 @@ export class ReplyCardComponent implements OnInit {
     });
   }
 
-  disabled(userId: number, favorites: Favorite[]) {
-    return !!favorites.find(favorite => userId === favorite.userId);
+  checkIsFavorite() {
+    return !!this.reply.favorites.find(favorite => this.data.authUser.userObject.id === favorite.userId);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.reply || changes.data) {
+      this.isFavorite = this.checkIsFavorite();
+    }
   }
 
   onClickFavorite() {
-    this.clickFavorite.emit();
+    this.clickFavorite.emit(this.isFavorite);
   }
 
   editReply(body) {
