@@ -27,8 +27,8 @@ export class ReplyService {
       );
   }
 
-  unFavorite(favoriteId: number) {
-    const url = `${environment.baseUrl}/replies/${favoriteId}/favorites`;
+  unFavorite(replyId: number) {
+    const url = `${environment.baseUrl}/replies/${replyId}/favorites`;
     return this.http.delete(url)
       .pipe(
         map((res: any) => res.data)
