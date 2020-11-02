@@ -44,7 +44,7 @@
           <app-reply-card
             [reply]="reply"
             [data]="data"
-            (clickFavorite)="favoriteReply(reply.id)"
+            (clickFavorite)="toggle($event, reply.id)"
             (clickDeleteReply)="deleteReply(reply.id)"
             (clickUpdateReply)="updateReply($event, reply.id)"
             ></app-reply-card>
