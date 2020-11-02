@@ -34,8 +34,8 @@ export class ThreadDetailComponent implements OnInit {
   private favoriteReplySubject = new BehaviorSubject<Favorite>(null);
   favoriteReplyAction$ = this.favoriteReplySubject.asObservable();
 
-  private unFavoriteSubject = new BehaviorSubject<number>(null);
-  unfavoriteReplyAction$ = this.unFavoriteSubject.asObservable();
+  private unfavoriteReplySubject = new BehaviorSubject<any>(null);
+  unfavoriteReplyAction$ = this.unfavoriteReplySubject.asObservable();
 
   private deleteReplySubject = new BehaviorSubject<number>(null);
   deleteReplyAction$ = this.deleteReplySubject.asObservable();
@@ -76,8 +76,8 @@ export class ThreadDetailComponent implements OnInit {
   ])
     .pipe(
       map(([
-        thread, reply, favoriteReply, deleteReplyId
-      ]) => this.triggerChange(thread, reply, favoriteReply, deleteReplyId))
+        thread, reply, favoriteReply, unfavoriteReply, deleteReplyId
+      ]) => this.triggerChange(thread, reply, favoriteReply, unfavoriteReply, deleteReplyId))
     );
 
   data$ = combineLatest([
@@ -172,6 +172,16 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
+  toggle(isFavorite, replyId) {
+    if (isFavorite) {
+      console.log('delete', isFavorite, replyId);
+      this.unfavoriteReply(replyId);
+    } else {
+      console.log('create', isFavorite, replyId);
+      this.favoriteReply(replyId);
+    }
+  }
+
   favoriteReply(id) {
     this.replyService.addFavorite(id)
       .subscribe(
@@ -190,7 +200,7 @@ export class ThreadDetailComponent implements OnInit {
     this.replyService.unFavorite(id)
       .subscribe(
         (data) => {
-          this.favoriteReplySubject.next(data);
+          this.unfavoriteReplySubject.next({ replyId: id, favoriteId: data.favoriteId });
         },
         (error) => {
           this.snackBar.open(error, 'Ok', {
@@ -200,7 +210,7 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  triggerChange(thread, reply, favoriteReply, deleteReply) {
+  triggerChange(thread, reply, favoriteReply, unfavoriteReply, deleteReply) {
     if (reply) {
       const foundIndex = thread.replies.findIndex(replied => replied.id === reply.id);
       if (foundIndex > -1) {
@@ -217,6 +227,16 @@ export class ThreadDetailComponent implements OnInit {
         .favorites
         .push(favoriteReply);
       this.favoriteReplySubject.next(null);
+      return thread;
+    }
+    if (unfavoriteReply) {
+      const { replyId, favoriteId } = unfavoriteReply;
+      const getReply = thread.replies.find(replied => replied.id === replyId);
+      const foundIndex = getReply.favorites.findIndex(favorite => favorite.id === favoriteId);
+      if (foundIndex > -1) {
+        getReply.favorites.splice(foundIndex, 1);
+      }
+      this.unfavoriteReplySubject.next(null);
       return thread;
     }
     if (deleteReply) {
