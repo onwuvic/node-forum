@@ -1,7 +1,6 @@
 import express from 'express';
 import FavoriteController from './FavoriteController';
 import Authentication from '../../middlewares/authentication';
-import FavoritePolicy from '../../policies/FavoritePolicy';
 
 const favoriteRouter = express.Router();
 
@@ -14,9 +13,8 @@ favoriteRouter.post(
 );
 
 favoriteRouter.delete(
-  '/replies/:favoriteId/favorites',
+  '/replies/:replyId/favorites',
   Authentication.tokenAuthentication,
-  FavoritePolicy.belongToUser,
   FavoriteController.unFavoriteReply
 );
 
