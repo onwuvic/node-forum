@@ -12,6 +12,7 @@ import { PluralizePipe } from '../pipes/pluralize/pluralize.pipe';
 import { ThreadCardComponent } from './components/thread-card/thread-card.component';
 import { ReplyFormComponent } from './components/reply-form/reply-form.component';
 import { ReplyCardComponent } from './components/reply-card/reply-card.component';
+import { FavoriteComponent } from './components/favorite/favorite.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ReplyCardComponent } from './components/reply-card/reply-card.component
     PluralizePipe,
     ThreadCardComponent,
     ReplyFormComponent,
-    ReplyCardComponent
+    ReplyCardComponent,
+    FavoriteComponent
   ],
   imports: [
     CommonModule,
