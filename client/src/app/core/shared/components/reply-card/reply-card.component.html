@@ -12,10 +12,11 @@
 
     <!-- Favorite button -->
     <ng-container *ngIf="data.isLoggedIn">
-      <button mat-stroked-button (click)="onClickFavorite()"
-        [disabled]="disabled(data.authUser.userObject.id, reply.favorites)">
-        {{ reply.favorites.length | pluralize : 'Favorite' }}
-      </button>
+      <app-favorite
+        [favorites]="reply.favorites"
+        [userId]="data.authUser.userObject.id"
+        (clickFavorite)="onClickFavorite()"
+        ></app-favorite>
     </ng-container>
     <!-- End Favorite button -->
   </div>
