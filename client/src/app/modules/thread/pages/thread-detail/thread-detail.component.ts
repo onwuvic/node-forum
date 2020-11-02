@@ -173,13 +173,7 @@ export class ThreadDetailComponent implements OnInit {
   }
 
   toggle(isFavorite, replyId) {
-    if (isFavorite) {
-      console.log('delete', isFavorite, replyId);
-      this.unfavoriteReply(replyId);
-    } else {
-      console.log('create', isFavorite, replyId);
-      this.favoriteReply(replyId);
-    }
+    isFavorite ? this.unfavoriteReply(replyId) : this.favoriteReply(replyId);
   }
 
   favoriteReply(id) {
