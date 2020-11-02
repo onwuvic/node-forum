@@ -31,8 +31,8 @@ export class ThreadDetailComponent implements OnInit {
   private replySubject = new BehaviorSubject<Reply>(null);
   replyAction$ = this.replySubject.asObservable();
 
-  private favoriteSubject = new BehaviorSubject<Favorite>(null);
-  favoriteAction$ = this.favoriteSubject.asObservable();
+  private addFavoriteSubject = new BehaviorSubject<Favorite>(null);
+  addFavoriteAction$ = this.addFavoriteSubject.asObservable();
 
   private deleteReplySubject = new BehaviorSubject<number>(null);
   deleteReplyAction$ = this.deleteReplySubject.asObservable();
@@ -67,7 +67,7 @@ export class ThreadDetailComponent implements OnInit {
   threadWithActions$ = combineLatest([
     this.thread$,
     this.replyAction$,
-    this.favoriteAction$,
+    this.addFavoriteAction$,
     this.deleteReplyAction$
   ])
     .pipe(
@@ -142,18 +142,21 @@ export class ThreadDetailComponent implements OnInit {
         thread.replies.unshift(reply);
       }
       this.replySubject.next(null);
+      return thread;
     }
     if (favorite) {
       thread.replies
         .find(replied => replied.id === favorite.favorableId)
         .favorites
         .push(favorite);
+      return thread;
     }
     if (deleteReplyId) {
       const foundIndex = thread.replies.findIndex(replied => replied.id === deleteReplyId);
       if (foundIndex > -1) {
         thread.replies.splice(foundIndex, 1);
       }
+      return thread;
     }
     return thread;
   }
@@ -162,7 +165,21 @@ export class ThreadDetailComponent implements OnInit {
     this.replyService.addFavorite(id)
       .subscribe(
         (data) => {
-          this.favoriteSubject.next(data);
+          this.addFavoriteSubject.next(data);
+        },
+        (error) => {
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
+        }
+      );
+  }
+
+  unFavorite(id) {
+    this.replyService.unFavorite(id)
+      .subscribe(
+        (data) => {
+          this.addFavoriteSubject.next(data);
         },
         (error) => {
           this.snackBar.open(error, 'Ok', {
