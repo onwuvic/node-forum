@@ -13,7 +13,7 @@ class FavoriteController {
   }
 
   static async unFavoriteReply(req, res) {
-    const response = await FavoriteService.deleteFavoriteById(req.params.favoriteId);
+    const response = await FavoriteService.deleteFavoriteById(req.user.id, req.params.replyId);
     return Response.httpResponse(res, response);
   }
 }
