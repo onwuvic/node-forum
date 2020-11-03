@@ -21,6 +21,24 @@ export class RepliesComponent implements OnInit {
   ngOnInit() {
   }
 
+  updateReply(replyData, replyId: number, index: number) {
+    this.replyService.updateReply(replyId, replyData)
+      .subscribe(
+        (data) => {
+          this.replies[index] = { ...this.replies[index], ...data };
+          this.snackBar.open('Reply updated!', 'Ok', {
+            panelClass: ['success']
+          });
+        },
+        (error) => {
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
+        }
+      );
+
+  }
+
   deleteReply(replyId: number, index: number) {
     this.replyService.deleteReply(replyId)
       .subscribe(
