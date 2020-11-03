@@ -55,15 +55,20 @@ class FavoriteService {
     return favorites;
   }
 
-  static async deleteFavoriteById(id) {
+  static async deleteFavoriteById(userId, replyId) {
     try {
+      const favorite = await FavoriteService.findUnique(userId, replyId, MODEL_REPLY);
+
+      if (!favorite) {
+        return Response.failureResponseObject(400, 'Favorite does not exist');
+      }
       // find all activities with favid and model
-      await ActivityService.deleteActivity(id, MODEL_FAVORITE);
+      await ActivityService.deleteActivity(favorite.id, MODEL_FAVORITE);
 
       // delete the favorite
-      await Favorite.destroy({ where: { id } });
+      await Favorite.destroy({ where: { id: favorite.id } });
 
-      return Response.successResponseObject('Deleted Successfully');
+      return Response.successResponseObject({ favoriteId: favorite.id });
     } catch (error) {
       return Response.serverErrorResponseObject();
     }

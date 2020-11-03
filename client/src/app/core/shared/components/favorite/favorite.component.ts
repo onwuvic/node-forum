@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Favorite } from '../../../models/favorite.model';
 
 @Component({
   selector: 'app-favorite',
@@ -7,8 +6,8 @@ import { Favorite } from '../../../models/favorite.model';
   styleUrls: ['./favorite.component.scss']
 })
 export class FavoriteComponent implements OnInit {
-  @Input() favorites: Favorite[];
-  @Input() userId: number;
+  @Input() favoritesCount: number;
+  @Input() isFavorite: boolean;
   @Output() clickFavorite = new EventEmitter();
 
   constructor() { }
@@ -16,13 +15,7 @@ export class FavoriteComponent implements OnInit {
   ngOnInit() {
   }
 
-  isFavorite() {
-    return !!this.favorites.find(favorite => this.userId === favorite.userId);
-  }
-
   onClickFavorite() {
-     // if it favorite make a call to the api to create favorite else delete favorite
-     // pass down the state of the isFavorite and allow the parent component decide what to do with that information
     this.clickFavorite.emit();
   }
 

@@ -12,11 +12,11 @@
 
     <!-- Favorite button -->
     <ng-container *ngIf="data.isLoggedIn">
-      <app-favorite
-        [favorites]="reply.favorites"
-        [userId]="data.authUser.userObject.id"
-        (clickFavorite)="onClickFavorite()"
-        ></app-favorite>
+        <app-favorite
+          [favoritesCount]="reply.favorites.length"
+          [isFavorite]="isFavorite"
+          (clickFavorite)="onClickFavorite()"
+          ></app-favorite>
     </ng-container>
     <!-- End Favorite button -->
   </div>

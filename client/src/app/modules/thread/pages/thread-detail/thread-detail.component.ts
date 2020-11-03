@@ -31,8 +31,11 @@ export class ThreadDetailComponent implements OnInit {
   private replySubject = new BehaviorSubject<Reply>(null);
   replyAction$ = this.replySubject.asObservable();
 
-  private addFavoriteSubject = new BehaviorSubject<Favorite>(null);
-  addFavoriteAction$ = this.addFavoriteSubject.asObservable();
+  private favoriteReplySubject = new BehaviorSubject<Favorite>(null);
+  favoriteReplyAction$ = this.favoriteReplySubject.asObservable();
+
+  private unfavoriteReplySubject = new BehaviorSubject<any>(null);
+  unfavoriteReplyAction$ = this.unfavoriteReplySubject.asObservable();
 
   private deleteReplySubject = new BehaviorSubject<number>(null);
   deleteReplyAction$ = this.deleteReplySubject.asObservable();
@@ -67,13 +70,14 @@ export class ThreadDetailComponent implements OnInit {
   threadWithActions$ = combineLatest([
     this.thread$,
     this.replyAction$,
-    this.addFavoriteAction$,
+    this.favoriteReplyAction$,
+    this.unfavoriteReplyAction$,
     this.deleteReplyAction$
   ])
     .pipe(
       map(([
-        thread, reply, favorite, deleteReplyId
-      ]) => this.triggerChange(thread, reply, favorite, deleteReplyId))
+        thread, reply, favoriteReply, unfavoriteReply, deleteReplyId
+      ]) => this.triggerChange(thread, reply, favoriteReply, unfavoriteReply, deleteReplyId))
     );
 
   data$ = combineLatest([
@@ -95,27 +99,6 @@ export class ThreadDetailComponent implements OnInit {
     this.authService.signIn();
   }
 
-  addReply(event, id) {
-    this.loading = true;
-    this.replyService.addReply(id, event.value)
-      .subscribe(
-        (data) => {
-          this.loading = false;
-          event.reset();
-          this.replySubject.next(data);
-          this.snackBar.open('Reply added!', 'Ok', {
-            panelClass: ['success']
-          });
-        },
-        (error) => {
-          this.loading = false;
-          this.snackBar.open(error, 'Ok', {
-            panelClass: ['error']
-          });
-        }
-      );
-  }
-
   deleteThread(id) {
     this.threadService.destroy(id)
       .subscribe(
@@ -133,55 +116,20 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  triggerChange(thread, reply, favorite, deleteReplyId) {
-    if (reply) {
-      const foundIndex = thread.replies.findIndex(replied => replied.id === reply.id);
-      if (foundIndex > -1) {
-        thread.replies[foundIndex] = { ...thread.replies[foundIndex], ...reply};
-      } else {
-        thread.replies.unshift(reply);
-      }
-      this.replySubject.next(null);
-      return thread;
-    }
-    if (favorite) {
-      thread.replies
-        .find(replied => replied.id === favorite.favorableId)
-        .favorites
-        .push(favorite);
-      return thread;
-    }
-    if (deleteReplyId) {
-      const foundIndex = thread.replies.findIndex(replied => replied.id === deleteReplyId);
-      if (foundIndex > -1) {
-        thread.replies.splice(foundIndex, 1);
-      }
-      return thread;
-    }
-    return thread;
-  }
-
-  addFavorite(id) {
-    this.replyService.addFavorite(id)
+  addReply(event, id) {
+    this.loading = true;
+    this.replyService.addReply(id, event.value)
       .subscribe(
         (data) => {
-          this.addFavoriteSubject.next(data);
-        },
-        (error) => {
-          this.snackBar.open(error, 'Ok', {
-            panelClass: ['error']
+          this.loading = false;
+          event.reset();
+          this.replySubject.next(data);
+          this.snackBar.open('Reply added!', 'Ok', {
+            panelClass: ['success']
           });
-        }
-      );
-  }
-
-  unFavorite(id) {
-    this.replyService.unFavorite(id)
-      .subscribe(
-        (data) => {
-          this.addFavoriteSubject.next(data);
         },
         (error) => {
+          this.loading = false;
           this.snackBar.open(error, 'Ok', {
             panelClass: ['error']
           });
@@ -222,5 +170,77 @@ export class ThreadDetailComponent implements OnInit {
           });
         }
       );
+  }
+
+  toggle(isFavorite, replyId) {
+    isFavorite ? this.unfavoriteReply(replyId) : this.favoriteReply(replyId);
+  }
+
+  favoriteReply(id) {
+    this.replyService.addFavorite(id)
+      .subscribe(
+        (data) => {
+          this.favoriteReplySubject.next(data);
+        },
+        (error) => {
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
+        }
+      );
+  }
+
+  unfavoriteReply(id) {
+    this.replyService.unFavorite(id)
+      .subscribe(
+        (data) => {
+          this.unfavoriteReplySubject.next({ replyId: id, favoriteId: data.favoriteId });
+        },
+        (error) => {
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
+        }
+      );
+  }
+
+  triggerChange(thread, reply, favoriteReply, unfavoriteReply, deleteReply) {
+    if (reply) {
+      const foundIndex = thread.replies.findIndex(replied => replied.id === reply.id);
+      if (foundIndex > -1) {
+        thread.replies[foundIndex] = { ...thread.replies[foundIndex], ...reply};
+      } else {
+        thread.replies.unshift(reply);
+      }
+      this.replySubject.next(null);
+      return thread;
+    }
+    if (favoriteReply) {
+      thread.replies
+        .find(replied => replied.id === favoriteReply.favorableId)
+        .favorites
+        .push(favoriteReply);
+      this.favoriteReplySubject.next(null);
+      return thread;
+    }
+    if (unfavoriteReply) {
+      const { replyId, favoriteId } = unfavoriteReply;
+      const getReply = thread.replies.find(replied => replied.id === replyId);
+      const foundIndex = getReply.favorites.findIndex(favorite => favorite.id === favoriteId);
+      if (foundIndex > -1) {
+        getReply.favorites.splice(foundIndex, 1);
+      }
+      this.unfavoriteReplySubject.next(null);
+      return thread;
+    }
+    if (deleteReply) {
+      const foundIndex = thread.replies.findIndex(replied => replied.id === deleteReply);
+      if (foundIndex > -1) {
+        thread.replies.splice(foundIndex, 1);
+      }
+      this.deleteReplySubject.next(null);
+      return thread;
+    }
+    return thread;
   }
 }

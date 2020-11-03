@@ -83,7 +83,7 @@ describe('', () => {
 
           // when the unfavorite the reply
           const responseTwo = await request
-            .delete(`${baseUrl}/replies/${response.body.data.id}/favorites`)
+            .delete(`${baseUrl}/replies/${replyTwo.id}/favorites`)
             .set('authorization', `Bearer ${token}`);
 
           // find the favorite in db
