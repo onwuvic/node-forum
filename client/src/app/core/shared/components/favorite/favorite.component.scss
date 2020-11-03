@@ -2,5 +2,14 @@
   .fa-heart {
     margin-right: 5px;
   }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.active {
+  background-color: #df4759;
+  color: #fff;
 }
 

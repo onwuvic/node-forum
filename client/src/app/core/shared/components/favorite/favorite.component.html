@@ -1,4 +1,4 @@
-<button mat-stroked-button [ngClass]="{'btn-primary': isFavorite }" class="btn botton-content" (click)="onClickFavorite()">
+<button mat-stroked-button [ngClass]="{'active': isFavorite }" class="botton-content" (click)="onClickFavorite()">
   <i class="fa fa-heart" aria-hidden="true"></i>
   <span>{{ favoritesCount }}</span>
 </button>
