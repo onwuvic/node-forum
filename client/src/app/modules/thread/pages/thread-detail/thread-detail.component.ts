@@ -133,24 +133,6 @@ export class ThreadDetailComponent implements OnInit {
       );
   }
 
-  updateReply(event, replyId: number) {
-    this.replyService.updateReply(replyId, event)
-      .subscribe(
-        (data) => {
-          this.replySubject.next(data);
-          this.snackBar.open('Reply updated!', 'Ok', {
-            panelClass: ['success']
-          });
-        },
-        (error) => {
-          this.snackBar.open(error, 'Ok', {
-            panelClass: ['error']
-          });
-        }
-      );
-
-  }
-
   toggle(isFavorite, replyId) {
     isFavorite ? this.unfavoriteReply(replyId) : this.favoriteReply(replyId);
   }
@@ -185,12 +167,7 @@ export class ThreadDetailComponent implements OnInit {
 
   triggerChange(thread, reply, favoriteReply, unfavoriteReply) {
     if (reply) {
-      const foundIndex = thread.replies.findIndex(replied => replied.id === reply.id);
-      if (foundIndex > -1) {
-        thread.replies[foundIndex] = { ...thread.replies[foundIndex], ...reply};
-      } else {
-        thread.replies.unshift(reply);
-      }
+      thread.replies.unshift(reply);
       this.replySubject.next(null);
       return thread;
     }
