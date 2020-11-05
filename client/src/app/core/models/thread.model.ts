@@ -8,6 +8,7 @@ export interface Thread {
   body: string;
   userId: number;
   channelId: number;
+  replyCount: string | number;
   createdAt: string;
   updatedAt: string;
   channel?: Channel;
