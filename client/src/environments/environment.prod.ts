@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://forum-thread.herokuapp.com/api/v1',
+  baseUrl: 'https://staging-forum-api.herokuapp.com/api/v1',
 };
