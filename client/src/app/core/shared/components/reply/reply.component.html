@@ -11,11 +11,11 @@
     <!-- End Reply profile Image, Name and Time Stamp  -->
 
     <!-- Favorite button -->
-    <ng-container *ngIf="data.isLoggedIn">
+    <ng-container *ngIf="isLogin">
         <app-favorite
           [favoritesCount]="reply.favorites.length"
           [isFavorite]="isFavorite"
-          (clickFavorite)="onClickFavorite()"
+          (clickFavorite)="toggle()"
           ></app-favorite>
     </ng-container>
     <!-- End Favorite button -->
@@ -45,8 +45,8 @@
   <!-- End Reply body -->
 
   <!-- Reply Card footer Edit and Delete -->
-  <ng-container *ngIf="data.isLoggedIn">
-    <ng-container *ngIf="data.authUser.userObject.id === reply.userId">
+  <ng-container *ngIf="isLogin">
+    <ng-container *ngIf="userId === reply.userId">
       <div class="card-footer">
         <button type="button" (click)="editReply(reply.body)" class="btn btn-secondary btn-sm mr-2">Edit</button>
         <button type="button" (click)="onDeleteReply()" class="btn btn-danger btn-sm">Delete</button>

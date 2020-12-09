@@ -13,7 +13,7 @@
             <mat-menu #browseDropdown="matMenu">
               <a [routerLink]="['threads']" mat-menu-item>All Threads</a>
               <ng-container *ngIf="data.isLoggedIn">
-                <a [routerLink]="['threads']" [queryParams]="{by: data.authUser.userObject.fullName }" mat-menu-item>My Threads</a>
+                <a [routerLink]="['threads']" [queryParams]="{by: data.authUser.fullName }" mat-menu-item>My Threads</a>
               </ng-container>
               <a [routerLink]="['threads']" [queryParams]="{popular: 1 }" mat-menu-item>Popular Threads</a>
             </mat-menu>
@@ -38,11 +38,11 @@
 
           <ng-container *ngIf="data.isLoggedIn">
             <span class="p-2 text-dark dropdown-toggle cursor" mat-button [matMenuTriggerFor]="profileDropdown">
-              {{ data.authUser.userObject.fullName }}
+              {{ data.authUser.fullName }}
             </span>
             <mat-menu #profileDropdown="matMenu">
               <a [routerLink]="['/threads', 'create']" mat-menu-item>New Thread</a>
-              <a [routerLink]="['/profile', data.authUser.userObject.fullName]" mat-menu-item>My Profile</a>
+              <a [routerLink]="['/profile', data.authUser.fullName]" mat-menu-item>My Profile</a>
               <span mat-menu-item (click)="logout()">LogOut</span>
             </mat-menu>
           </ng-container>

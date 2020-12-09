@@ -9,7 +9,7 @@
             <a [routerLink]="['/profile', data.thread.creator.fullName]">{{ data.thread.creator.fullName }}</a>
           </p>
           <ng-container *ngIf="data.isLoggedIn">
-            <ng-container *ngIf="data.authUser.userObject.id === data.thread.creator.id">
+            <ng-container *ngIf="data.authUser.id === data.thread.creator.id">
               <div>
                 <button mat-icon-button [matMenuTriggerFor]="moreOptions" aria-label="Delete thread">
                   <mat-icon>more_vert</mat-icon>
@@ -40,15 +40,11 @@
       <h5>{{ data.thread.replies.length | pluralize : 'comment' }}</h5>
 
       <ng-container *ngIf="data.thread.replies.length">
-        <ng-container *ngFor="let reply of data.thread.replies">
-          <app-reply-card
-            [reply]="reply"
-            [data]="data"
-            (clickFavorite)="toggle($event, reply.id)"
-            (clickDeleteReply)="deleteReply(reply.id)"
-            (clickUpdateReply)="updateReply($event, reply.id)"
-            ></app-reply-card>
-        </ng-container>
+          <app-replies
+            [replies]="data.thread.replies"
+            [isLogin]="data.isLoggedIn"
+            [userId]="data.authUser?.id"
+            ></app-replies>
       </ng-container>
 
       <!-- Paginate Comments -->

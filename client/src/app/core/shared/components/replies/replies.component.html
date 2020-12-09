@@ -1,0 +1,9 @@
+<ng-container *ngFor="let reply of replies; index as i">
+  <app-reply
+    [reply]="reply"
+    [userId]="userId"
+    [isLogin]="isLogin"
+    (clickDeleteReply)="deleteReply(reply.id, i)"
+    (clickUpdateReply)="updateReply($event, reply.id, i)"
+    ></app-reply>
+</ng-container>

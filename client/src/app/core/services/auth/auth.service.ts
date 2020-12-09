@@ -30,7 +30,7 @@ export class AuthService {
   private authUserSub = new BehaviorSubject(null);
 
   get authUser() {
-    this.authUserSub.next(this.jwt.decodeToken());
+    this.authUserSub.next(this.formatUser(this.jwt.decodeToken()));
     return this.authUserSub.asObservable();
   }
 
@@ -58,6 +58,13 @@ export class AuthService {
     this.router.navigate(['/auth', 'login']);
   }
 
+  formatUser(user) {
+    if (user) {
+      return user.userObject;
+    }
+    return user;
+  }
+
   authenticate(user: {email: string, password: string }): Observable<any> {
     const url = `${environment.baseUrl}/auth/login`;
     return this.http.post(url, user)
@@ -65,7 +72,7 @@ export class AuthService {
         map((res: any) => res.data),
         tap(data => {
           localStorage.setItem('token', data.token);
-          this.authUserSub.next(this.jwt.decodeToken(data.token));
+          this.authUserSub.next(this.formatUser(this.jwt.decodeToken(data.token)));
           this.loggedInSubject.next(true);
         })
       );
