@@ -3,7 +3,6 @@
     [reply]="reply"
     [userId]="userId"
     [isLogin]="isLogin"
-    (clickFavorite)="toggle($event, reply.id)"
     (clickDeleteReply)="deleteReply(reply.id, i)"
     (clickUpdateReply)="updateReply($event, reply.id, i)"
     ></app-reply>
