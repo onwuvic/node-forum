@@ -15,7 +15,7 @@
         <app-favorite
           [favoritesCount]="reply.favorites.length"
           [isFavorite]="isFavorite"
-          (clickFavorite)="onClickFavorite()"
+          (clickFavorite)="toggle()"
           ></app-favorite>
     </ng-container>
     <!-- End Favorite button -->
