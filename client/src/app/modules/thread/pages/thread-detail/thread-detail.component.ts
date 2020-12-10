@@ -3,14 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { EMPTY, BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { EMPTY, combineLatest, Subject } from 'rxjs';
 import { map, switchMap, catchError} from 'rxjs/operators';
 
 import { ThreadService } from '../../../../core/services/thread/thread.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { ReplyService } from '../../../../core/services/reply/reply.service';
-import { Reply } from '../../../../core/models/reply.model';
-import { Favorite } from '../../../../core/models/favorite.model';
 
 @Component({
   selector: 'app-thread-detail',
@@ -28,16 +25,12 @@ export class ThreadDetailComponent implements OnInit {
 
   isLoggedIn$ = this.authService.isLoggedIn$;
 
-  private replySubject = new BehaviorSubject<Reply>(null);
-  replyAction$ = this.replySubject.asObservable();
-
   constructor(
     private route: ActivatedRoute,
     private threadService: ThreadService,
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private replyService: ReplyService,
     private snackBar: MatSnackBar
   ) { }
 
@@ -58,18 +51,10 @@ export class ThreadDetailComponent implements OnInit {
 
   authUser$ = this.authService.authUser;
 
-  threadWithActions$ = combineLatest([
-    this.thread$,
-    this.replyAction$,
-  ])
-    .pipe(
-      map(([thread, reply]) => this.triggerChange(thread, reply))
-    );
-
   data$ = combineLatest([
     this.isLoggedIn$,
     this.authUser$,
-    this.threadWithActions$
+    this.thread$
   ])
     .pipe(
       map(([isLoggedIn, authUser, thread]) => ({ isLoggedIn, authUser, thread }))
@@ -100,35 +85,5 @@ export class ThreadDetailComponent implements OnInit {
           });
         }
       );
-  }
-
-  addReply(event, id) {
-    this.loading = true;
-    this.replyService.addReply(id, event.value)
-      .subscribe(
-        (data) => {
-          this.loading = false;
-          event.reset();
-          this.replySubject.next(data);
-          this.snackBar.open('Reply added!', 'Ok', {
-            panelClass: ['success']
-          });
-        },
-        (error) => {
-          this.loading = false;
-          this.snackBar.open(error, 'Ok', {
-            panelClass: ['error']
-          });
-        }
-      );
-  }
-
-  triggerChange(thread, reply) {
-    if (reply) {
-      thread.replies.unshift(reply);
-      this.replySubject.next(null);
-      return thread;
-    }
-    return thread;
   }
 }
