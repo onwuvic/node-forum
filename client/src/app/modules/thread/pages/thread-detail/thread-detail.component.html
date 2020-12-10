@@ -44,6 +44,7 @@
             [replies]="data.thread.replies"
             [isLogin]="data.isLoggedIn"
             [userId]="data.authUser?.id"
+            [threadId]="data.thread.id"
             ></app-replies>
       </ng-container>
 
@@ -69,13 +70,10 @@
       </nav>
       <!--/.Comments-->
 
-      <!--Reply-->
-      <app-reply-form *ngIf="data.isLoggedIn" [loading]="loading" (replySubmit)="addReply($event, data.thread.id)"></app-reply-form>
       <p *ngIf="!data.isLoggedIn" class="text-center">
         Please
         <span class="btn-link" (click)="signIn()">sign in</span> to participate in this discussion.
       </p>
-      <!--/.Reply-->
     </div>
 
     <div class="col-12 col-md-4">
