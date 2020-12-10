@@ -7,3 +7,5 @@
     (clickUpdateReply)="updateReply($event, reply.id, i)"
     ></app-reply>
 </ng-container>
+
+<app-reply-form *ngIf="isLogin" [loading]="loading" (replySubmit)="addReply($event)"></app-reply-form>
