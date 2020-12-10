@@ -12,6 +12,8 @@ export class RepliesComponent implements OnInit {
   @Input() replies: any;
   @Input() isLogin: boolean;
   @Input() userId: number;
+  @Input() threadId: number;
+  loading = false;
 
   constructor(
     private replyService: ReplyService,
@@ -19,6 +21,27 @@ export class RepliesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  addReply(event) {
+    this.loading = true;
+    this.replyService.addReply(this.threadId, event.value)
+      .subscribe(
+        (data) => {
+          this.loading = false;
+          event.reset();
+          this.replies.unshift(data);
+          this.snackBar.open('Reply added!', 'Ok', {
+            panelClass: ['success']
+          });
+        },
+        (error) => {
+          this.loading = false;
+          this.snackBar.open(error, 'Ok', {
+            panelClass: ['error']
+          });
+        }
+      );
   }
 
   updateReply(replyData, replyId: number, index: number) {
