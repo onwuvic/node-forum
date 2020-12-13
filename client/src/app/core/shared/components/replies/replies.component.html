@@ -1,4 +1,4 @@
-<ng-container *ngFor="let reply of replies; index as i">
+<ng-container *ngFor="let reply of replies | paginate: { itemsPerPage: 10, currentPage: page }; index as i">
   <app-reply
     [reply]="reply"
     [userId]="userId"
@@ -7,5 +7,7 @@
     (clickUpdateReply)="updateReply($event, reply.id, i)"
     ></app-reply>
 </ng-container>
+
+<pagination-controls class="flex-block justify-content-center" (pageChange)="pageChanged($event)"></pagination-controls>
 
 <app-reply-form *ngIf="isLogin" [loading]="loading" (replySubmit)="addReply($event)"></app-reply-form>
