@@ -12,6 +12,7 @@ import { ThreadService } from '../../../../core/services/thread/thread.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThreadComponent implements OnInit {
+  page: number = 1;
   private errorMessageSubject = new Subject<string>();
   errorMessage$ = this.errorMessageSubject.asObservable();
 
@@ -36,5 +37,10 @@ export class ThreadComponent implements OnInit {
     );
 
   ngOnInit() { }
+
+  pageChanged(currentPage) {
+    this.page = currentPage;
+    window.scrollTo(0,0);
+  }
 
 }

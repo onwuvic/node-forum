@@ -1,7 +1,11 @@
 <div class="row mb-2">
   <ng-container *ngIf="(threads$ | async) as threads">
-    <div class="col-md-6" *ngFor="let thread of threads">
+    <div class="col-md-6" *ngFor="let thread of threads | paginate: { itemsPerPage: 15, currentPage: page }">
       <app-thread-card [thread]=thread [link]="['.', thread.channel.slug, thread.id]"></app-thread-card>
+    </div>
+
+    <div class="col-md-12">
+      <pagination-controls class="flex-block justify-content-center" (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
   </ng-container>
 
