@@ -14,6 +14,7 @@ export class RepliesComponent implements OnInit {
   @Input() userId: number;
   @Input() threadId: number;
   loading = false;
+  page: number = 1;
 
   constructor(
     private replyService: ReplyService,
@@ -77,6 +78,11 @@ export class RepliesComponent implements OnInit {
           });
         }
       );
+  }
+
+  pageChanged(currentPage) {
+    this.page = currentPage;
+    window.scrollTo(0,0);
   }
 
 }
