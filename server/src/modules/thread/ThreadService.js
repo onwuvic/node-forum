@@ -7,7 +7,7 @@ import ActivityService from '../activity/ActivityService';
 import Response from '../../responses/response';
 import ReplyService from '../reply/ReplyService';
 import ThreadFilters from './ThreadFilters';
-import { CREATE_THREAD_ACTIVITY, MODEL_REPLY, MODEL_THREAD } from '../../helpers/constants';
+import { CREATE_THREAD_ACTIVITY, MODEL_THREAD } from '../../helpers/constants';
 
 const {
   Thread, Reply, User, Channel, Favorite
@@ -191,6 +191,28 @@ class ThreadService {
       return Response.serverErrorResponseObject();
     }
   }
+
+  static getPagination(query) {
+    const pageValue = query.page ? parseInt(query.page, 10) : 1;
+    const sizeValue = query.size ? parseInt(query.size, 10) : 3;
+    const page = ((pageValue < 0) || (isNaN(pageValue))) ? 1 : pageValue;
+    const size = ((pageValue < 0) || (isNaN(pageValue))) ? 3 : sizeValue;
+
+    const limit = size;
+    const offset = page ? page * limit : 0;
+    return { limit, offset, page };
+  }
+
+  static getPagingData(data, page, limit) {
+    const { count: totalItems, rows: threads } = data;
+    const currentPage = page;
+    const totalPages = Math.ceil(totalItems / limit);
+    return {
+      totalItems, threads, totalPages, currentPage
+    };
+  }
+
+  // https://bezkoder.com/node-js-sequelize-pagination-mysql/
 }
 
 export default ThreadService;
