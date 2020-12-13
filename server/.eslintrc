@@ -39,6 +39,7 @@
     "eol-last": [
       "error",
       "always"
-    ]
+    ],
+    "no-restricted-globals": ["isNaN"]
   }
 }
