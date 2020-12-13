@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MomentModule } from 'ngx-moment';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 import { MaterialModule } from './material-module/material.module';
@@ -24,7 +25,7 @@ import { ReplyComponent } from './components/reply/reply.component';
     ReplyFormComponent,
     FavoriteComponent,
     RepliesComponent,
-    ReplyComponent
+    ReplyComponent,
   ],
   imports: [
     CommonModule,
@@ -33,6 +34,7 @@ import { ReplyComponent } from './components/reply/reply.component';
     ReactiveFormsModule,
     MaterialModule,
     MomentModule,
+    NgxPaginationModule
   ],
   exports: [
     FormsModule,
@@ -45,7 +47,8 @@ import { ReplyComponent } from './components/reply/reply.component';
     ThreadCardComponent,
     ReplyFormComponent,
     RepliesComponent,
-    ReplyComponent
+    ReplyComponent,
+    NgxPaginationModule
   ]
 })
 export class SharedModule { }
